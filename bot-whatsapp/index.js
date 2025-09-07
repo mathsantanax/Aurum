@@ -34,7 +34,7 @@ app.post("/webhook", async (req, res) => {
     if(message){
         const from = message.from;
         const text = message.text?.body;
-        console.log("Mensagem Recebida: \n", text);
+        console.log("Mensagem de: ", from  + "\nCorpo da Mensagem: \n", text);
         if (text?.toLowerCase() === "oi") {
             try {
                 await axios.post(
@@ -43,6 +43,25 @@ app.post("/webhook", async (req, res) => {
                     messaging_product: "whatsapp",
                     to: from,
                     text: { body: "Hello, sent through the created API" },
+                },
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                    "Content-Type": "application/json"
+                }
+            );
+            } catch (error) {
+                console.error("Error sending message:", error.response?.data || error.message);
+            }
+        }
+        else if(text?.toLowerCase() === "bot")
+        {
+            try {
+                await axios.post(
+                `https://graph.facebook.com/v22.0/${phoneId}/messages`,
+                {
+                    messaging_product: "whatsapp",
+                    to: from,
+                    text: { body: "Esse bot foi feito para o aplicativo Aurum Finance, Criado pela empresa Anlumina! \n bem-vindo" },
                 },
                 {
                     headers: { Authorization: `Bearer ${token}` },
