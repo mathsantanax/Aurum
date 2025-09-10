@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75 d17.13
+VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AurumApi", "AurumApi.csproj", "{C1C426BD-68B4-42FA-8EBC-3AAAC4D19FE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurum-Application", "..\Aurum-Application\Aurum-Application.csproj", "{306600F7-8762-4BC1-BC44-AD6D273234F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurum-Domain", "..\Aurum-Domain\Aurum-Domain.csproj", "{8235B5B3-F2EA-497D-92CB-73F06419C235}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurum-Infrastructure", "..\Aurum-Infrastructure\Aurum-Infrastructure.csproj", "{3A322003-8D8A-466A-BD2F-660B3FEAC526}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{C1C426BD-68B4-42FA-8EBC-3AAAC4D19FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1C426BD-68B4-42FA-8EBC-3AAAC4D19FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1C426BD-68B4-42FA-8EBC-3AAAC4D19FE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{306600F7-8762-4BC1-BC44-AD6D273234F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{306600F7-8762-4BC1-BC44-AD6D273234F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{306600F7-8762-4BC1-BC44-AD6D273234F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{306600F7-8762-4BC1-BC44-AD6D273234F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8235B5B3-F2EA-497D-92CB-73F06419C235}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8235B5B3-F2EA-497D-92CB-73F06419C235}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8235B5B3-F2EA-497D-92CB-73F06419C235}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8235B5B3-F2EA-497D-92CB-73F06419C235}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A322003-8D8A-466A-BD2F-660B3FEAC526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A322003-8D8A-466A-BD2F-660B3FEAC526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A322003-8D8A-466A-BD2F-660B3FEAC526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A322003-8D8A-466A-BD2F-660B3FEAC526}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
