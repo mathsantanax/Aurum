@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6GCSlpGZjAg=",
+  "dgSpecHash": "aVO5jGnk49k=",
   "success": true,
-  "projectFilePath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
+  "projectFilePath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mathe\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\mathe\\.nuget\\packages\\microsoft.openapi\\1.6.14\\microsoft.openapi.1.6.14.nupkg.sha512",
