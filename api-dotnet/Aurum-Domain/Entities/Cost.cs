@@ -17,6 +17,9 @@ namespace Aurum_Domain.Entities
         public Guid CategoryId { get; private set; }
         public Category? Category { get; private set; }
 
+        public Guid WalletId { get; private set; }
+        public Wallet? Wallet { get; private set; }
+
         private Cost() { }
 
         public Cost(string description, Money value, Category category)
