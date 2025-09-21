@@ -17,31 +17,31 @@ namespace Aurum_Domain.Entities
         public Guid UserId { get; private set; }
         public User? User { get; private set; }
 
-        private readonly List<Income> _incomes = new();
-        private readonly List<Cost> _costs = new();
-
-        public IReadOnlyCollection<Income> Incomes => _incomes.AsReadOnly();
-        public IReadOnlyCollection<Cost> Costs => _costs.AsReadOnly();
+        private readonly List<Transaction> _transactions = new();
+        public IReadOnlyCollection<Transaction> Transactions => _transactions.AsReadOnly();
 
         private Wallet() { }
 
-        public Wallet(string name)
+        public Wallet(string name, User user)
         {
             Id = Guid.NewGuid();
             SetName(name);
             Balance = Money.Zero();
+            User = user ?? throw new ArgumentException("Usuário é obrigatório.");
+            UserId = user.Id;
         }
 
-        public void AddIncome(Income income)
+        public void AddTransaction(Transaction transaction)
         {
-            _incomes.Add(income);
-            Balance = Balance.Add(income.Value);
-        }
+            if (transaction == null)
+                throw new ArgumentException("Transação inválida.");
 
-        public void AddCost(Cost cost)
-        {
-            _costs.Add(cost);
-            Balance = Balance.Subtract(cost.Value);
+            if (transaction.Type == TransactionType.Income)
+                Balance = Balance.Add(transaction.Value);
+            else if (transaction.Type == TransactionType.Cost)
+                Balance = Balance.Subtract(transaction.Value);
+
+            _transactions.Add(transaction);
         }
 
         private void SetName(string name)
@@ -50,6 +50,5 @@ namespace Aurum_Domain.Entities
                 throw new ArgumentException("Nome da carteira é obrigatório.");
             Name = name;
         }
-
     }
 }

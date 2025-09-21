@@ -9,8 +9,8 @@ namespace Aurum_Domain.Entities
 {
     public class Income : Transaction
     {
-        public Income(string description, Money value, Category category)
-            : base(description, value, category) { }
-
+        public override TransactionType Type => TransactionType.Income;
+        public Income(string description, Money value, Category category, Wallet? wallet = null, SharedWallet? sharedWallet = null)
+            : base(description, value, category, wallet, sharedWallet) { }
     }
 }

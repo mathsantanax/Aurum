@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("Aurum-Application")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Aurum-Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e64ea151bbeafe9d05fbe9fbe64117b4804e33e7")]
-[assembly: System.Reflection.AssemblyProductAttribute("Aurum-Application")]
-[assembly: System.Reflection.AssemblyTitleAttribute("Aurum-Application")]
+[assembly: System.Reflection.AssemblyProductAttribute("Aurum-Domain")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Aurum-Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.

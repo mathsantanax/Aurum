@@ -10,45 +10,60 @@ using System.Threading.Tasks;
 
 namespace Aurum_Infrastructure.Repositories
 {
-    internal class CategoryRepository : ICategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
-        private readonly InfraContext infraContext;
+        private readonly InfraContext _infraContext;
 
-        public CategoryRepository(InfraContext infraContext )
+        public CategoryRepository(InfraContext infraContext)
         {
-            this.infraContext = infraContext;
-        }
-
-        public async Task DeleteCategory(Category category)
-        {
-            var existingCategory = await infraContext.Category.AsNoTracking().FirstAsync(c => c.Id.Equals(category.Id));
-            if(existingCategory != null)
-            {
-                infraContext.Category.Remove(existingCategory);
-                await infraContext.SaveChangesAsync();
-            }
+            _infraContext = infraContext;
         }
 
         public async Task<List<Category>> GetAllCategories(User user)
         {
-            return await infraContext.Category
+            return await _infraContext.Categories
                 .AsNoTracking()
-                .Where(c => c.UserId.Equals(user.Id))
+                .Where(c => c.UserId == user.Id)
                 .ToListAsync();
         }
 
-        public async Task AddOrUpdatedCategory(Category category)
+        public async Task<Category?> GetById(Guid id)
         {
-            var existingCategory = await infraContext.Category.AsNoTracking().FirstAsync(c => c.Id.Equals(category.Id));
+            return await _infraContext.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
 
-            if(existingCategory != null)
+        public async Task<Category?> GetByName(User user, string description)
+        {
+            return await _infraContext.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.UserId == user.Id && c.Description == description);
+        }
+
+        public async Task AddOrUpdateCategory(Category category)
+        {
+            var existingCategory = await _infraContext.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == category.Id);
+
+            if (existingCategory != null)
             {
-                infraContext.Category.Update(category);
-                await infraContext.SaveChangesAsync();
+                _infraContext.Categories.Update(category);
+            }
+            else
+            {
+                await _infraContext.Categories.AddAsync(category);
             }
 
-            await infraContext.Category.AddAsync(category);
-            await infraContext.SaveChangesAsync();
+            await _infraContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteCategory(Category category)
+        {
+            _infraContext.Categories.Attach(category);
+            _infraContext.Categories.Remove(category);
+            await _infraContext.SaveChangesAsync();
         }
     }
 }
