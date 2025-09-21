@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Aurum-Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eba8460971a3a088fce41975288e5afbdb9943ae")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+968a4d549e6ad64afbef12d2b300e6fab17167a9")]
 [assembly: System.Reflection.AssemblyProductAttribute("Aurum-Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aurum-Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

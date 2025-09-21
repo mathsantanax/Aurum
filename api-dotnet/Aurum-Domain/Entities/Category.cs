@@ -12,6 +12,8 @@ namespace Aurum_Domain.Entities
         public string? Description { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdateAt { get; private set; }
+        public Guid UserId { get; private set; }
+        public User? User { get; private set; }
 
         private Category() { }
 
