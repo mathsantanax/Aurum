@@ -10,38 +10,86 @@ using System.Threading.Tasks;
 
 namespace Aurum_Infrastructure.Repositories
 {
-    internal class WalletRepository : IWalletRepository
+    public class WalletRepository : IWalletRepository
     {
-        private readonly InfraContext infraContext;
+        private readonly InfraContext _infraContext;
 
-        public WalletRepository(InfraContext _infraContext)
+        public WalletRepository(InfraContext infraContext)
         {
-            infraContext = _infraContext;
+            _infraContext = infraContext;
         }
+
         public async Task DeleteWallet(User user, Wallet wallet)
         {
-            var existingWallet = await infraContext.Wallet.AsNoTracking().FirstOrDefaultAsync(w => w.Id.Equals(wallet.Id) && w.UserId.Equals(user.Id));
-            if (existingWallet != null)
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), "Usuário não pode ser nulo.");
+            if (wallet == null)
+                throw new ArgumentNullException(nameof(wallet), "Carteira não pode ser nula.");
+
+            try
             {
-                infraContext.Wallet.Remove(existingWallet);
-                await infraContext.SaveChangesAsync();
+                var existingWallet = await _infraContext.Wallets
+                    .FirstOrDefaultAsync(w => w.Id == wallet.Id && w.UserId == user.Id);
+
+                if (existingWallet == null)
+                    throw new KeyNotFoundException($"Carteira {wallet.Id} não encontrada para o usuário {user.Id}.");
+
+                _infraContext.Wallets.Remove(existingWallet);
+                await _infraContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new InvalidOperationException("Erro ao excluir a carteira no banco de dados.", ex);
             }
         }
 
-        // buscando todas as carteiras com as receitas/gastos do mês
         public async Task<List<Wallet>> GetAllWallets(User user)
         {
-            return await infraContext.Wallet.AsNoTracking().Where(w => w.UserId.Equals(user.Id))
-                .Include(w => w.Costs.Where(c => c.Date.Month.Equals(DateTime.Now.Month)))
-                .Include(w => w.Incomes.Where(i => i.Date.Month.Equals(DateTime.Now.Month)))
-                .ToListAsync();
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), "Usuário não pode ser nulo.");
+            if (user.Id == Guid.Empty)
+                throw new ArgumentException("O Id do usuário não pode ser vazio.", nameof(user));
+
+            try
+            {
+                var currentMonth = DateTime.UtcNow.Month;
+                var currentYear = DateTime.UtcNow.Year;
+
+                return await _infraContext.Wallets
+                    .Where(w => w.UserId == user.Id)
+                    .Include(w => w.Transactions
+                        .Where(t => t.Date.Month == currentMonth && t.Date.Year == currentYear))
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Erro ao buscar todas as carteiras do usuário.", ex);
+            }
         }
 
         public async Task<Wallet> GetWallet(User user, Wallet wallet)
         {
-            return await infraContext.Wallet
-                .AsNoTracking()
-                .FirstOrDefaultAsync(w => w.UserId.Equals(user.Id) && w.Id.Equals(wallet.Id));
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), "Usuário não pode ser nulo.");
+            if (wallet == null)
+                throw new ArgumentNullException(nameof(wallet), "Carteira não pode ser nula.");
+            if (user.Id == Guid.Empty || wallet.Id == Guid.Empty)
+                throw new ArgumentException("O Id do usuário ou da carteira não pode ser vazio.");
+
+            try
+            {
+                return await _infraContext.Wallets
+                        .Include(w => w.Transactions
+                            .Where(t => t.WalletId == wallet.Id))
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(w => w.UserId == user.Id && w.Id == wallet.Id)
+                        ?? throw new KeyNotFoundException($"Carteira {wallet.Id} não encontrada para o usuário {user.Id}.");
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Erro ao buscar a carteira no banco de dados.", ex);
+            }
         }
     }
 }
