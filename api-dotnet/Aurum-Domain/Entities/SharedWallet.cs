@@ -12,6 +12,8 @@ namespace Aurum_Domain.Entities
         public Guid Id { get; private set; }
         public string? Name { get; private set; }
         public Money? Balance { get; private set; }
+        public Guid OwnerId { get; set; }
+        public User? Owner { get; set; }
 
         private readonly List<User> _members = new();
         public IReadOnlyCollection<User> Members => _members;

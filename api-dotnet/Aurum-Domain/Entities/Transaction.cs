@@ -10,12 +10,12 @@ namespace Aurum_Domain.Entities
     public abstract class Transaction
     {
         public Guid Id { get; private set; }
-        public string Description { get; private set; }
-        public Money Value { get; private set; }
+        public string? Description { get; private set; }
+        public Money? Value { get; private set; }
         public DateTime Date { get; private set; }
 
         public Guid CategoryId { get; private set; }
-        public Category Category { get; private set; }
+        public Category? Category { get; private set; }
 
         public Guid? WalletId { get; private set; }
         public Wallet? Wallet { get; private set; }

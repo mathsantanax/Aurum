@@ -15,6 +15,10 @@ namespace Aurum_Domain.Entities
         public string? Phone { get; private set; }
 
         private readonly List<Wallet> _wallets = new();
+
+        public readonly List<SharedWallet> _sharedWallets = new();
+
+        private IReadOnlyCollection<SharedWallet> sharedWallets => _sharedWallets.AsReadOnly();
         public IReadOnlyCollection<Wallet> Wallets => _wallets.AsReadOnly();
 
         private User() { }
