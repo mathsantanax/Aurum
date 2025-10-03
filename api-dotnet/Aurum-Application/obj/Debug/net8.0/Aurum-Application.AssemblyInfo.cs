@@ -15,9 +15,13 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 <<<<<<< HEAD
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+968a4d549e6ad64afbef12d2b300e6fab17167a9")]
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bf557c59d613c488ef69c2937729312c94ca7c6b")]
+>>>>>>> matheus
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+21a66d78ee0fa4592733cbdf8baeaea9ef08f7ac")]
 >>>>>>> matheus
 [assembly: System.Reflection.AssemblyProductAttribute("Aurum-Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aurum-Application")]
