@@ -1,12 +1,8 @@
 {
   "version": 2,
-<<<<<<< HEAD
-  "dgSpecHash": "HYhh4AEia50=",
-=======
-  "dgSpecHash": "obKxdgmpeD8=",
->>>>>>> 2d1172ac8a40dd369f683bbe1b59fbbbe0d30c42
+  "dgSpecHash": "qVepYarAW/A=",
   "success": true,
-  "projectFilePath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Infrastructure\\Aurum-Infrastructure.csproj",
+  "projectFilePath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Infrastructure\\Aurum-Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mathe\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\mathe\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
@@ -48,5 +44,15 @@
     "C:\\Users\\mathe\\.nuget\\packages\\system.text.encoding.codepages\\6.0.0\\system.text.encoding.codepages.6.0.0.nupkg.sha512",
     "C:\\Users\\mathe\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "message": "Problema ao ler o arquivo de cache C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Infrastructure\\obj\\project.nuget.cache: '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
+      "projectPath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Infrastructure\\Aurum-Infrastructure.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Infrastructure\\Aurum-Infrastructure.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

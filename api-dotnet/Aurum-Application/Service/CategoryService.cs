@@ -27,14 +27,20 @@ namespace Aurum_Application.Service
             }
         }
 
-        public Task DeleteCategoryAsync(Guid categoryId)
+        public async Task DeleteCategoryAsync(Guid categoryId)
         {
-            throw new NotImplementedException();
+            var existingCategory = await _categoryRepository.GetById(categoryId);
+
+            if (existingCategory != null)
+            {
+                await _categoryRepository.DeleteCategory(existingCategory);
+            }
         }
 
-        public Task<List<CategoryDTO>> GetAllCategoriesAsync(Guid userId)
+        public async Task<List<CategoryDTO>> GetAllCategoriesAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            var categories = await _categoryRepository.GetAllCategories(userId);
+            return categories.Select(c => CategoryDTO.FromEntity(c)).ToList();
         }
     }
 }
