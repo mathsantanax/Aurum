@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {}
+    "net8.0": {
+      "Aurum-Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Aurum-Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Aurum-Domain.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Aurum-Domain/1.0.0": {
+      "type": "project",
+      "path": "../Aurum-Domain/Aurum-Domain.csproj",
+      "msbuildProject": "../Aurum-Domain/Aurum-Domain.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0": []
+    "net8.0": [
+      "Aurum-Domain >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\mathe\\.nuget\\packages\\": {},
@@ -39,7 +58,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj": {
+              "projectPath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -76,5 +99,13 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problema ao ler o arquivo de cache C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Application\\obj\\project.nuget.cache: '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0."
+    }
+  ]
 }
