@@ -24,6 +24,12 @@ namespace Aurum_Domain.Entities
             CreatedAt = DateTime.UtcNow;
         }
 
+        public Category(Guid guid, string description)
+        {
+            SetDescription(description);
+            UpdateAt = DateTime.UtcNow;
+        }
+
         public void Rename(string newDescription)
         {
             SetDescription(newDescription);
