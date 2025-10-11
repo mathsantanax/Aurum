@@ -20,6 +20,32 @@ namespace Aurum_Infrastructure.Repositories
             _infraContext = infraContext;
         }
 
+        public async Task AddUser(User user, SharedWallet sharedWallet)
+        {
+            if(user == null)
+                throw new ArgumentNullException(nameof(user), "Usuário não pode ser nulo.");
+            if(sharedWallet == null)
+                throw new ArgumentNullException(nameof(sharedWallet), "Carteira não pode ser nula.");
+
+            try
+            {
+                var wallet = await _infraContext.SharedWallets
+                    .Include(w => w.Members)
+                    .SingleOrDefaultAsync(w => w.Id.Equals(sharedWallet.Id) && w.OwnerId.Equals(sharedWallet.OwnerId));
+
+                wallet.AddMember(user);
+                await _infraContext.SaveChangesAsync();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Erro ao Adcionar Usuário.", ex);
+            }
+        }
+
         public async Task DeleteSharedWallet(User user, SharedWallet sharedWallet)
         {
             if (user == null)
@@ -65,37 +91,13 @@ namespace Aurum_Infrastructure.Repositories
                 return await _infraContext.SharedWallets
                     .Where(w => w.Members.Any(u => u.Id == user.Id))
                     .Include(w => w.Transactions
-                    .Where(t => t.Date.Month == currentMonth && t.Date.Year == currentYear))
+                    .Where(t => t.CreatedAt.Month == currentMonth && t.CreatedAt.Year == currentYear))
                     .AsNoTracking()
                     .ToListAsync();
             }
             catch(Exception ex)
             {
                 throw new InvalidOperationException("Erro ao buscar todas as carteiras do usuário.", ex);
-            }
-        }
-
-        public async Task<SharedWallet> GetSharedWallet(Guid walletId, Guid userId)
-        {
-            if(walletId == Guid.Empty)
-                throw new ArgumentNullException(nameof(walletId), "Carteira não pode ser nula.");
-            if (userId == Guid.Empty)
-                throw new ArgumentNullException(nameof(userId), "Usuário não pode ser nulo.");
-            try
-            {
-                var currentMonth = DateTime.UtcNow.Month;
-                var currentYear = DateTime.UtcNow.Year;
-
-                return await _infraContext.SharedWallets
-                    .Include(w => w.Transactions.Where(t => t.SharedWalletId == walletId && t.Date.Month == currentMonth && t.Date.Year == currentYear))
-                    .Include(w => w.Members)
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(w => w.Id == walletId)
-                    ?? throw new KeyNotFoundException($"Carteira {walletId} não encontrada");
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Erro ao buscar a carteira no banco de dados.", ex);
             }
         }
     }

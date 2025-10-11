@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aurum_Domain.Entities
+namespace Domain.Enums
 {
-    public enum TransactionType
+    public enum WalletRole
     {
-        Income,
-        Cost
+        Owner = 1,
+        Member = 2
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,22 +10,28 @@ namespace Aurum_Domain.Entities
 {
     public class User
     {
-        public Guid Id { get; private set; }
+        [Key]
+        public Guid Guid { get; private set; }
+        [Required, MaxLength(100)]
         public string? FullName { get; private set; }
+        [Required, MaxLength(200)]
+        [EmailAddress]
         public string? Email { get; private set; }
+        [MaxLength(20)]
         public string? Phone { get; private set; }
+        [MaxLength(200)]
+        public string? PasswordHash { get; private set; }
+        public DateTime CreatedAt { get; private set; } = DateTime.Now;
 
-        private readonly List<Wallet> _wallets = new();
+        public virtual ICollection<PrivateWallet> PrivateWallets { get; set; } = new List<PrivateWallet>();
+        public virtual ICollection<WalletMember> WalletMemberships { get; set; } = new List<WalletMember>();
+        public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
-        public readonly List<SharedWallet> _sharedWallets = new();
+        public User() { }
 
-        private IReadOnlyCollection<SharedWallet> sharedWallets => _sharedWallets.AsReadOnly();
-        public IReadOnlyCollection<Wallet> Wallets => _wallets.AsReadOnly();
-
-        private User() { }
-
-        public User(string name, string email, string phone)
+        public User(string fullName, string email, string phone)
         {
+<<<<<<< HEAD
             Id = Guid.NewGuid();
             SetName(name);
             SetEmail(email);
@@ -66,14 +73,23 @@ namespace Aurum_Domain.Entities
         {
             if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
                 throw new ArgumentException("E-mail inválido.");
+=======
+            Guid = Guid.NewGuid();
+            FullName = fullName;
+>>>>>>> 00b5558a5b7f090bb0b2570ca70ae5de3b114aa8
             Email = email;
+            Phone = phone;  
         }
 
-        private void SetPhone(string phone)
+        public bool CanAccessWallet(Wallet wallet)
         {
-            if (string.IsNullOrWhiteSpace(phone))
-                throw new ArgumentException("Telefone é obrigatório.");
-            Phone = phone;
+            if (wallet is PrivateWallet pw)
+                return pw.OwnerId == Id;
+
+            if (wallet is SharedWallet sw)
+                return sw.Members.Any(m => m.UserId == Id);
+
+            return false;
         }
     }
 }

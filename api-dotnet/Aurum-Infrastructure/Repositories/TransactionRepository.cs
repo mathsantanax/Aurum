@@ -61,10 +61,10 @@ namespace Aurum_Infrastructure.Repositories
                 query = query.Where(x => x.SharedWalletId == sharedWallet.Id);
 
             if (startDate.HasValue)
-                query = query.Where(x => x.Date >= startDate.Value);
+                query = query.Where(x => x.CreatedAt >= startDate.Value);
 
             if (endDate.HasValue)
-                query = query.Where(x => x.Date <= endDate.Value);
+                query = query.Where(x => x.CreatedAt <= endDate.Value);
 
             return await query.AsNoTracking().ToListAsync();
         }
