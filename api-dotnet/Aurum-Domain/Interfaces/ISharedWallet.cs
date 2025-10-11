@@ -9,8 +9,8 @@ namespace Aurum_Domain.Interfaces
 {
     public interface ISharedWalletRepository
     {
-        Task<SharedWallet> GetSharedWallet(Guid walletId, Guid userId);
         Task<List<SharedWallet>> GetAllSharedWallets(User user);
         Task DeleteSharedWallet(User user, SharedWallet sharedWallet);
+        Task AddUser(User user, SharedWallet sharedWallet);
     }
 }

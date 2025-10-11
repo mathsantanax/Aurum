@@ -58,37 +58,13 @@ namespace Aurum_Infrastructure.Repositories
                 return await _infraContext.Wallets
                     .Where(w => w.UserId == user.Id)
                     .Include(w => w.Transactions
-                        .Where(t => t.Date.Month == currentMonth && t.Date.Year == currentYear))
+                        .Where(t => t.CreatedAt.Month == currentMonth && t.CreatedAt.Year == currentYear))
                     .AsNoTracking()
                     .ToListAsync();
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException("Erro ao buscar todas as carteiras do usuário.", ex);
-            }
-        }
-
-        public async Task<Wallet> GetWallet(User user, Wallet wallet)
-        {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user), "Usuário não pode ser nulo.");
-            if (wallet == null)
-                throw new ArgumentNullException(nameof(wallet), "Carteira não pode ser nula.");
-            if (user.Id == Guid.Empty || wallet.Id == Guid.Empty)
-                throw new ArgumentException("O Id do usuário ou da carteira não pode ser vazio.");
-
-            try
-            {
-                return await _infraContext.Wallets
-                        .Include(w => w.Transactions
-                            .Where(t => t.WalletId == wallet.Id))
-                        .AsNoTracking()
-                        .FirstOrDefaultAsync(w => w.UserId == user.Id && w.Id == wallet.Id)
-                        ?? throw new KeyNotFoundException($"Carteira {wallet.Id} não encontrada para o usuário {user.Id}.");
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Erro ao buscar a carteira no banco de dados.", ex);
             }
         }
     }

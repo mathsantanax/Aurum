@@ -29,7 +29,7 @@ namespace Aurum_Infrastructure.Repositories
                 await _infraContext.Users.AddAsync(user);
                 await _infraContext.SaveChangesAsync();
             }
-            catch (PostgresException ex) when (ex.SqlState == "23505") // unique_violation
+            catch (PostgresException ex) when (ex.SqlState == "23505")
             {
                 throw new InvalidOperationException("Já existe um usuário com os mesmos dados únicos.", ex);
             }
