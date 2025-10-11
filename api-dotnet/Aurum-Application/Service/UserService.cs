@@ -1,5 +1,8 @@
 ﻿using Aurum_Application.DTOs;
+using Aurum_Application.Exceptions;
 using Aurum_Application.Interfaces;
+using Aurum_Domain.Entities;
+using Aurum_Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,26 +11,52 @@ using System.Threading.Tasks;
 
 namespace Aurum_Application.Service
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
-        Task IUserService.AddUserAsync(UserDto user)
+        private readonly IUserRepository userRepository;
+
+        public UserService(IUserRepository userRepository) => this.userRepository = userRepository;
+
+        public async Task AddUserAsync(UserDto user)
         {
-            throw new NotImplementedException();
+            if (user == null)
+                throw new AppException("Usuário não pode ser nulo.", 400);
+            var entity = new User(user.Name, user.Email, user.Phone);
+            await userRepository.AddAsync(entity);
         }
 
-        Task IUserService.DeleteUserAsync(Guid id)
+        public async Task DeleteUserAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var entity = await userRepository.GetUser(id);
+            if (entity == null)
+                throw new AppException("Usuário não encontrado.", 404);
+
+            await userRepository.DeleteAsync(entity);
         }
 
-        Task<UserDto> IUserService.GetUserAsync(Guid id)
+        public async Task<UserDto> GetUserAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var entity = await userRepository.GetUser(id);
+            if (entity == null)
+                throw new AppException("Usuário não encontrado.", 404);
+
+            var userdto = new UserDto
+            {
+                Id = id,
+                Name = entity.FullName,
+                Email = entity.Email,
+                Phone = entity.Phone,
+            };
+
+            return userdto;
         }
 
-        Task IUserService.UpdateUserAsync(UserDto user)
+        public async Task UpdateUserAsync(UserDto user)
         {
-            throw new NotImplementedException();
+            var entity = new User(user.Id, user.Name, user.Email, user.Phone);
+            if (entity == null)
+                throw new AppException("Usuário não pode ser nulo.", 400);
+            await userRepository.DeleteAsync(entity);
         }
     }
 }

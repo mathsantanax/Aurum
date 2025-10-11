@@ -31,9 +31,28 @@ namespace Aurum_Domain.Entities
             SetPhone(phone);
         }
 
+        public User(Guid id, string? fullName, string? email, string? phone)
+        {
+            SetName(fullName);
+            SetEmail(email);
+            SetPhone(phone);
+        } 
+
+        public void setGuid(Guid guid)
+        {
+            if (guid == Guid.Empty)
+                throw new ArgumentNullException(nameof(guid), "Guid não pode ser nulo");
+            Id = guid;
+        }
+
         public void AddWallet(Wallet wallet)
         {
             _wallets.Add(wallet);
+        }
+
+        public void AddSahredWallet(SharedWallet shared)
+        {
+            _sharedWallets.Add(shared);
         }
 
         private void SetName(string name)

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj": {}
+    "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj": {
+    "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj",
+        "projectUniqueName": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj",
         "projectName": "Aurum-Domain",
-        "projectPath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj",
+        "projectPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj",
         "packagesPath": "C:\\Users\\mathe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\obj\\",
+        "outputPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -45,7 +45,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -66,7 +66,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

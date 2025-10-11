@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Aurum-Domain/1.0.0": {
+        "runtime": {
+          "Aurum-Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Aurum-Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

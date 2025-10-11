@@ -23,34 +23,28 @@ namespace Aurum_Infrastructure.Repositories
         public async Task AddAsync(User user)
         {
             if (user == null)
-                throw new ArgumentNullException(nameof(user), "Usuário não pode ser nulo.");
+                throw new ArgumentNullException(nameof(user));
+
             try
             {
                 await _infraContext.Users.AddAsync(user);
                 await _infraContext.SaveChangesAsync();
             }
-            catch (PostgresException ex) when (ex.SqlState == "23505") // unique_violation
+            catch (PostgresException ex) when (ex.SqlState == "23505")
             {
                 throw new InvalidOperationException("Já existe um usuário com os mesmos dados únicos.", ex);
-            }
-            catch (DbUpdateException ex)
-            {
-                throw new InvalidOperationException("Erro ao salvar o usuário no banco de dados.", ex);
             }
         }
 
         public async Task DeleteAsync(User user)
         {
             if (user == null)
-                throw new ArgumentNullException(nameof(user), "Usuário não pode ser nulo.");
+                throw new ArgumentNullException(nameof(user));
 
             try
             {
-                var existingUser = await _infraContext.Users.FindAsync(user.Id);
-                if (existingUser == null)
-                    throw new KeyNotFoundException($"Usuário com Id '{user.Id}' não encontrado.");
-
-                _infraContext.Users.Remove(existingUser);
+                _infraContext.Users.Attach(user);
+                _infraContext.Users.Remove(user);
                 await _infraContext.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
@@ -81,15 +75,12 @@ namespace Aurum_Infrastructure.Repositories
         public async Task UpdateAsync(User user)
         {
             if (user == null)
-                throw new ArgumentNullException(nameof(user), "Usuário não pode ser nulo.");
+                throw new ArgumentNullException(nameof(user));
 
             try
             {
-                var existingUser = await _infraContext.Users.FindAsync(user.Id);
-                if (existingUser == null)
-                    throw new KeyNotFoundException($"Usuário com Id '{user.Id}' não encontrado.");
-
-                _infraContext.Entry(existingUser).CurrentValues.SetValues(user);
+                _infraContext.Users.Attach(user);
+                _infraContext.Entry(user).State = EntityState.Modified;
                 await _infraContext.SaveChangesAsync();
             }
             catch (DbUpdateException ex)

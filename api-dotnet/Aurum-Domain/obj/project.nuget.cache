@@ -1,18 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lTWia+V+CvY=",
+  "dgSpecHash": "2aQIO5Dv1F8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj",
+  "projectFilePath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj",
   "expectedPackageFiles": [],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "message": "Problema ao ler o arquivo de cache C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\obj\\project.nuget.cache: '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
-      "projectPath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }
