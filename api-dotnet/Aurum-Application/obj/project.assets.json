@@ -33,11 +33,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Application\\Aurum-Application.csproj",
+      "projectUniqueName": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Application\\Aurum-Application.csproj",
       "projectName": "Aurum-Application",
-      "projectPath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Application\\Aurum-Application.csproj",
+      "projectPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Application\\Aurum-Application.csproj",
       "packagesPath": "C:\\Users\\mathe\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Application\\obj\\",
+      "outputPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -59,8 +59,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj": {
-              "projectPath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj"
+            "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj": {
+              "projectPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\Aurum-Domain\\Aurum-Domain.csproj"
             }
           }
         }
@@ -75,7 +75,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0": {
@@ -96,16 +96,8 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problema ao ler o arquivo de cache C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\Aurum-Application\\obj\\project.nuget.cache: '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0."
-    }
-  ]
+  }
 }
