@@ -9,9 +9,7 @@ namespace Aurum_Domain.Interfaces
 {
     public interface ICategoryRepository
     {
-        Task<List<Category>> GetAllCategories(Guid user);   // Buscar todas as categorias de um usuário
-        Task<Category?> GetById(Guid id);                   // Buscar categoria por ID
-        Task<Category?> GetByName(Guid user, string name);  // Buscar categoria pelo nome (opcional)
+        Task<List<Category>> GetAllCategories(User user);   // Buscar todas as categorias de um usuário
         Task AddOrUpdateCategory(Category category);        // Adicionar ou atualizar categoria
         Task DeleteCategory(Category category);             // Deletar categoria
     }

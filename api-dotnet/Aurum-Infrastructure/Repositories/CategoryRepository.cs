@@ -19,26 +19,12 @@ namespace Aurum_Infrastructure.Repositories
             _infraContext = infraContext;
         }
 
-        public async Task<List<Category>> GetAllCategories(Guid user)
+        public async Task<List<Category>> GetAllCategories(User user)
         {
             return await _infraContext.Categories
                 .AsNoTracking()
-                .Where(c => c.UserId == user)
+                .Where(c => c.UserId == user.Id)
                 .ToListAsync();
-        }
-
-        public async Task<Category?> GetById(Guid id)
-        {
-            return await _infraContext.Categories
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == id);
-        }
-
-        public async Task<Category?> GetByName(Guid user, string description)
-        {
-            return await _infraContext.Categories
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.UserId == user && c.Description == description);
         }
 
         public async Task AddOrUpdateCategory(Category category)

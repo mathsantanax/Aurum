@@ -14,6 +14,11 @@ namespace Aurum_Application.Service
     {
         private readonly ICategoryRepository _categoryRepository;
 
+        public CategoryService(ICategoryRepository categoryRepository)
+        {
+            _categoryRepository = categoryRepository;
+        }
+
         public async Task AddOrUpdateCategoryAsync(CategoryDTO category)
         {
             var existingCategory = await _categoryRepository.GetById(category.Id);
