@@ -24,7 +24,6 @@ namespace Aurum_Domain.Entities
         public DateTime CreatedAt { get; private set; } = DateTime.Now;
 
         public virtual ICollection<PrivateWallet> PrivateWallets { get; set; } = new List<PrivateWallet>();
-        public virtual ICollection<WalletMember> WalletMemberships { get; set; } = new List<WalletMember>();
         public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
         public User() { }
@@ -32,8 +31,8 @@ namespace Aurum_Domain.Entities
         public User(string fullName, string email, string phone)
         {
 <<<<<<< HEAD
-            Id = Guid.NewGuid();
-            SetName(name);
+            Guid = Guid.NewGuid();
+            SetName(fullName);
             SetEmail(email);
             SetPhone(phone);
         }

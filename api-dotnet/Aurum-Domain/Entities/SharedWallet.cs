@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurum_Domain.Entities
 {
-    internal class SharedWallet
+    public class SharedWallet : Wallet
     {
     }
 }
