@@ -1,4 +1,6 @@
-﻿namespace AurumApi.Extensions
+﻿using AurumApi.Exceptions;
+
+namespace AurumApi.Extensions
 {
     public static class AppExtensions
     {
@@ -8,6 +10,8 @@
 
             application.UseAuthentication();
             application.UseAuthorization();
+
+            application.UseMiddleware<ExceptionMiddleware>();
 
             application.UseSwagger();
             application.UseSwaggerUI();

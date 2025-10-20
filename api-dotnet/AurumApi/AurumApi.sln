@@ -5,12 +5,6 @@ VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AurumApi", "AurumApi.csproj", "{C1C426BD-68B4-42FA-8EBC-3AAAC4D19FE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurum-Application", "..\Aurum-Application\Aurum-Application.csproj", "{306600F7-8762-4BC1-BC44-AD6D273234F8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurum-Domain", "..\Aurum-Domain\Aurum-Domain.csproj", "{8235B5B3-F2EA-497D-92CB-73F06419C235}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurum-Infrastructure", "..\Aurum-Infrastructure\Aurum-Infrastructure.csproj", "{3A322003-8D8A-466A-BD2F-660B3FEAC526}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
