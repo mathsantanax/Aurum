@@ -11,17 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("35032575-01b6-42d0-867a-4ab976be07bd")]
-[assembly: System.Reflection.AssemblyCompanyAttribute("AurumApi")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Aurum-Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+796ff4628b40084353f274b39f74d552c940c6ad")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2829c2ba3e6c6d9114818458a31607010b6276d3")]
->>>>>>> matheus
-[assembly: System.Reflection.AssemblyProductAttribute("AurumApi")]
-[assembly: System.Reflection.AssemblyTitleAttribute("AurumApi")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a7a053f02dc95f04d8cfcebfc98184386a09d080")]
+[assembly: System.Reflection.AssemblyProductAttribute("Aurum-Domain")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Aurum-Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.
