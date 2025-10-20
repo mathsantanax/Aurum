@@ -28,7 +28,8 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Repositories\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Dtos\" />
   </ItemGroup>
 
 </Project>
