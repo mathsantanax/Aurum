@@ -16,7 +16,8 @@ namespace AurumApi.Extensions
             string direct_url = Environment.GetEnvironmentVariable("DIRECT_URL")!;
 
             if (string.IsNullOrEmpty(direct_url))
-                throw new Exception("❌ Connection string do Supabase não encontrada no .env");
+                builder.Services.AddDbContext<AurumDbContext>(options => 
+                    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddDbContext<AurumDbContext>(options => 
                 options.UseNpgsql(direct_url));
