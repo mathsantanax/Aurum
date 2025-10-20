@@ -6,7 +6,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Aurum_Domain.Entities
 {
@@ -23,5 +22,7 @@ namespace Aurum_Domain.Entities
 
         public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
         public virtual ICollection<WalletMember> Members { get; set; } = new List<WalletMember>();
+
+
     }
 }
