@@ -1,6 +1,7 @@
 ﻿using AurumApi.Interfaces;
 using AurumApi.Models;
 using AurumApi.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace AurumApi.Repositories
 {
@@ -26,19 +27,56 @@ namespace AurumApi.Repositories
             }
         }
 
-        public Task DeleteUser(User user)
+        public async Task DeleteUser(User user)
         {
-            throw new NotImplementedException();
+            var verifyUser = await dbContext.Users.FirstOrDefaultAsync(u => u.Guid == user.Guid);
+            if (verifyUser == null)
+                throw new Exception("Usuário Inválido.");
+
+            try
+            {
+                dbContext.Users.Remove(verifyUser);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            { 
+                throw new Exception(ex.Message); 
+            }
         }
 
-        public Task<User> GetUser(User user)
+        public async Task<User> GetUser(User user)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var verifyUser = await dbContext.Users.FirstOrDefaultAsync(u => u.Guid == user.Guid);
+                if (verifyUser.Equals(null))
+                    throw new Exception("Usuário Inválido.");
+
+                return verifyUser;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public Task UpdateUser(User user)
+        public async Task UpdateUser(User user)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var verifyUser = await dbContext.Users.FirstOrDefaultAsync(u => u.Guid == user.Guid);
+                if (verifyUser.Equals(null))
+                    throw new Exception("Usuário Inválido.");
+
+                verifyUser = new User(user.Guid, user.Name, user.Email, user.PhoneNumber);
+                dbContext.Users.Update(verifyUser);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
