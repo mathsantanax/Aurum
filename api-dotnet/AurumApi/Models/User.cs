@@ -17,22 +17,31 @@ namespace AurumApi.Models
 
         public User() { }
 
-        public User(string name, string email, string phone, string passwordHash)
+        public User(Guid guid)
+        {
+            this.Guid = guid;
+        }
+
+        public User(string name, string email, string phone)
         {
             Guid = Guid.NewGuid();
             this.Name = name;
             this.Email = email;
             this.PhoneNumber = phone;
-            PasswordHash = passwordHash;
         }
 
-        public User(Guid guid, string name, string email, string phoneNumber, string passwordHash)
+        public User(Guid guid, string name, string email, string phoneNumber)
         {
             Guid = guid;
             this.Name = name;
             this.Email = email;
             this.PhoneNumber = phoneNumber;
-            PasswordHash = passwordHash;
+        }
+
+        public void AddPass(Guid guid, string passwordHash)
+        {
+            this.Guid = guid;
+            this.PasswordHash = passwordHash;
         }
     }
 }
