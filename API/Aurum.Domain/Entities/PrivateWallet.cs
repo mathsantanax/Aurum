@@ -12,10 +12,12 @@ namespace Aurum.Domain.Entities
         public virtual User User { get; private set; } = null!;
 
         public PrivateWallet() { }
-        public PrivateWallet(string name, User ownerUser)
+        public void CriarCarteira(string name, User ownerUser)
         {
             this.Guid = Guid.NewGuid();
             this.OwnerGuid = ownerUser.Guid;
+            this.User.UpdateUser(ownerUser.Guid, ownerUser.Name, ownerUser.Email, ownerUser.PhoneNumber);
+            this.Amount = 0;
             this.Name = name;
             this.WalletType = WalletType.Private;
             this.CreatedAt = DateTime.UtcNow;

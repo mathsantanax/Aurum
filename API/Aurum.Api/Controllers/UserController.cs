@@ -17,6 +17,20 @@ namespace Aurum.Api.Controllers
             _userService = userService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get([FromBody] UserDTO request)
+        {
+            try
+            {
+                return Ok(await _userService.GetUserAsync(request));
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDTO request)
         {
@@ -24,11 +38,18 @@ namespace Aurum.Api.Controllers
             return Ok("Cadastrado Com Sucesso!");
         }
 
-        [HttpPut()]
+        [HttpPut]
         public async Task<IActionResult> Put([FromBody] UserDTO request)
         {
             await _userService.UpdateUserAsync(request);
             return Ok("Usuário Atualizado com Sucesso!");
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromBody] UserDTO request)
+        {
+            await _userService.DeleteUserAsync(request);
+            return Ok("Usuário Deletado com sucesso!");
         }
     }
 }

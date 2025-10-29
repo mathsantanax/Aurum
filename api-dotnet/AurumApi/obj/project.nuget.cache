@@ -1,14 +1,8 @@
 {
   "version": 2,
-<<<<<<< HEAD
-  "dgSpecHash": "OhfqJponChI=",
+  "dgSpecHash": "2oHaNCeDDjU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\mathe\\documents\\projetos\\aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
-=======
-  "dgSpecHash": "JAyrRoxerus=",
-  "success": true,
-  "projectFilePath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
->>>>>>> f5b4ce5a3ea01fc63721b81ba440b3c795ec7f9d
+  "projectFilePath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mathe\\.nuget\\packages\\dotenv.net\\4.0.0\\dotenv.net.4.0.0.nupkg.sha512",
     "C:\\Users\\mathe\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
@@ -80,5 +74,15 @@
     "C:\\Users\\mathe\\.nuget\\packages\\system.threading.channels\\8.0.0\\system.threading.channels.8.0.0.nupkg.sha512",
     "C:\\Users\\mathe\\.nuget\\packages\\websocket.client\\5.1.1\\websocket.client.5.1.1.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "message": "Problema ao ler o arquivo de cache C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\AurumApi\\obj\\project.nuget.cache: '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
+      "projectPath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\mathe\\Documents\\Projetos\\Aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

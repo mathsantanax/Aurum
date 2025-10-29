@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Aurum.Application.DTOs
 {
-    public class UserDTO
+    public record class UserDTO
     {
 
         [Key]

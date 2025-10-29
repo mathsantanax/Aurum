@@ -13,7 +13,7 @@ namespace Aurum.Domain.Entities
         public virtual ICollection<Wallet> Wallets { get; set; } = [];
         public User() { }
 
-        public User(string name, string email, string phone)
+        public void AddUser(string name, string email, string phone)
         {
             Guid = Guid.NewGuid();
             this.Name = SetName(name);
@@ -34,6 +34,18 @@ namespace Aurum.Domain.Entities
             this.Name= SetName(name);
             this.Email = email;
             this.PhoneNumber = phone;
+        }
+
+        public void GetUser(Guid? guid = null, string? phone = null)
+        {
+            if (guid == null && string.IsNullOrWhiteSpace(phone))
+                throw new ArgumentException("Você deve informar o GUID ou o número de telefone.");
+
+            if (guid.HasValue)
+                Guid = guid.Value;
+
+            if (!string.IsNullOrWhiteSpace(phone))
+                PhoneNumber = phone;
         }
 
         private string SetName(string name)

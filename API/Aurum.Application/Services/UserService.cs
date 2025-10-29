@@ -14,14 +14,25 @@ namespace Aurum.Application.Services
         private readonly IUserRepository _userRepository;
 
         public UserService(IUserRepository userRepository)
-        { this._userRepository = userRepository; }
+        { 
+            this._userRepository = userRepository; 
+        }
+
+        public async Task<User> GetUserAsync(UserDTO userDTO)
+        {
+            var user = new User();
+            user.GetUser(userDTO.Guid, userDTO.PhoneNumber);
+            
+           return await _userRepository.GetUser(user);
+        }
 
         public async Task AddUserAsync(UserDTO userDTO)
         {
             if (userDTO == null)
                 throw new ArgumentNullException(nameof(userDTO));
 
-            var user = new User(userDTO.Name, userDTO.Email, userDTO.PhoneNumber);
+            var user = new User();
+            user.AddUser(userDTO.Name, userDTO.Email, userDTO.PhoneNumber);
 
             await _userRepository.AddUser(user);
         }
@@ -36,6 +47,17 @@ namespace Aurum.Application.Services
             user.UpdateUser(userDTO.Guid, userDTO.Name, userDTO.Email, userDTO.PhoneNumber);
 
             await _userRepository.UpdateUser(user);
+        }
+
+        public async Task DeleteUserAsync(UserDTO userDTO)
+        {
+            if (userDTO == null)
+                throw new ArgumentNullException(nameof(userDTO), "O DTO do usuário não pode ser nulo.");
+            var user = new User();
+
+            user.UpdateUser(userDTO.Guid, userDTO.Name, userDTO.Email, userDTO.PhoneNumber);
+
+            await _userRepository.DeleteUser(user);
         }
     }
 }
