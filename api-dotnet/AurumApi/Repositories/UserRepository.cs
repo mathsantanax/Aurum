@@ -2,6 +2,7 @@
 using AurumApi.Models;
 using AurumApi.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace AurumApi.Repositories
 {
@@ -44,6 +45,14 @@ namespace AurumApi.Repositories
             }
         }
 
+        public async Task<User> GetFromNumber(User user)
+        {
+            var getUser = await dbContext.Users.FirstOrDefaultAsync(u => u.PhoneNumber == user.PhoneNumber);
+            if (getUser == null)
+                throw new Exception("Invalido. ");
+            return getUser;
+        }
+
         public async Task<User> GetUser(User user)
         {
             try
@@ -69,8 +78,7 @@ namespace AurumApi.Repositories
                 if (verifyUser.Equals(null))
                     throw new Exception("Usuário Inválido.");
 
-                verifyUser = new User(user.Guid, user.Name, user.Email, user.PhoneNumber);
-                dbContext.Users.Update(verifyUser);
+                verifyUser.UpdateUser(user.Name, user.Email, user.PhoneNumber);
                 await dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
