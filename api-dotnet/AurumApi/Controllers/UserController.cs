@@ -22,10 +22,10 @@ namespace AurumApi.Controllers
         }
 
 
-        [HttpGet("id")]
-        public async Task<IActionResult> GetUser([FromBody] Guid id)
+        [HttpGet]
+        public async Task<IActionResult> GetUser([FromBody] UserDTO request)
         {
-            var returnUser = await _userService.GetUser(id);
+            var returnUser = await _userService.GetUser(request);
             return Ok(returnUser);
         }
 
@@ -42,7 +42,6 @@ namespace AurumApi.Controllers
             await _userService.DeleteUser(request);
             return NotFound();
         }
-
 
     }
 }

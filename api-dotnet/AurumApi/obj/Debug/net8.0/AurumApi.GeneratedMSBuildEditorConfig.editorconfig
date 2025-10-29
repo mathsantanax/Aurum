@@ -17,13 +17,21 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = AurumApi
 build_property.RootNamespace = AurumApi
+<<<<<<< HEAD
 build_property.ProjectDir = C:\Users\mathe\documents\projetos\aurum\api-dotnet\AurumApi\
+=======
+build_property.ProjectDir = C:\Users\mathe\Documents\Projects\Aurum\api-dotnet\AurumApi\
+>>>>>>> f5b4ce5a3ea01fc63721b81ba440b3c795ec7f9d
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+<<<<<<< HEAD
 build_property.MSBuildProjectDirectory = C:\Users\mathe\documents\projetos\aurum\api-dotnet\AurumApi
+=======
+build_property.MSBuildProjectDirectory = C:\Users\mathe\Documents\Projects\Aurum\api-dotnet\AurumApi
+>>>>>>> f5b4ce5a3ea01fc63721b81ba440b3c795ec7f9d
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 

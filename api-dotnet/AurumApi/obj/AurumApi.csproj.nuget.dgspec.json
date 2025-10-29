@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "C:\\Users\\mathe\\documents\\projetos\\aurum\\api-dotnet\\AurumApi\\AurumApi.csproj": {}
   },
   "projects": {
@@ -12,6 +13,19 @@
         "projectPath": "C:\\Users\\mathe\\documents\\projetos\\aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
         "packagesPath": "C:\\Users\\mathe\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\mathe\\documents\\projetos\\aurum\\api-dotnet\\AurumApi\\obj\\",
+=======
+    "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\AurumApi\\AurumApi.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\AurumApi\\AurumApi.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
+        "projectName": "AurumApi",
+        "projectPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
+        "packagesPath": "C:\\Users\\mathe\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\AurumApi\\obj\\",
+>>>>>>> f5b4ce5a3ea01fc63721b81ba440b3c795ec7f9d
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -45,7 +59,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -107,7 +121,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "OhfqJponChI=",
   "success": true,
   "projectFilePath": "C:\\Users\\mathe\\documents\\projetos\\aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
+=======
+  "dgSpecHash": "JAyrRoxerus=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\api-dotnet\\AurumApi\\AurumApi.csproj",
+>>>>>>> f5b4ce5a3ea01fc63721b81ba440b3c795ec7f9d
   "expectedPackageFiles": [
     "C:\\Users\\mathe\\.nuget\\packages\\dotenv.net\\4.0.0\\dotenv.net.4.0.0.nupkg.sha512",
     "C:\\Users\\mathe\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

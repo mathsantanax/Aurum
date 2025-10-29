@@ -13,21 +13,36 @@ namespace AurumApi.Service
         }
 
 
-        public async Task<UserDTO> GetUser(Guid guid)
+        public async Task<UserDTO> GetUser(UserDTO request)
         {
-            var user =  await _userInterface.GetUser(new Models.User(guid));
-            if (user == null)
-                return null;
+            if(request.guid != Guid.Empty)
+            {
+                var user = await _userInterface.GetUser(new Models.User(request.nome));
+                if (user == null)
+                    return null;
 
-            return new UserDTO(user.Guid,
-                                user.Name,
-                                user.Email, 
-                                user.PhoneNumber); 
+                return new UserDTO(user.Guid,
+                                    user.Name,
+                                    user.Email,
+                                    user.PhoneNumber);
+
+            }
+            if (request.phone != null)
+            {
+                var user = await _userInterface.GetFromNumber(new Models.User(request.phone));
+                if (user == null)
+                    return null;
+
+                return new UserDTO(user.Guid, user.Name, user.Email, user.PhoneNumber);
+            }
+
+            return null;
+
         }
 
         public async Task AddUser(UserDTO request)
         {
-            await _userInterface.AddUser(new Models.User(request.nome, request.email, request.phone));
+            await _userInterface.AddUser(new Models.User(request.nome, request.email, request.phone, "null"));
         }
 
         public async Task UpdateUser(UserDTO request)
