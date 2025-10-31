@@ -1,6 +1,7 @@
 ﻿using Aurum.Domain.Entities;
 using Aurum.Domain.Interfaces;
 using Aurum.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,18 @@ namespace Aurum.Infrastructure.Repositories
         {
             try
             {
-                await _context.PrivateWallets.AddAsync(wallet);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Guid == wallet.User.Guid);
+                if (user == null)
+                    throw new ArgumentException("Usuário não encontrado.");
+
+                var privateWallet = new PrivateWallet();
+
+                privateWallet.CriarCarteira(wallet.Name, user);
+
+                user.Wallets.Add(privateWallet);
+                _context.Entry(user).State = EntityState.Modified;
+
+                await _context.PrivateWallets.AddAsync(privateWallet);
                 await _context.SaveChangesAsync();
             }
             catch (NpgsqlException ex)

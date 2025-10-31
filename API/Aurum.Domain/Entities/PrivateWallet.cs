@@ -16,7 +16,7 @@ namespace Aurum.Domain.Entities
         {
             this.Guid = Guid.NewGuid();
             this.OwnerGuid = ownerUser.Guid;
-            this.User.UpdateUser(ownerUser.Guid, ownerUser.Name, ownerUser.Email, ownerUser.PhoneNumber);
+            this.User = ownerUser;
             this.Amount = 0;
             this.Name = name;
             this.WalletType = WalletType.Private;
