@@ -135,7 +135,6 @@ C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\refint\Au
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\Aurum.Api.pdb
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\Aurum.Api.genruntimeconfig.cache
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\ref\Aurum.Api.dll
-C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Aurum.Application.dll
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Aurum.Application.pdb
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
@@ -283,3 +282,17 @@ C:\Users\mathe\Documents\Projetos\Aurum\API\Aurum.Api\obj\Debug\net9.0\refint\Au
 C:\Users\mathe\Documents\Projetos\Aurum\API\Aurum.Api\obj\Debug\net9.0\Aurum.Api.pdb
 C:\Users\mathe\Documents\Projetos\Aurum\API\Aurum.Api\obj\Debug\net9.0\Aurum.Api.genruntimeconfig.cache
 C:\Users\mathe\Documents\Projetos\Aurum\API\Aurum.Api\obj\Debug\net9.0\ref\Aurum.Api.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

@@ -1,6 +1,8 @@
 ﻿using Aurum.Application.DTOs;
 using Aurum.Domain.Entities;
 using Aurum.Domain.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +13,55 @@ namespace Aurum.Application.Services
 {
     public class UserService
     {
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+
         private readonly IUserRepository _userRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(UserManager<User> userManager, SignInManager<User> signInManager, IUserRepository userRepository)
         { 
-            this._userRepository = userRepository; 
+            this._userRepository = userRepository;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
+
+        public async Task RegisterUser(UserDTO request)
+        {
+            try
+            {
+                var user = new User();
+                user.RegisterUser(request.Name, request.Email, request.PhoneNumber, request.PassWord, request.ConfirmedPassword);
+                
+                var result = await _userManager.CreateAsync(user, user.PasswordHash!);
+                if (!result.Succeeded)
+                    throw new InvalidOperationException(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+            catch(Exception ex)    
+            {
+                throw new Exception(ex.Message);    
+            }
+        }
+
+        public async Task<User> LoginUser(UserDTO request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.PassWord))
+                throw new ApplicationException("Email e senha são obrigatórios.");
+
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+                throw new ApplicationException("Email ou senha inválidos.");
+
+            // Verifica se a senha é válida
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.PassWord);
+            if (!isPasswordValid)
+                throw new ApplicationException("Email ou senha inválidos.");
+
+            // Opcional: Atualiza o SecurityStamp para expirar tokens antigos
+            await _userManager.UpdateSecurityStampAsync(user);
+
+            return user;
+        }
+
 
         public async Task<User> GetUserAsync(UserDTO userDTO)
         {

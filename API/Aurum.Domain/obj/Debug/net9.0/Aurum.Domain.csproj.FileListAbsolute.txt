@@ -22,3 +22,4 @@ C:\Users\mathe\Documents\Projetos\Aurum\API\Aurum.Domain\obj\Debug\net9.0\Aurum.
 C:\Users\mathe\Documents\Projetos\Aurum\API\Aurum.Domain\obj\Debug\net9.0\refint\Aurum.Domain.dll
 C:\Users\mathe\Documents\Projetos\Aurum\API\Aurum.Domain\obj\Debug\net9.0\Aurum.Domain.pdb
 C:\Users\mathe\Documents\Projetos\Aurum\API\Aurum.Domain\obj\Debug\net9.0\ref\Aurum.Domain.dll
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Domain\obj\Debug\net9.0\Aurum.Domain.csproj.AssemblyReference.cache

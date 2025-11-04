@@ -1,13 +1,18 @@
 ﻿using Aurum.Application.DTOs;
 using Aurum.Application.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Aurum.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/v1/[controller]")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
@@ -17,12 +22,29 @@ namespace Aurum.Api.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get([FromBody] UserDTO request)
+        // GET /api/v1/users/me  -> retorna usuário autenticado com wallets
+        [HttpGet("me")]
+        public async Task<IActionResult> Get()
         {
             try
             {
-                return Ok(await _userService.GetUserAsync(request));
+                var idClaim = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+
+                if (string.IsNullOrEmpty(idClaim))
+                    return Unauthorized("Token inválido: jti ausente.");
+
+                if (!Guid.TryParse(idClaim, out var userGuid))
+                    return BadRequest("jti não contém um Guid válido.");
+
+                var user = await _userService.GetUserAsync(
+                            new UserDTO
+                            {
+                                Guid = userGuid,
+                                Email = User.FindFirstValue(ClaimTypes.Email)!
+
+                            });
+
+                return Ok(user);
             }
             catch (Exception ex)
             {

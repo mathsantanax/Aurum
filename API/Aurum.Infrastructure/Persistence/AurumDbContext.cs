@@ -1,15 +1,18 @@
 ﻿using Aurum.Domain.Entities;
 using Aurum.Domain.Entities.Enums;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace Aurum.Infrastructure.Persistence
 {
-    public class AurumDbContext : DbContext
+    public class AurumDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public AurumDbContext(DbContextOptions<AurumDbContext> options) : base(options) { }
 
-        public DbSet<User> Users { get; set; }
+
+        public override  DbSet<User> Users { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<PrivateWallet> PrivateWallets { get; set; }
         public DbSet<SharedWallet> SharedWallets { get; set; }

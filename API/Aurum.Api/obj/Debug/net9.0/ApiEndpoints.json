@@ -48,16 +48,32 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Aurum.Api.Controllers.UserController",
-    "Method": "Get",
-    "RelativePath": "api/User",
-    "HttpMethod": "GET",
+    "ContainingType": "Aurum.Api.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/v1/Auth/Login",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Aurum.Application.DTOs.UserDTO",
+        "Type": "Aurum.Api.Controllers.AuthController\u002BLoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.AuthController",
+    "Method": "Register",
+    "RelativePath": "api/v1/Auth/Register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Aurum.Api.Controllers.AuthController\u002BRegisterRequest",
         "IsRequired": true
       }
     ],
@@ -66,7 +82,7 @@
   {
     "ContainingType": "Aurum.Api.Controllers.UserController",
     "Method": "Post",
-    "RelativePath": "api/User",
+    "RelativePath": "api/v1/User",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -82,7 +98,7 @@
   {
     "ContainingType": "Aurum.Api.Controllers.UserController",
     "Method": "Put",
-    "RelativePath": "api/User",
+    "RelativePath": "api/v1/User",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -98,7 +114,7 @@
   {
     "ContainingType": "Aurum.Api.Controllers.UserController",
     "Method": "Delete",
-    "RelativePath": "api/User",
+    "RelativePath": "api/v1/User",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -109,6 +125,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.UserController",
+    "Method": "Get",
+    "RelativePath": "api/v1/User/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   }
 ]

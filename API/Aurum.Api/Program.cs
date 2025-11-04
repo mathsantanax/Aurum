@@ -1,4 +1,6 @@
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Aurum.Api.Extensions;
 
 namespace Aurum.Api

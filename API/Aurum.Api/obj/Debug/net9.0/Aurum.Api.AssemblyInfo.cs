@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Aurum.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7ae63f31b5d88a6cb5470865a7dbe8ecaafdff14")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b1a2d38c58ae7e3138985f20aa3763927d819d13")]
 [assembly: System.Reflection.AssemblyProductAttribute("Aurum.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aurum.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

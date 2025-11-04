@@ -18,5 +18,7 @@ namespace Aurum.Application.DTOs
         public string Email { get; set; } = string.Empty!;
         [StringLength(20)]
         public string PhoneNumber { get; set; } = string.Empty!;
+        public string PassWord { get; set; } = string.Empty!;
+        public string ConfirmedPassword { get; set; } = string.Empty!;
     }
 }

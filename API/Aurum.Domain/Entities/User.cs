@@ -1,17 +1,32 @@
 ﻿
 
+using Microsoft.AspNetCore.Identity;
+using System.Net;
+using System.Text.RegularExpressions;
+
 namespace Aurum.Domain.Entities
 {
-    public class User
+    public class User : IdentityUser<Guid>
     {
         public Guid Guid { get; private set; }
         public string Name { get; private set; } = string.Empty!;
-        public string Email { get; private set; } = string.Empty!;
-        public string PhoneNumber { get; private set; } = string.Empty!;
-        public string PasswordHash { get; private set; } = string.Empty!;
 
         public virtual ICollection<Wallet> Wallets { get; set; } = [];
         public User() { }
+
+        public void RegisterUser(string name, string email, string phone, string pass, string confirmedPass)
+        {
+            this.Guid = Guid.NewGuid();
+            this.Name = SetName(name);
+            this.UserName = SetEmail(email);
+            this.Email = SetEmail(email);
+            this.PhoneNumber = SetPhoneNumber(phone);
+
+            if (pass != confirmedPass)
+                throw new InvalidOperationException("Senhas não são iguais.");
+
+            this.PasswordHash = SetPassword(pass);
+        }
 
         public void AddUser(string name, string email, string phone)
         {
@@ -48,11 +63,61 @@ namespace Aurum.Domain.Entities
                 PhoneNumber = phone;
         }
 
-        private string SetName(string name)
+        static string SetName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Nome é obrigatório.");
             return name;
+        }
+
+        static string SetEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("E-mail é obrigatório.");
+
+            // Verificação de sintaxe básica
+            string padrao = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            if (!Regex.IsMatch(email, padrao))
+                throw new ArgumentException("E-mail inválido.");
+
+            return email.ToLower();
+        }
+
+        static string SetPhoneNumber(string numero)
+        {
+            if (string.IsNullOrWhiteSpace(numero))
+                throw new ArgumentException("Telefone é obrigatório.");
+
+            // Remove caracteres não numéricos
+            string numeroLimpo = Regex.Replace(numero, @"[^\d]", "");
+
+            if (numeroLimpo.Length < 10 || numeroLimpo.Length > 11)
+                throw new ArgumentException("Número de telefone inválido.");
+
+            return numeroLimpo;
+        }
+
+        static string SetPassword(string senha)
+        {
+            if (string.IsNullOrWhiteSpace(senha))
+                throw new ArgumentException("Senha é obrigatória.");
+
+            if (senha.Length < 8)
+                throw new ArgumentException("Senha deve ter pelo menos 8 caracteres.");
+
+            if (!Regex.IsMatch(senha, @"[A-Z]"))
+                throw new ArgumentException("Senha deve conter pelo menos uma letra maiúscula.");
+
+            if (!Regex.IsMatch(senha, @"[a-z]"))
+                throw new ArgumentException("Senha deve conter pelo menos uma letra minúscula.");
+
+            if (!Regex.IsMatch(senha, @"[0-9]"))
+                throw new ArgumentException("Senha deve conter pelo menos um número.");
+
+            if (!Regex.IsMatch(senha, @"[!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/?]"))
+                throw new ArgumentException("Senha deve conter pelo menos um caractere especial.");
+
+            return senha;
         }
     }
 }
