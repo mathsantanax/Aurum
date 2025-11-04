@@ -22,5 +22,13 @@ namespace Aurum.Domain.Entities
             this.WalletType = WalletType.Private;
             this.CreatedAt = DateTime.UtcNow;
         }
+
+        public void ObterCarteiraPrivada(Guid guid, string name, User ownerUser)
+        {
+            this.Guid = guid;
+            this.OwnerGuid = ownerUser.Guid;
+            this.User = ownerUser;
+            this.Name = name;
+        }
     }
 }

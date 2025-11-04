@@ -16,6 +16,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Aurum.Api.Controllers.PrivateWalletController",
+    "Method": "Get",
+    "RelativePath": "api/PrivateWallet",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Aurum.Application.DTOs.PrivateWalletDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.PrivateWalletController",
+    "Method": "Delete",
+    "RelativePath": "api/PrivateWallet",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Aurum.Application.DTOs.PrivateWalletDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Aurum.Api.Controllers.UserController",
     "Method": "Get",
     "RelativePath": "api/User",

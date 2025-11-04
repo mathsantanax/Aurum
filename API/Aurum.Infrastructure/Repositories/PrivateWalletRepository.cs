@@ -48,9 +48,51 @@ namespace Aurum.Infrastructure.Repositories
             }
         }
 
-        public Task DeletarCarteira(Wallet wallet)
+        public async Task DeletarCarteira(Wallet wallet)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var existingWallet = await _context.PrivateWallets.FirstOrDefaultAsync(x => x.Guid == wallet.Guid);
+
+                if (existingWallet == null)
+                    throw new ArgumentException("Carteira não encontrada.");
+
+                _context.PrivateWallets.Remove(existingWallet);
+                await _context.SaveChangesAsync();
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new InvalidOperationException("Erro de comunicação com o banco de dados PostgreSQL.\n" + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Erro inesperado \n" + ex.Message);
+            }
+        }
+
+        public async Task<PrivateWallet> ObterCarteiraPrivadaPorGuid(Wallet wallet)
+        {
+            try
+            {
+                var existingWallet = await _context.PrivateWallets
+                        .Include(w => w.Transactions)
+                        .FirstOrDefaultAsync(x => x.Guid == wallet.Guid);
+
+                if (existingWallet == null)
+                    throw new ArgumentException("Carteira não encontrada.");
+
+                return existingWallet;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new InvalidOperationException("Erro de comunicação com o banco de dados PostgreSQL.\n" + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Erro inesperado \n" + ex.Message);
+            }
+
+
         }
     }
 }

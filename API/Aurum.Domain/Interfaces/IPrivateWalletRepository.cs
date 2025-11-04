@@ -10,6 +10,7 @@ namespace Aurum.Domain.Interfaces
     public interface IPrivateWalletRepository
     {
         Task CriarCarteiraPrivada(PrivateWallet wallet);
+        Task<PrivateWallet> ObterCarteiraPrivadaPorGuid(Wallet wallet);
         Task DeletarCarteira(Wallet wallet);
     }
 }

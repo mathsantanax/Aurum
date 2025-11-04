@@ -44,7 +44,8 @@ namespace Aurum.Infrastructure.Repositories
                 if(user == null)
                     throw new ArgumentNullException("Usuário está inválido" + nameof(user));
 
-                var userData = await _context.Users.FirstOrDefaultAsync(u => u.Guid == user.Guid);
+                var userData = await _context.Users.Include(w => w.Wallets)
+                                        .FirstOrDefaultAsync(u => u.Guid == user.Guid);
                 if(userData == null)
                     throw new ArgumentNullException("Usuário não cadastrado");
 

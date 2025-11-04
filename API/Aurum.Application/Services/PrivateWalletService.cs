@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Aurum.Application.Services
 {
-    public  class PrivateWalletService
+    public class PrivateWalletService
     {
         private readonly IPrivateWalletRepository privateWalletRepository;
         public PrivateWalletService(IPrivateWalletRepository _privateWallet)
@@ -23,7 +23,7 @@ namespace Aurum.Application.Services
             {
                 if (walletDTO == null)
                     throw new ArgumentNullException("Inválido");
-                if (walletDTO.user == null) 
+                if (walletDTO.user == null)
                     throw new ArgumentNullException("Inválido");
 
                 var privateWallet = new PrivateWallet();
@@ -35,10 +35,55 @@ namespace Aurum.Application.Services
 
                 await privateWalletRepository.CriarCarteiraPrivada(privateWallet);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new ArgumentException(ex.Message);
             }
         }
+
+        public async Task<PrivateWallet> GetWalletByGuid(PrivateWalletDTO walletDTO)
+        {
+            try
+            {
+                if (walletDTO == null)
+                    throw new ArgumentNullException("Inválido");
+
+                var wallet = new PrivateWallet();
+                var user = new User();
+
+                user.UpdateUser(walletDTO.user.Guid, walletDTO.user.Name, walletDTO.user.Email, walletDTO.user.PhoneNumber);
+
+                wallet.ObterCarteiraPrivada(walletDTO.guid, walletDTO.NameWallet, user);
+                var walletData = await privateWalletRepository.ObterCarteiraPrivadaPorGuid(wallet);
+                if (walletData == null)
+                    throw new ArgumentNullException("Carteira não encontrada");
+                return wallet;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        public async Task DeleteWallet(PrivateWalletDTO walletDTO)
+        {
+            try
+            {
+                if (walletDTO == null)
+                    throw new ArgumentNullException("Inválido");
+
+                var wallet = new PrivateWallet();
+                var user = new User();
+                user.UpdateUser(walletDTO.user.Guid, walletDTO.user.Name, walletDTO.user.Email, walletDTO.user.PhoneNumber);
+                wallet.ObterCarteiraPrivada(walletDTO.guid, walletDTO.NameWallet, user);
+                await privateWalletRepository.DeletarCarteira(wallet);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+
+        }
     }
+
 }

@@ -29,5 +29,33 @@ namespace Aurum.Api.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromBody] PrivateWalletDTO request)
+        {
+            try
+            {
+                var wallet = await privateWalletService.GetWalletByGuid(request);
+                return Ok(wallet);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromBody] PrivateWalletDTO request)
+        {
+            try
+            {
+                await privateWalletService.DeleteWallet(request);
+                return Ok("Carteira Deletada");
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
     }
 }

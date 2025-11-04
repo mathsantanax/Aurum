@@ -9,6 +9,7 @@ namespace Aurum.Application.DTOs
 {
     public record class PrivateWalletDTO
     {
+        public Guid guid { get; set; }
         [Required]
         public UserDTO user {  get; set; } = null!;
         [Required]
