@@ -24,7 +24,7 @@ namespace Aurum.Infrastructure.Repositories
         {
             try
             {
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Guid == wallet.User.Guid);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == wallet.User.Id);
                 if (user == null)
                     throw new ArgumentException("Usuário não encontrado.");
 

@@ -45,7 +45,7 @@ namespace Aurum.Infrastructure.Repositories
                     throw new ArgumentNullException("Usuário está inválido" + nameof(user));
 
                 var userData = await _context.Users.Include(w => w.Wallets)
-                                        .FirstOrDefaultAsync(u => u.Guid == user.Guid);
+                                        .FirstOrDefaultAsync(u => u.Id == user.Id);
                 if(userData == null)
                     throw new ArgumentNullException("Usuário não cadastrado");
 
@@ -70,20 +70,20 @@ namespace Aurum.Infrastructure.Repositories
                 if (user == null)
                     throw new ArgumentNullException(nameof(user), "O objeto de usuário não pode ser nulo.");
 
-                if (user.Guid == Guid.Empty && string.IsNullOrWhiteSpace(user.PhoneNumber))
+                if (user.Id == Guid.Empty && string.IsNullOrWhiteSpace(user.PhoneNumber))
                     throw new ArgumentException("Você deve informar o GUID ou o número de telefone para buscar o usuário.");
 
                 User? userData = null;
 
-                if (user.Guid != Guid.Empty)
+                if (user.Id != Guid.Empty)
                     userData = await _context.Users
-                                    .Where(u => u.Guid.Equals(user.Guid))
+                                    .Where(u => u.Id.Equals(user.Id))
                                     .Include(w => w.Wallets)
-                                    .FirstOrDefaultAsync(u => u.Guid == user.Guid);
+                                    .FirstOrDefaultAsync(u => u.Id == user.Id);
 
                 else if (!string.IsNullOrWhiteSpace(user.PhoneNumber))
                     userData = await _context.Users
-                                    .Where(u => u.PhoneNumber.Equals(user.PhoneNumber))
+                                    .Where(u => u.PhoneNumber!.Equals(user.PhoneNumber))
                                     .Include(w => w.Wallets)
                                     .FirstOrDefaultAsync(u => u.PhoneNumber == user.PhoneNumber);
 
@@ -107,10 +107,10 @@ namespace Aurum.Infrastructure.Repositories
         {
             try
             {
-                var existingUser = await _context.Users.FindAsync(user.Guid);
+                var existingUser = await _context.Users.FindAsync(user.Id);
 
                 if (existingUser == null)
-                    throw new KeyNotFoundException($"Usuário com ID {user.Guid} não encontrado.");
+                    throw new KeyNotFoundException($"Usuário com ID {user.Id} não encontrado.");
 
                 _context.Entry(existingUser).CurrentValues.SetValues(user);
                 await _context.SaveChangesAsync();

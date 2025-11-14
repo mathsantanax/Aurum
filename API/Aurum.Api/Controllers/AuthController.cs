@@ -1,13 +1,14 @@
 ﻿using Aurum.Api.Service;
 using Aurum.Application.DTOs;
 using Aurum.Application.Services;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aurum.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private readonly UserService _userService;
@@ -20,7 +21,7 @@ namespace Aurum.Api.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody]RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody]RegisterDTO request)
         {
             try
             {
@@ -43,16 +44,21 @@ namespace Aurum.Api.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginDTO request)
         {
             try
             {
+                if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+                    return BadRequest("Email e senha são obrigatórios.");
+
                 var login = await _userService.LoginUser(
                     new UserDTO
                     {
                         Email = request.Email!,
                         PassWord = request.Password!
                     });
+
+                Console.WriteLine(login);
 
                 var token = authService.GenerateJwtToken(login);
                 return Ok(new { Token = token });
@@ -61,21 +67,6 @@ namespace Aurum.Api.Controllers
             {
                 throw new Exception(ex.Message);
             }
-        }
-
-        public record class RegisterRequest
-        {
-            public string? Email { get; set; }
-            public string? FullName { get; set; }
-            public string? PhoneNumber { get; set; }
-            public string? Password { get; set; }
-            public string? ConfirmedPassword { get; set; }
-        }
-
-        public record class LoginRequest
-        {
-            public string? Email { get; set; }
-            public string? Password { get; set; }
         }
     }
 }

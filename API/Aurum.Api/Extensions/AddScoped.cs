@@ -13,7 +13,7 @@ namespace Aurum.Api.Extensions
 
             //Registros
 
-            // Usuário
+             // Usuário
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<UserService>();
 

@@ -20,7 +20,7 @@ namespace Aurum.Domain.Entities
 
         public Members(User user, SharedWallet wallet, MemberRoles roles = MemberRoles.Member)
         {
-            user.AddMember(user.Guid, user.Name);
+            user.AddMember(user.Id, user.fullName);
 
             this.WalletGuid = wallet.Guid;
             this.WalletRole = roles;

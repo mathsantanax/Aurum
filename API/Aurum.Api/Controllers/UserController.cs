@@ -12,23 +12,20 @@ namespace Aurum.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
 
-        public UserController(UserService userService)
-        {
-            _userService = userService;
-        }
+        public UserController(UserService userService) => _userService = userService;
 
         // GET /api/v1/users/me  -> retorna usuário autenticado com wallets
+        [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Get()
         {
             try
             {
-                var idClaim = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                var idClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 if (string.IsNullOrEmpty(idClaim))
                     return Unauthorized("Token inválido: jti ausente.");
@@ -39,9 +36,7 @@ namespace Aurum.Api.Controllers
                 var user = await _userService.GetUserAsync(
                             new UserDTO
                             {
-                                Guid = userGuid,
-                                Email = User.FindFirstValue(ClaimTypes.Email)!
-
+                                PhoneNumber = User.FindFirstValue(JwtRegisteredClaimNames.PhoneNumber)!,
                             });
 
                 return Ok(user);
@@ -51,6 +46,19 @@ namespace Aurum.Api.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpGet("check-token")]
+        public IActionResult CheckToken()
+        {
+            ClaimsIdentity? identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity == null)
+                return Unauthorized();
+
+            var claims = identity.Claims.Select(c => new { c.Type, c.Value });
+            return Ok(claims);
+        }
+
 
 
         [HttpPost]

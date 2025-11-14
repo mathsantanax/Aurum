@@ -9,13 +9,13 @@ namespace Aurum.Api.Extensions
         {
             app.UseHttpsRedirection();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.MapOpenApi();
-
             app.UseSwagger();
             app.UseSwaggerUI();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllers();
 

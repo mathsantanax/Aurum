@@ -57,7 +57,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Aurum.Api.Controllers.AuthController\u002BLoginRequest",
+        "Type": "Aurum.Application.DTOs.LoginDTO",
         "IsRequired": true
       }
     ],
@@ -73,7 +73,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Aurum.Api.Controllers.AuthController\u002BRegisterRequest",
+        "Type": "Aurum.Application.DTOs.RegisterDTO",
         "IsRequired": true
       }
     ],
@@ -125,6 +125,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.UserController",
+    "Method": "CheckToken",
+    "RelativePath": "api/v1/User/check-token",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

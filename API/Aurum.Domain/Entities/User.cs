@@ -8,16 +8,15 @@ namespace Aurum.Domain.Entities
 {
     public class User : IdentityUser<Guid>
     {
-        public Guid Guid { get; private set; }
-        public string Name { get; private set; } = string.Empty!;
-
+        public string fullName { get; private set; } = string.Empty!;
+        public DateTime CreatedAt { get; private set; }
         public virtual ICollection<Wallet> Wallets { get; set; } = [];
         public User() { }
 
         public void RegisterUser(string name, string email, string phone, string pass, string confirmedPass)
         {
-            this.Guid = Guid.NewGuid();
-            this.Name = SetName(name);
+            this.Id = Guid.NewGuid();
+            this.fullName = name.ToUpper();
             this.UserName = SetEmail(email);
             this.Email = SetEmail(email);
             this.PhoneNumber = SetPhoneNumber(phone);
@@ -30,8 +29,9 @@ namespace Aurum.Domain.Entities
 
         public void AddUser(string name, string email, string phone)
         {
-            Guid = Guid.NewGuid();
-            this.Name = SetName(name);
+            Id = Guid.NewGuid();
+            this.CreatedAt = DateTime.UtcNow;
+            this.UserName = SetName(name);
             this.Email = email;
             this.PhoneNumber = phone;
             PasswordHash = string.Empty;
@@ -39,14 +39,14 @@ namespace Aurum.Domain.Entities
 
         public void AddMember(Guid guid, string name)
         {
-            this.Guid = guid;
-            this.Name = SetName(name);
+            this.Id = guid;
+            this.fullName = SetName(name);
         }
 
         public void UpdateUser(Guid guid, string name, string email, string phone)
         {
-            this.Guid = guid;
-            this.Name= SetName(name);
+            this.Id = guid;
+            this.fullName = SetName(name);
             this.Email = email;
             this.PhoneNumber = phone;
         }
@@ -57,7 +57,7 @@ namespace Aurum.Domain.Entities
                 throw new ArgumentException("Você deve informar o GUID ou o número de telefone.");
 
             if (guid.HasValue)
-                Guid = guid.Value;
+                Id = guid.Value;
 
             if (!string.IsNullOrWhiteSpace(phone))
                 PhoneNumber = phone;

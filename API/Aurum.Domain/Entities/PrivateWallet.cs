@@ -15,7 +15,7 @@ namespace Aurum.Domain.Entities
         public void CriarCarteira(string name, User ownerUser)
         {
             this.Guid = Guid.NewGuid();
-            this.OwnerGuid = ownerUser.Guid;
+            this.OwnerGuid = ownerUser.Id;
             this.User = ownerUser;
             this.Amount = 0;
             this.Name = name;
@@ -26,7 +26,7 @@ namespace Aurum.Domain.Entities
         public void ObterCarteiraPrivada(Guid guid, string name, User ownerUser)
         {
             this.Guid = guid;
-            this.OwnerGuid = ownerUser.Guid;
+            this.OwnerGuid = ownerUser.Id;
             this.User = ownerUser;
             this.Name = name;
         }

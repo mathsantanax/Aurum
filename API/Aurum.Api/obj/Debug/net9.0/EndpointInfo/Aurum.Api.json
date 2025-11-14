@@ -14,17 +14,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
+                "$ref": "#/components/schemas/RegisterDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
+                "$ref": "#/components/schemas/RegisterDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
+                "$ref": "#/components/schemas/RegisterDTO"
               }
             }
           }
@@ -45,17 +45,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "$ref": "#/components/schemas/LoginDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "$ref": "#/components/schemas/LoginDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "$ref": "#/components/schemas/LoginDTO"
               }
             }
           }
@@ -168,6 +168,18 @@
         }
       }
     },
+    "/api/v1/User/check-token": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/v1/User": {
       "post": {
         "tags": [
@@ -260,16 +272,22 @@
   },
   "components": {
     "schemas": {
-      "LoginRequest": {
+      "LoginDTO": {
+        "required": [
+          "email",
+          "password"
+        ],
         "type": "object",
         "properties": {
           "email": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
           },
           "password": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 25,
+            "minLength": 0,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -295,28 +313,40 @@
         },
         "additionalProperties": false
       },
-      "RegisterRequest": {
+      "RegisterDTO": {
+        "required": [
+          "confirmedPassword",
+          "email",
+          "fullName",
+          "password",
+          "phoneNumber"
+        ],
         "type": "object",
         "properties": {
           "email": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string"
           },
           "fullName": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string"
           },
           "phoneNumber": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string"
           },
           "password": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 25,
+            "minLength": 0,
+            "type": "string"
           },
           "confirmedPassword": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 25,
+            "minLength": 0,
+            "type": "string"
           }
         },
         "additionalProperties": false

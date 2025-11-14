@@ -24,8 +24,8 @@ namespace Aurum.Infrastructure.Persistence
             // User 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(u => u.Guid);
-                entity.Property(u => u.Name).IsRequired().HasMaxLength(150);
+                entity.HasKey(u => u.Id);
+                entity.Property(u => u.fullName).IsRequired().HasMaxLength(150);
                 entity.Property(u => u.Email).IsRequired().HasMaxLength(100);
                 entity.HasMany<PrivateWallet>()
                     .WithOne(w => w.User)

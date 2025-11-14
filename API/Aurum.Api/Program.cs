@@ -10,7 +10,7 @@ namespace Aurum.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.UseScoped().AddArchitecture();
+            builder.AddArchitecture().UseScoped();
 
             var app = builder.Build();
             app.UseArchitecture();

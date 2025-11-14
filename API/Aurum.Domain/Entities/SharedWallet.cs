@@ -25,7 +25,7 @@ namespace Aurum.Domain.Entities
             this.WalletType = WalletType.Public;
             this.CreatedAt = DateTime.Now;
 
-            this.OwnerGuide = owner.Guid;
+            this.OwnerGuide = owner.Id;
             this.OwnerUser = owner;
 
             this.Members.Add(new Members(owner, this, MemberRoles.Admin));
@@ -33,11 +33,11 @@ namespace Aurum.Domain.Entities
 
         public string AddMember(User user, MemberRoles role = MemberRoles.Member)
         {
-            if (Members.Any(m => m.Guid == user.Guid))
-                return $"Usuário {user.Name} já é membro da carteira.";
+            if (Members.Any(m => m.Id == user.Id))
+                return $"Usuário {user.fullName} já é membro da carteira.";
 
             Members.Add(new Members(user, this, role));
-            return $"Usuário {user.Name} adicionado como {role}.";
+            return $"Usuário {user.fullName} adicionado como {role}.";
         }
     }
 }
