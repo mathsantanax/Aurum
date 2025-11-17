@@ -289,10 +289,10 @@ C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\staticweb
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.Aurum.Api.props
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.Aurum.Api.props
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\staticwebassets.pack.json
+C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\Aurum.Api.csproj.Up2Date
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\Aurum.Api.dll
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\refint\Aurum.Api.dll
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\Aurum.Api.pdb
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\Aurum.Api.genruntimeconfig.cache
 C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\ref\Aurum.Api.dll
-C:\Users\mathe\Documents\Projects\Aurum\API\Aurum.Api\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

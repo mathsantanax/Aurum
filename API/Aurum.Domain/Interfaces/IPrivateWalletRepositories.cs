@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Aurum.Domain.Interfaces
 {
-    public interface IUserRepository
+    public interface IPrivateWalletRepositories : IRepository<PrivateWallet>
     {
-        Task<User> GetUser(Guid guid);
     }
 }

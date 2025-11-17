@@ -16,15 +16,15 @@ namespace Aurum.Application.DTOs
     public record class RegisterDTO
     {
         [Required, StringLength(150)]
-        public string? Email { get; set; }
+        public string Email { get; set; } = string.Empty!;
         [Required, StringLength(150)]
-        public string? FullName { get; set; }
+        public string FullName { get; set; } = string.Empty!;
         [Required, StringLength(20)]
-        public string? PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = string.Empty!;
         [Required, StringLength(25)]
-        public string? Password { get; set; }
+        public string Password { get; set; } = string.Empty!;
         [Required, StringLength(25)]
-        public string? ConfirmedPassword { get; set; }
+        public string ConfirmedPassword { get; set; } = string.Empty!;
     }
 
     // Novo DTO para o refresh de tokens

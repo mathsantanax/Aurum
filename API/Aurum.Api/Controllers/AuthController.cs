@@ -1,7 +1,8 @@
-﻿using Aurum.Api.Service;
-using Aurum.Application.DTOs;
+﻿using Aurum.Application.DTOs;
 using Aurum.Application.Services;
+using Aurum.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aurum.Api.Controllers
@@ -11,61 +12,89 @@ namespace Aurum.Api.Controllers
     [AllowAnonymous]
     public class AuthController : ControllerBase
     {
-        private readonly UserService _userService;
         private readonly AuthService authService;
 
-        public AuthController(UserService userService, AuthService service)
+        public AuthController(AuthService authService)
         {
-            authService = service;
-            _userService = userService;
+            this.authService = authService;
+        }
+
+        /// Rota de login para autenticação e emissão de um JWT.
+        [HttpPost("login")]
+        // O LoginDTO deve conter Email e Password
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
+        {
+            // 1. Validação do DTO (o framework já faz a validação básica, mas a lógica de domínio é no serviço)
+            if (loginDto == null || string.IsNullOrEmpty(loginDto.Email) || string.IsNullOrEmpty(loginDto.Password))
+            {
+                return BadRequest(new { message = "E-mail e senha são obrigatórios." });
+            }
+
+            // 2. Chama o serviço para validar as credenciais e gerar o token
+            var token = await authService.AuthenticateAndGenerateToken(loginDto.Email, loginDto.Password);
+
+            if (string.IsNullOrEmpty(token))
+            {
+                // Retorna 401 Unauthorized se as credenciais forem inválidas.
+                return Unauthorized(new { message = "E-mail ou senha inválidos." });
+            }
+
+            // 3. Sucesso: Retorna o token JWT.
+            return Ok(new
+            {
+                token = token,
+                message = "Autenticação bem-sucedida."
+            });
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] TokenRefreshDTO request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.Token) || string.IsNullOrEmpty(request.RefreshToken))
+            {
+                return BadRequest(new { message = "Tokens são obrigatórios." });
+            }
+
+            var (newJwt, newRefreshToken) = await authService.RefreshTokens(request.Token, request.RefreshToken);
+
+            if (string.IsNullOrEmpty(newJwt))
+            {
+                // Falha na atualização (Refresh Token inválido/expirado)
+                return Unauthorized(new { message = "Falha na atualização. Requer novo login." });
+            }
+
+            return Ok(new
+            {
+                jwtToken = newJwt,
+                refreshToken = newRefreshToken,
+                message = "Tokens atualizados com sucesso."
+            });
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody]RegisterDTO request)
+        public async Task<IActionResult> Register([FromBody] RegisterDTO registerDto)
         {
+            if (registerDto == null ||
+                string.IsNullOrEmpty(registerDto.Email) ||
+                string.IsNullOrEmpty(registerDto.FullName) ||
+                string.IsNullOrEmpty(registerDto.PhoneNumber) ||
+                string.IsNullOrEmpty(registerDto.Password) ||
+                string.IsNullOrEmpty(registerDto.ConfirmedPassword))
+            {
+                return BadRequest(new { message = "Todos os campos são obrigatórios." });
+            }
             try
             {
-                await _userService.RegisterUser(
-                    new UserDTO
-                    {
-                        Name = request.FullName!,
-                        Email = request.Email!,
-                        PhoneNumber = request.PhoneNumber!,
-                        PassWord = request.Password!,
-                        ConfirmedPassword = request.ConfirmedPassword!
-                    });
-
-                return Ok("Usuário registrado com sucesso!");
+                var user = await authService.RegisterUser(registerDto);
+                return Ok(new
+                {
+                    userId = user.Id,
+                    message = "Usuário registrado com sucesso."
+                });
             }
-            catch (Exception ex)
+            catch (ApplicationException ex)
             {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO request)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
-                    return BadRequest("Email e senha são obrigatórios.");
-
-                var login = await _userService.LoginUser(
-                    new UserDTO
-                    {
-                        Email = request.Email!,
-                        PassWord = request.Password!
-                    });
-
-                Console.WriteLine(login);
-
-                var token = authService.GenerateJwtToken(login);
-                return Ok(new { Token = token });
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
+                return BadRequest(new { message = ex.Message });
             }
         }
     }

@@ -1,47 +1,15 @@
 [
   {
-    "ContainingType": "Aurum.Api.Controllers.PrivateWalletController",
-    "Method": "Post",
-    "RelativePath": "api/PrivateWallet",
+    "ContainingType": "Aurum.Api.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/v1/Auth/login",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
-        "Type": "Aurum.Application.DTOs.PrivateWalletDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Aurum.Api.Controllers.PrivateWalletController",
-    "Method": "Get",
-    "RelativePath": "api/PrivateWallet",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "Aurum.Application.DTOs.PrivateWalletDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Aurum.Api.Controllers.PrivateWalletController",
-    "Method": "Delete",
-    "RelativePath": "api/PrivateWallet",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "Aurum.Application.DTOs.PrivateWalletDTO",
+        "Name": "loginDto",
+        "Type": "Aurum.Application.DTOs.LoginDTO",
         "IsRequired": true
       }
     ],
@@ -49,15 +17,15 @@
   },
   {
     "ContainingType": "Aurum.Api.Controllers.AuthController",
-    "Method": "Login",
-    "RelativePath": "api/v1/Auth/Login",
+    "Method": "Refresh",
+    "RelativePath": "api/v1/Auth/refresh",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Aurum.Application.DTOs.LoginDTO",
+        "Type": "Aurum.Application.DTOs.TokenRefreshDTO",
         "IsRequired": true
       }
     ],
@@ -72,7 +40,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
+        "Name": "registerDto",
         "Type": "Aurum.Application.DTOs.RegisterDTO",
         "IsRequired": true
       }
@@ -80,57 +48,41 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Aurum.Api.Controllers.UserController",
-    "Method": "Post",
-    "RelativePath": "api/v1/User",
+    "ContainingType": "Aurum.Api.Controllers.PrivateWalletController",
+    "Method": "CreatePrivateWallet",
+    "RelativePath": "api/v1/PrivateWallet/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Aurum.Application.DTOs.UserDTO",
+        "Type": "Aurum.Application.DTOs.WalletDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Aurum.Api.Controllers.UserController",
-    "Method": "Put",
-    "RelativePath": "api/v1/User",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "Aurum.Application.DTOs.UserDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Aurum.Api.Controllers.UserController",
-    "Method": "Delete",
-    "RelativePath": "api/v1/User",
+    "ContainingType": "Aurum.Api.Controllers.PrivateWalletController",
+    "Method": "DeletePrivateWalletAsync",
+    "RelativePath": "api/v1/PrivateWallet/Delete",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
-        "Type": "Aurum.Application.DTOs.UserDTO",
+        "Name": "wallet",
+        "Type": "Aurum.Application.DTOs.WalletDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Aurum.Api.Controllers.UserController",
-    "Method": "CheckToken",
-    "RelativePath": "api/v1/User/check-token",
+    "ContainingType": "Aurum.Api.Controllers.PrivateWalletController",
+    "Method": "GetAllPrivateWalletAsync",
+    "RelativePath": "api/v1/PrivateWallet/GetAll",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -138,9 +90,41 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Aurum.Api.Controllers.UserController",
-    "Method": "Get",
-    "RelativePath": "api/v1/User/me",
+    "ContainingType": "Aurum.Api.Controllers.PrivateWalletController",
+    "Method": "GetPrivateWalletByIdAsync",
+    "RelativePath": "api/v1/PrivateWallet/GetById",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "wallet",
+        "Type": "Aurum.Application.DTOs.WalletDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.PrivateWalletController",
+    "Method": "UpdatePrivateWalletAsync",
+    "RelativePath": "api/v1/PrivateWallet/Update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "wallet",
+        "Type": "Aurum.Application.DTOs.WalletDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.TesteController",
+    "Method": "GetProtectedData",
+    "RelativePath": "api/v1/Teste/protected",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
