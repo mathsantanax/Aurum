@@ -10,59 +10,45 @@ namespace Aurum.Domain.Entities
     {
         public string fullName { get; private set; } = string.Empty!;
         public DateTime CreatedAt { get; private set; }
+        public string? RefreshToken { get; private set; }
+        public DateTime? RefreshTokenExpiryTime { get; private set; }
+        public bool IsActive { get; private set; } = true;
         public virtual ICollection<Wallet> Wallets { get; set; } = [];
         public User() { }
 
+        // Método para registrar um novo usuário
         public void RegisterUser(string name, string email, string phone, string pass, string confirmedPass)
         {
             this.Id = Guid.NewGuid();
-            this.fullName = name.ToUpper();
+            this.fullName = SetName(name);
             this.UserName = SetEmail(email);
             this.Email = SetEmail(email);
             this.PhoneNumber = SetPhoneNumber(phone);
-
+            this.CreatedAt = DateTime.UtcNow;
             if (pass != confirmedPass)
                 throw new InvalidOperationException("Senhas não são iguais.");
 
             this.PasswordHash = SetPassword(pass);
         }
 
-        public void AddUser(string name, string email, string phone)
+        public void SetRefreshToken(string refreshToken, DateTime expiryTime)
         {
-            Id = Guid.NewGuid();
-            this.CreatedAt = DateTime.UtcNow;
-            this.UserName = SetName(name);
-            this.Email = email;
-            this.PhoneNumber = phone;
-            PasswordHash = string.Empty;
+            this.RefreshToken = refreshToken;
+            this.RefreshTokenExpiryTime = expiryTime;
         }
 
-        public void AddMember(Guid guid, string name)
+        public void RevokeRefreshToken()
         {
-            this.Id = guid;
-            this.fullName = SetName(name);
+            this.RefreshToken = null;
+            this.RefreshTokenExpiryTime = DateTime.UtcNow;
         }
 
-        public void UpdateUser(Guid guid, string name, string email, string phone)
+        public void DeactivateUser()
         {
-            this.Id = guid;
-            this.fullName = SetName(name);
-            this.Email = email;
-            this.PhoneNumber = phone;
+            this.IsActive = false;
         }
 
-        public void GetUser(Guid? guid = null, string? phone = null)
-        {
-            if (guid == null && string.IsNullOrWhiteSpace(phone))
-                throw new ArgumentException("Você deve informar o GUID ou o número de telefone.");
-
-            if (guid.HasValue)
-                Id = guid.Value;
-
-            if (!string.IsNullOrWhiteSpace(phone))
-                PhoneNumber = phone;
-        }
-
+        // Métodos auxiliares para validação e formatação
         static string SetName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))

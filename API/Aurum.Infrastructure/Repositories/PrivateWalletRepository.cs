@@ -2,7 +2,6 @@
 using Aurum.Domain.Interfaces;
 using Aurum.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,88 +10,64 @@ using System.Threading.Tasks;
 
 namespace Aurum.Infrastructure.Repositories
 {
-    public class PrivateWalletRepository : IPrivateWalletRepository
+    public class PrivateWalletRepository : IPrivateWalletRepositories
     {
         private readonly AurumDbContext _context;
-
         public PrivateWalletRepository(AurumDbContext context)
         {
-            _context = context;
+            this._context = context;
         }
 
-        public async Task CriarCarteiraPrivada(PrivateWallet wallet)
+        public async Task<PrivateWallet> Add(PrivateWallet entity)
         {
-            try
-            {
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == wallet.User.Id);
-                if (user == null)
-                    throw new ArgumentException("Usuário não encontrado.");
-
-                var privateWallet = new PrivateWallet();
-
-                privateWallet.CriarCarteira(wallet.Name, user);
-
-                user.Wallets.Add(privateWallet);
-                _context.Entry(user).State = EntityState.Modified;
-
-                await _context.PrivateWallets.AddAsync(privateWallet);
-                await _context.SaveChangesAsync();
-            }
-            catch (NpgsqlException ex)
-            {
-                throw new InvalidOperationException("Erro de comunicação com o banco de dados PostgreSQL.\n" + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Erro inesperado \n" + ex.Message);
-            }
+            await _context.Wallets.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
-        public async Task DeletarCarteira(Wallet wallet)
+        public async Task<bool> Delete(PrivateWallet entity)
         {
-            try
-            {
-                var existingWallet = await _context.PrivateWallets.FirstOrDefaultAsync(x => x.Guid == wallet.Guid);
-
-                if (existingWallet == null)
-                    throw new ArgumentException("Carteira não encontrada.");
-
-                _context.PrivateWallets.Remove(existingWallet);
-                await _context.SaveChangesAsync();
-            }
-            catch (NpgsqlException ex)
-            {
-                throw new InvalidOperationException("Erro de comunicação com o banco de dados PostgreSQL.\n" + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Erro inesperado \n" + ex.Message);
-            }
+          var result =  await _context.Wallets
+                .OfType<PrivateWallet>()
+                .Where(w => w.Guid == entity.Guid && w.OwnerGuid == entity.OwnerGuid)
+                .ExecuteDeleteAsync();
+            return result > 0;
         }
 
-        public async Task<PrivateWallet> ObterCarteiraPrivadaPorGuid(Wallet wallet)
+        public async Task<IEnumerable<PrivateWallet>> GetAll(Guid id)
         {
-            try
-            {
-                var existingWallet = await _context.PrivateWallets
-                        .Include(w => w.Transactions)
-                        .FirstOrDefaultAsync(x => x.Guid == wallet.Guid);
+            return await _context.Wallets
+                .OfType<PrivateWallet>()
+                .Where(w => w.OwnerGuid == id)
+                .ToListAsync();
+        }
 
-                if (existingWallet == null)
-                    throw new ArgumentException("Carteira não encontrada.");
+        public async Task<PrivateWallet> GetById(Guid entity, Guid ownerGuid)
+        {
+            var wallet = await _context.Wallets
+                .OfType<PrivateWallet>()
+                .Include(w => w.Transactions)
+                .FirstOrDefaultAsync(w => w.Guid == entity && w.OwnerGuid == ownerGuid);
 
-                return existingWallet;
-            }
-            catch (NpgsqlException ex)
-            {
-                throw new InvalidOperationException("Erro de comunicação com o banco de dados PostgreSQL.\n" + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Erro inesperado \n" + ex.Message);
-            }
+            if(wallet == null)
+                throw new Exception("Carteira não encontrada.");
+            return wallet;
+        }
 
+        public async Task<PrivateWallet> Update(PrivateWallet entity)
+        {
+            var result = await _context.Wallets
+                .OfType<PrivateWallet>()
+                .Where(w => w.Guid == entity.Guid && w.OwnerGuid == entity.OwnerGuid)
+                .ExecuteUpdateAsync(w => w
+                    .SetProperty(p => p.Name, entity.Name)
+                    .SetProperty(p => p.Amount, entity.Amount)
+                    .SetProperty(p => p.UpdatedAt, DateTime.UtcNow)
+                );
 
+            if (result == 0)
+                throw new Exception("Falha ao atualizar a carteira.");
+            return entity;
         }
     }
 }

@@ -48,6 +48,28 @@ namespace Aurum.Infrastructure.Migrations
                     b.ToTable("Category");
                 });
 
+            modelBuilder.Entity("Aurum.Domain.Entities.Members", b =>
+                {
+                    b.Property<Guid>("UserGuid")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("WalletGuid")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("WalletRole")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("UserGuid", "WalletGuid");
+
+                    b.HasIndex("WalletGuid");
+
+                    b.ToTable("Members");
+                });
+
             modelBuilder.Entity("Aurum.Domain.Entities.Transactions", b =>
                 {
                     b.Property<Guid>("Guid")
@@ -104,10 +126,8 @@ namespace Aurum.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -115,6 +135,9 @@ namespace Aurum.Infrastructure.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("LockoutEnabled")
@@ -140,6 +163,13 @@ namespace Aurum.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("RefreshToken")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -147,13 +177,13 @@ namespace Aurum.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
                     b.Property<string>("fullName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.HasKey("Id");
 
@@ -165,10 +195,6 @@ namespace Aurum.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator().HasValue("User");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Aurum.Domain.Entities.Wallet", b =>
@@ -207,6 +233,21 @@ namespace Aurum.Infrastructure.Migrations
                     b.HasDiscriminator<string>("WalletType");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("CategoryUser", b =>
+                {
+                    b.Property<Guid>("CategoryGuid")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("CategoryGuid", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CategoryUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -339,24 +380,6 @@ namespace Aurum.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Aurum.Domain.Entities.Members", b =>
-                {
-                    b.HasBaseType("Aurum.Domain.Entities.User");
-
-                    b.Property<DateTime>("JoinedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("WalletGuid")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("WalletRole")
-                        .HasColumnType("integer");
-
-                    b.HasIndex("WalletGuid");
-
-                    b.HasDiscriminator().HasValue("Members");
-                });
-
             modelBuilder.Entity("Aurum.Domain.Entities.PrivateWallet", b =>
                 {
                     b.HasBaseType("Aurum.Domain.Entities.Wallet");
@@ -382,6 +405,25 @@ namespace Aurum.Infrastructure.Migrations
                     b.HasIndex("OwnerUserId");
 
                     b.HasDiscriminator().HasValue("Public");
+                });
+
+            modelBuilder.Entity("Aurum.Domain.Entities.Members", b =>
+                {
+                    b.HasOne("Aurum.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Aurum.Domain.Entities.SharedWallet", "SharedWallet")
+                        .WithMany("Members")
+                        .HasForeignKey("WalletGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SharedWallet");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Aurum.Domain.Entities.Transactions", b =>
@@ -416,6 +458,21 @@ namespace Aurum.Infrastructure.Migrations
                     b.HasOne("Aurum.Domain.Entities.User", null)
                         .WithMany("Wallets")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("CategoryUser", b =>
+                {
+                    b.HasOne("Aurum.Domain.Entities.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoryGuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Aurum.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -467,17 +524,6 @@ namespace Aurum.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Aurum.Domain.Entities.Members", b =>
-                {
-                    b.HasOne("Aurum.Domain.Entities.SharedWallet", "SharedWallet")
-                        .WithMany("Members")
-                        .HasForeignKey("WalletGuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SharedWallet");
                 });
 
             modelBuilder.Entity("Aurum.Domain.Entities.PrivateWallet", b =>

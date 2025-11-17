@@ -6,5 +6,6 @@
         public static string JWT_ISSUER { get; private set; } = Environment.GetEnvironmentVariable("ISSUER")!;
         public static string JWT_AUDIENCE { get; private set; } = Environment.GetEnvironmentVariable("AUDIENCE")!;
         public static int EXPIRE_IN_MINUTES { get; private set; } = Convert.ToInt32(Environment.GetEnvironmentVariable("EXPIREINMINUTES"))!;
+        public static string CONNECTION_STRING { get; private set; } = Environment.GetEnvironmentVariable("DIRECT_URL")!; 
     }
 }
