@@ -17,6 +17,12 @@ namespace Aurum.Api.Extensions
             builder.Services.AddScoped<PrivateWalletService>();
             builder.Services.AddScoped<IPrivateWalletRepositories, PrivateWalletRepository>();
 
+            builder.Services.AddScoped<CategoryService>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+            builder.Services.AddScoped<SharedWalletService>();
+            builder.Services.AddScoped<ISharedWalletRepository, SharedWalletRepository>();
+
             return builder;
         }
     }

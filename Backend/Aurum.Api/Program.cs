@@ -1,18 +1,21 @@
 
-using Aurum.Api.Extensions;
+using Aurum.API.Extensions;
 
-namespace Aurum.Api
+namespace Aurum.API
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.AddArchitecture().UseScoped();
+
+            // Add services to the container.
+            builder.AddScooped()
+                .AddArchitecture();
 
             var app = builder.Build();
-            app.UseArchitecture();
-            app.Run();
+            app.UseArchitecture()
+                .Run();
         }
     }
 }

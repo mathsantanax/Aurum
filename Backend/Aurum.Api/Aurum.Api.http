@@ -1,6 +1,6 @@
-@Aurum.Api_HostAddress = http://localhost:5228
+@Aurum.API_HostAddress = http://localhost:5244
 
-GET {{Aurum.Api_HostAddress}}/weatherforecast/
+GET {{Aurum.API_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

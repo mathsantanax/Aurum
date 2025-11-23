@@ -23,7 +23,7 @@ namespace Aurum.Domain.Entities
             this.Guid = Guid.NewGuid();
             this.Name = name;
             this.WalletType = WalletType.Public;
-            this.CreatedAt = DateTime.Now;
+            this.CreatedAt = DateTime.UtcNow;
             this.Amount = 0; 
 
             this.OwnerGuide = owner.Id;
@@ -38,6 +38,11 @@ namespace Aurum.Domain.Entities
         public void SetNullOwner()
         {
             this.OwnerUser = null!;
+        }
+
+        public void ChangeNameWallet(string name)
+        {
+            this.Name = name;
         }
 
         public string AddMember(User user, MemberRoles role = MemberRoles.Member)
@@ -55,13 +60,12 @@ namespace Aurum.Domain.Entities
         }
 
         // Você pode adicionar métodos aqui para gerenciar ou verificar permissões:
-        /*
         public bool CanUserModify(Guid userId)
         {
             var member = Members.FirstOrDefault(m => m.UserGuid == userId);
             return member != null && member.WalletRole == MemberRoles.Admin;
         }
-        */
+        
     }
 }
 
