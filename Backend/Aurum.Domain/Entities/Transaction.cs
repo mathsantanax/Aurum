@@ -18,6 +18,10 @@ namespace Aurum.Domain.Entities
         public Guid? CreditCardGuid { get; private set; } // Chave estrangeira para o cartão de crédito (se aplicável)
         public PaymentMethod PaymentMethod { get; private set; } // Método de pagamento
 
+        private readonly List<CreditCardExpense> _creditCardExpenses = [];
+        public IReadOnlyCollection<CreditCardExpense> CreditCardExpenses => _creditCardExpenses.AsReadOnly();
+
+
         // Construtor para EF Core (protegido ou privado)
         public Transaction() { } 
 
@@ -40,13 +44,15 @@ namespace Aurum.Domain.Entities
             this.CreditCardGuid = null;
         }
 
+        public void AddCreditExpenses(CreditCardExpense creditCardExpenses)
+        {
+            ArgumentNullException.ThrowIfNull(creditCardExpenses); // Verifica se o crédito é nulo
+            _creditCardExpenses.Add(creditCardExpenses);
+        }
+
         public void RegisterCreditCardTransaction(Guid creditCardGuid, int installmentNumber)
         {
             this.CreditCardGuid = creditCardGuid;
-        }
-
-        public void SetInstallmentNumber(int installmentNumber)
-        {
             if (installmentNumber <= 1)
                 throw new ArgumentException("O número da parcela deve ser maior que zero.", nameof(installmentNumber));
             this.InstallmentNumber = installmentNumber;

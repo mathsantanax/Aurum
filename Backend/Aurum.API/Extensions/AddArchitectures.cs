@@ -1,5 +1,5 @@
 ﻿using Aurum.API.Configurations;
-using Aurum.Infrastructure.Persistence;
+using Aurum.Infrastructure.Data;
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -21,14 +21,14 @@ namespace Aurum.API.Extensions
             DotEnv.Load();
 
             // verifica se a variável de ambiente está carregada corretamente
-            if(string.IsNullOrEmpty(Globals.ConnectionString))
+            if(string.IsNullOrEmpty(Globals.DATABASE_URL))
             {
                 throw new Exception("A variável de ambiente DEFAULT_CONNECTION não está definida.");
             }
 
             // Configurando o DbContext com PostgreSQL do Supabase
             builder.Services.AddDbContext<AppDbContext>(opt =>
-                        opt.UseNpgsql(Globals.ConnectionString));
+                        opt.UseNpgsql(Globals.DATABASE_URL));
 
             // verifica se as variáveis de de conexão do jwt para autenticação do Supabase estão carregadas corretamente
             if (string.IsNullOrEmpty(Globals.URL_PROJECT) || string.IsNullOrEmpty(Globals.ANON_KEY))

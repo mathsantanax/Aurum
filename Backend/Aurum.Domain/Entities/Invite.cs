@@ -9,7 +9,7 @@ namespace Aurum.Domain.Entities
         public Guid SendUserId { get; private set; } // Identificador do usuário que enviou o convite
         public Guid InvitedUserId { get; private set; } // Identificador do usuário convidado
         public DateTime SendAt { get; private set; } // Data de envio do convite
-        public DateTime ExpireAt => SendAt.AddDays(7); // Data de expiração do convite (7 dias após o envio)
+        public DateTime ExpireAt { get; private set; }// Data de expiração do convite (7 dias após o envio)
         public InviteStatus Status { get; private set; } // Status do convite
 
         protected Invite() { } // Construtor para EF Core (protegido ou privado)
@@ -22,6 +22,7 @@ namespace Aurum.Domain.Entities
             SendUserId = sendUserId;
             InvitedUserId = invitedUserId;
             SendAt = DateTime.UtcNow;
+            ExpireAt = SendAt.AddDays(7);
             Status = InviteStatus.Pending;
         }
 

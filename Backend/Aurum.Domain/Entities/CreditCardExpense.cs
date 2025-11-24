@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Aurum.Domain.Entities
 {
-    public class CreditCardExpenses
+    public class CreditCardExpense
     {
         public Guid Id { get; private set; } // Identificador único da transação agendada
         public Guid WalletId { get; private set; }// Chave estrangeira para a carteira
@@ -23,10 +23,10 @@ namespace Aurum.Domain.Entities
         public TransactionFlow Type { get; private set; } = TransactionFlow.Expense; // Tipo da transação (Despesa, Receita, Transferência)
         public PaymentMethod PaymentMethod { get; private set; } = PaymentMethod.CreditCard; // Método de pagamento (Cartão de Crédito)
 
-        public CreditCardExpenses() { } // Construtor para EF Core (protegido ou privado
+        public CreditCardExpense() { } // Construtor para EF Core (protegido ou privado
 
         // Construtor público para criar uma nova transação agendada
-        public CreditCardExpenses(Guid walletId, Guid transactiontGuid, Guid creditCardGuid, decimal amount, int installmentNumber, DateTime scheduleExecutionDate, Guid categoryId)
+        public CreditCardExpense(Guid walletId, Guid transactiontGuid, Guid creditCardGuid, decimal amount, int installmentNumber, DateTime scheduleExecutionDate, Guid categoryId)
         {
             this.Id = Guid.NewGuid();
             this.WalletId = walletId;

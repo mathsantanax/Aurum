@@ -18,6 +18,9 @@ namespace Aurum.Domain.Entities
         private readonly List<SharedWalletMembership> _sharedWalletMemberships = []; // Lista de membros compartilhados
         public IReadOnlyCollection<SharedWalletMembership> SharedWalletMemberships => _sharedWalletMemberships.AsReadOnly(); // Exposição somente leitura dos membros compartilhados
 
+        private readonly List<CreditCard> _creditCards = []; // Lista de cartões de crédito associados à carteira
+        public IReadOnlyCollection<CreditCard> CreditCards => _creditCards.AsReadOnly(); // Exposição somente leitura dos cartões de crédito
+
         public Guid OwnerGuid { get; private set; } // Chave estrangeira para o proprietário da carteira
 
         // Construtor para EF Core (protegido ou privado)
@@ -37,6 +40,19 @@ namespace Aurum.Domain.Entities
             AddMembership(OwnerUserGuid, MemberRole.Owner,new ContributionRule(ContributionType.None, 0));
         }
 
+        public void AddCreditCard(CreditCard creditCard)
+        {
+            ArgumentNullException.ThrowIfNull(creditCard); // Verifica se o cartão de crédito é nulo
+
+            // Verifica se o cartão de crédito pertence a esta carteira
+            if (creditCard.WalletId != Id)
+                throw new InvalidOperationException("O cartão de crédito não pertence a esta carteira.");
+
+            _creditCards.Add(creditCard);
+            this.UpdatedAt = DateTime.UtcNow;
+        }
+
+        // Método de Domínio para adicionar uma transação
         public void AddTransaction(Transaction transaction)
         {
             ArgumentNullException.ThrowIfNull(transaction);
@@ -55,11 +71,9 @@ namespace Aurum.Domain.Entities
             // Verifica se o valor da transação é válido
             if (transaction.Amount <= 0)
                 throw new InvalidOperationException($"O valor da transação deve ser maior que zero. {transaction.Amount}");
-            
 
             _transactions.Add(transaction);
-            if(!transaction.InstallmentNumber.HasValue && transaction.InstallmentNumber !> 1)
-                UpdateBalance(transaction.Type, transaction.Amount);
+            UpdateBalance(transaction);
         }
 
         // Método de Domínio para adicionar o primeiro membro (o dono)
@@ -110,14 +124,25 @@ namespace Aurum.Domain.Entities
         }
 
         // Método para atualizar o saldo da carteira
-        private void UpdateBalance(TransactionFlow type, decimal amount)
+        private void UpdateBalance(Transaction transaction)
         {
-            if (type == TransactionFlow.Expense)
-                this._balance -= amount;
-            if (type == TransactionFlow.Income)
-                this._balance += amount;
-            else if(type == TransactionFlow.Transfer)
-                this._balance -= amount;
+            // Usamos o PaymentMethod para decidir se o débito é real.
+            if (transaction.Type == TransactionFlow.Income)
+            {
+                this._balance += transaction.Amount;
+            }
+            else if (transaction.Type == TransactionFlow.Expense)
+            {
+                // Regra de Cash Flow: Apenas débito real (Pix, Débito, Pagamento de Fatura) afeta o saldo.
+                if (transaction.PaymentMethod == PaymentMethod.Debit ||
+                    transaction.PaymentMethod == PaymentMethod.Pix ||
+                    transaction.PaymentMethod == PaymentMethod.BillPayment)
+                {
+                    this._balance -= transaction.Amount;
+                }
+                // Despesas com PaymentMethod.CreditCard são ignoradas, pois o débito ocorre no BillPayment.
+            }
+            // NOTA: Transações de Transferência (se houver) devem ser tratadas por um serviço que debita uma Wallet e credita outra.
 
             this.UpdatedAt = DateTime.UtcNow;
         }
