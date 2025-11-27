@@ -797,6 +797,9 @@
       },
       "System.Threading.Channels/7.0.0": {},
       "Aurum.Applications/1.0.0": {
+        "dependencies": {
+          "Aurum.Domain": "1.0.0"
+        },
         "runtime": {
           "Aurum.Applications.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -814,7 +817,7 @@
       },
       "Aurum.Infrastructure/1.0.0": {
         "dependencies": {
-          "Aurum.Domain": "1.0.0",
+          "Aurum.Applications": "1.0.0",
           "Microsoft.EntityFrameworkCore": "9.0.11",
           "Microsoft.Extensions.Configuration": "10.0.0",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "9.0.11",

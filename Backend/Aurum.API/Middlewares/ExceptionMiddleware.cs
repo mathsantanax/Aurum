@@ -1,4 +1,4 @@
-﻿using Aurum.Applications.Exceptions;
+﻿    using Aurum.Applications.Exceptions;
 using System.Text.Json;
 
 namespace Aurum.API.Middlewares
@@ -22,8 +22,21 @@ namespace Aurum.API.Middlewares
             }
             catch (AppException ex)
             {
-                _logger.LogError(ex, ex.Message);
-                await HandleExceptionAsync(httpContext, 500, $"Erro interno do servidor.{ex.Message} ");
+                _logger.LogWarning(ex, $"[AppException] Status {ex.StatusCode}: {ex.Message}");
+                await HandleExceptionAsync(httpContext, ex.StatusCode, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                int statusCode = ex switch
+                {
+                    KeyNotFoundException => 404,
+                    UnauthorizedAccessException => 401,
+                    _ => 500
+                };
+
+                _logger.LogError(ex, $"[Critical Error] Status {statusCode}: {ex.Message}");
+
+                await HandleExceptionAsync(httpContext, statusCode, "Ocorreu um erro interno no servidor.");
             }
         }
 
@@ -32,7 +45,12 @@ namespace Aurum.API.Middlewares
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
 
-            var result = JsonSerializer.Serialize(new { error = message });
+            var result = JsonSerializer.Serialize(new
+            {
+                status = statusCode,
+                error = message
+            });
+
             return context.Response.WriteAsync(result);
         }
     }

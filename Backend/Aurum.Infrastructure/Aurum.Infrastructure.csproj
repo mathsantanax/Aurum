@@ -20,11 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aurum.Domain\Aurum.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Repositories\" />
+    <ProjectReference Include="..\Aurum.Applications\Aurum.Applications.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,8 @@
-﻿namespace Aurum.API.Extensions
+﻿using Aurum.Applications.Services;
+using Aurum.Domain.Interfaces;
+using Aurum.Infrastructure.Repositories;
+
+namespace Aurum.API.Extensions
 {
     public static class AddScoopeds
     {
@@ -7,6 +11,9 @@
         {
             // Add scooped-specific services here
             // e.g., builder.Services.AddScoped<IMyScoopedService, MyScoopedService>();
+
+            builder.Services.AddScoped<WalletService>();
+            builder.Services.AddScoped<IWalletRepository, WalletRepository>();
 
             return builder;
         }

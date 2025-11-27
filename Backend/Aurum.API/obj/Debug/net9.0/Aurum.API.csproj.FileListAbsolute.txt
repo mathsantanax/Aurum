@@ -145,6 +145,7 @@ C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\obj\Debug\net9.0\stati
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.Aurum.API.props
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.Aurum.API.props
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\obj\Debug\net9.0\staticwebassets.pack.json
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\obj\Debug\net9.0\Aurum.API.csproj.Up2Date
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\obj\Debug\net9.0\Aurum.API.dll
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\obj\Debug\net9.0\refint\Aurum.API.dll

@@ -7,14 +7,30 @@
   "targets": {
     ".NETCoreApp,Version=v9.0": {
       "Aurum.Applications/1.0.0": {
+        "dependencies": {
+          "Aurum.Domain": "1.0.0"
+        },
         "runtime": {
           "Aurum.Applications.dll": {}
+        }
+      },
+      "Aurum.Domain/1.0.0": {
+        "runtime": {
+          "Aurum.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }
   },
   "libraries": {
     "Aurum.Applications/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aurum.Domain/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

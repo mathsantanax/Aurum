@@ -396,6 +396,19 @@
           }
         }
       },
+      "Aurum.Applications/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "Aurum.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Aurum.Applications.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Aurum.Applications.dll": {}
+        }
+      },
       "Aurum.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
@@ -1029,6 +1042,11 @@
         "postgresql.png"
       ]
     },
+    "Aurum.Applications/1.0.0": {
+      "type": "project",
+      "path": "../Aurum.Applications/Aurum.Applications.csproj",
+      "msbuildProject": "../Aurum.Applications/Aurum.Applications.csproj"
+    },
     "Aurum.Domain/1.0.0": {
       "type": "project",
       "path": "../Aurum.Domain/Aurum.Domain.csproj",
@@ -1037,7 +1055,7 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "Aurum.Domain >= 1.0.0",
+      "Aurum.Applications >= 1.0.0",
       "Microsoft.EntityFrameworkCore >= 9.0.11",
       "Microsoft.EntityFrameworkCore.Tools >= 10.0.0",
       "Microsoft.Extensions.Configuration >= 10.0.0",
@@ -1080,8 +1098,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.Domain\\Aurum.Domain.csproj": {
-              "projectPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.Domain\\Aurum.Domain.csproj"
+            "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.Applications\\Aurum.Applications.csproj": {
+              "projectPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.Applications\\Aurum.Applications.csproj"
             }
           }
         }

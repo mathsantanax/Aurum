@@ -13,5 +13,22 @@ namespace Aurum.Applications.Exceptions
         {
             StatusCode = statusCode;
         }
+
+        //
+        public AppException(string message) : base(message)
+        {
+            // Padrão 500 para exceções genéricas de aplicação não mapeadas.
+            StatusCode = 500;
+        }
+    }
+
+    public class NotFoundException : AppException
+    {
+        public NotFoundException(string message) : base(message, 404) { }
+    }
+
+    public class ValidationException : AppException
+    {
+        public ValidationException(string message) : base(message, 400) { }
     }
 }
