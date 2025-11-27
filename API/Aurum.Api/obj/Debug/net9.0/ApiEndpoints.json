@@ -48,6 +48,64 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Aurum.Api.Controllers.CategoryController",
+    "Method": "CreateCategory",
+    "RelativePath": "api/v1/Category/Create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Aurum.Application.DTOs.CategoryDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.CategoryController",
+    "Method": "GetAllCategoriesAsync",
+    "RelativePath": "api/v1/Category/GetAll",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.CategoryController",
+    "Method": "GetCategoryByIdAsync",
+    "RelativePath": "api/v1/Category/GetById/{guid}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "guid",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.CategoryController",
+    "Method": "UpdateCategory",
+    "RelativePath": "api/v1/Category/Update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Aurum.Application.DTOs.CategoryDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Aurum.Api.Controllers.PrivateWalletController",
     "Method": "CreatePrivateWallet",
     "RelativePath": "api/v1/PrivateWallet/Create",
@@ -115,6 +173,64 @@
     "Parameters": [
       {
         "Name": "wallet",
+        "Type": "Aurum.Application.DTOs.WalletDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.SharedWalletController",
+    "Method": "CreateSharedWallet",
+    "RelativePath": "api/v1/SharedWallet/Create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Aurum.Application.DTOs.WalletDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.SharedWalletController",
+    "Method": "GetSharedWallets",
+    "RelativePath": "api/v1/SharedWallet/GetAll",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.SharedWalletController",
+    "Method": "GetSharedWalletById",
+    "RelativePath": "api/v1/SharedWallet/GetById/{guid}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "guid",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Aurum.Api.Controllers.SharedWalletController",
+    "Method": "UpdateSharedWallet",
+    "RelativePath": "api/v1/SharedWallet/Update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
         "Type": "Aurum.Application.DTOs.WalletDto",
         "IsRequired": true
       }

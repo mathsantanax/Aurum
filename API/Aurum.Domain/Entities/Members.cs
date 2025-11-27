@@ -28,6 +28,11 @@ namespace Aurum.Domain.Entities
             this.JoinedAt = DateTime.UtcNow;
         }
 
+        public void SetNullUser()
+        {
+            this.User = null!;
+        }  
+
         public void ChangeRole(MemberRoles newRole)
         {
             this.WalletRole = newRole;

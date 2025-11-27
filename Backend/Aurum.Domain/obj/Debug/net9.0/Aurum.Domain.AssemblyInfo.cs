@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Aurum.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+372333490101e60f98406d3a3d86d33c9d8d474a")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2ee8e5aa16222021f16c687410dde5e573374272")]
+>>>>>>> matheus
 [assembly: System.Reflection.AssemblyProductAttribute("Aurum.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aurum.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -21,7 +21,14 @@ namespace Aurum.Domain.Entities
             this.Guid = Guid.NewGuid();
             this.NameCategory = nameCategory;
             this.Description = descricao;
-            this.CreatedAt = DateTime.Now;
+            this.CreatedAt = DateTime.UtcNow;
+        }
+
+        public void UpdateCategoria(string nameCategory, string descricao)
+        {
+            this.NameCategory = nameCategory;
+            this.Description = descricao;
+            this.LastUpdatedAt = DateTime.Now;
         }
     }
 }
