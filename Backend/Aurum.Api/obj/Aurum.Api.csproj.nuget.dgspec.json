@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.Api\\Aurum.Api.csproj": {}
+    "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.API\\Aurum.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.Api\\Aurum.Api.csproj": {
+    "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.API\\Aurum.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.Api\\Aurum.Api.csproj",
+        "projectUniqueName": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.API\\Aurum.Api.csproj",
         "projectName": "Aurum.Api",
-        "projectPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.Api\\Aurum.Api.csproj",
+        "projectPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.API\\Aurum.Api.csproj",
         "packagesPath": "C:\\Users\\mathe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.Api\\obj\\",
+        "outputPath": "C:\\Users\\mathe\\Documents\\Projects\\Aurum\\Backend\\Aurum.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
