@@ -39,28 +39,21 @@ namespace Aurum.Infrastructure.Repositories
         }
 
         // Obtém todas as carteiras associadas a um usuário específico.
-        public async Task<IReadOnlyList<Wallet>> GetAllWallets(Guid UserId)
+        public async Task<IReadOnlyList<Wallet>> GetAllWallets(Guid userId)
         {
             try
             {
-                // Obtém os IDs das carteiras das quais o usuário é membro.
-                var wallets = await _context.Set<SharedWalletMembership>()
-                                        .Where(m => m.UserGuid == UserId)
-                                        .Select(m => m.WalletId) // Seleciona apenas os IDs das carteiras
-                                        .Distinct()
-                                        .ToListAsync();
-
-    
-
-                // Obtém as carteiras completas com base nos IDs obtidos.
+                // Consulta para obter todas as carteiras onde o usuário é membro.
                 var result = await _context.Wallets
-                                            .Where(w => wallets.Contains(w.Id))
-                                            .Include(w => w.Transactions) // Inclui as transações associadas
-                                            .Include(w => w.CreditCards) // Inclui os cartões de crédito associados
-                                            .Include(w => w.SharedWalletMemberships) // Inclui os membros compartilhados
-                                            .ToListAsync();
+                                 .Where(w => w.SharedWalletMemberships.Any(m => m.UserGuid == userId)) // Filtra carteiras onde o usuário é membro
+                                 .Include(w => w.Transactions) // Inclui as transações associadas
+                                 .Include(w => w.CreditCards) // Inclui os cartões de crédito associados
+                                 .Include(w => w.SharedWalletMemberships) // Inclui os membros da carteira compartilhada
+                                 .AsNoTracking() // Evita o rastreamento para melhorar o desempenho em consultas somente leitura
+                                 .ToListAsync();
 
                 return result;
+
             }
             catch(DbException ex)
             {
@@ -68,14 +61,47 @@ namespace Aurum.Infrastructure.Repositories
             }
         }
 
-        public Task<Wallet> GetWalletById(Guid WalletId, Guid UserId)
+        public async Task<Wallet> GetWalletById(Guid WalletId, Guid UserId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await _context.Wallets
+                            .Where(w => w.Id.Equals(WalletId) && w.SharedWalletMemberships.Any(m => m.UserGuid == UserId))
+                            .Include(w => w.Transactions)
+                            .Include(w => w.CreditCards)
+                            .Include(w => w.SharedWalletMemberships)
+                            .AsSplitQuery()
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync();
+
+                return result ?? throw new AppException($"Não Existe nenhuma cateira com id {WalletId}");
+            }
+            catch (DbException ex)
+            {
+                throw new AppException($"Erro ao acessar o banco de dados. {ex.Message}", ex.HResult);
+            }
         }
 
-        public Task<Wallet> UpdateWallet(Wallet wallet, Guid UserId)
+        public async Task<Wallet> UpdateNameWallet(Wallet wallet, Guid UserId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.Wallets.Update(wallet);
+                //_context.Wallets.Attach(wallet);
+                //_context.Entry(wallet).Property(w => w.Name).IsModified = true;
+                //_context.Entry(wallet).Property(w => w.UpdatedAt).IsModified = true;
+                await _context.SaveChangesAsync();
+                return wallet;
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("violates unique constraint") == true)
+                {
+                    throw new ValidationException("O nome do item já existe. Escolha outro nome.");
+                }
+                // Se for outro erro de banco, relança como um erro 500 de aplicação.
+                throw new AppException($"Erro ao salvar o item no banco de dados. {ex.Message}", ex.HResult);
+            }
         }
     }
 }

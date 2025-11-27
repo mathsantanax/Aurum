@@ -25,5 +25,19 @@ namespace Aurum.Applications.Services
             return await _walletRepository.GetAllWallets(userId);
         }
 
+        public async Task<Wallet> GetWalletById(Guid WalletId, Guid UserId)
+        {
+            return await _walletRepository.GetWalletById(WalletId, UserId);
+        }
+
+        public async Task<Wallet> UpdateNameWallet(WalletDTO request, Guid walletId, Guid userId)
+        {
+            var walletResult = await _walletRepository.GetWalletById(walletId, userId);
+
+            walletResult.UpdateName(request.Name, userId);
+
+            return await _walletRepository.UpdateNameWallet(walletResult, userId);
+        }
+
     }
 }

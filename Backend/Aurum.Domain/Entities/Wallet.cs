@@ -94,7 +94,7 @@ namespace Aurum.Domain.Entities
             var changingMember = _sharedWalletMemberships.FirstOrDefault(m => m.UserGuid == ChangeUserGuid) ?? throw new InvalidOperationException("Usuário que está alterando o papel não é membro desta carteira.");
 
             // Verifica se o membro que está tentando alterar o papel tem permissão
-            if (membership.Role == MemberRole.Owner && membership.Role == MemberRole.Admin)
+            if (membership.Role != MemberRole.Owner && membership.Role != MemberRole.Admin)
                 throw new InvalidOperationException("Permissão negada. Apenas Proprietários ou Administradores podem alterar papéis.");
 
             // Verifica se o membro que está sendo alterado é o proprietário
@@ -144,6 +144,18 @@ namespace Aurum.Domain.Entities
             }
             // NOTA: Transações de Transferência (se houver) devem ser tratadas por um serviço que debita uma Wallet e credita outra.
 
+            this.UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void UpdateName(string name, Guid userId)
+        {
+            var membership = _sharedWalletMemberships.FirstOrDefault(m => m.UserGuid == userId) ?? throw new InvalidOperationException("Usuário não é membro desta carteira.");
+
+            // Verifica se o membro que está tentando alterar o papel tem permissão
+            if (membership.Role != MemberRole.Owner && membership.Role != MemberRole.Admin)
+                throw new InvalidOperationException("Permissão negada. Apenas Proprietários ou Administradores podem realizar alterações na carteira");
+
+            this.Name = name;
             this.UpdatedAt = DateTime.UtcNow;
         }
 

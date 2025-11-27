@@ -12,7 +12,7 @@ namespace Aurum.Domain.Interfaces
         Task<IReadOnlyList<Wallet>> GetAllWallets(Guid UserId);
         Task<Wallet> GetWalletById(Guid WalletId, Guid UserId);
         Task<Wallet> CreateWallet(Wallet wallet);
-        Task<Wallet> UpdateWallet(Wallet wallet, Guid UserId);
+        Task<Wallet> UpdateNameWallet(Wallet wallet, Guid UserId);
         Task<bool> DeleteWallet(Guid WalletId, Guid UserId);
     }
 }
