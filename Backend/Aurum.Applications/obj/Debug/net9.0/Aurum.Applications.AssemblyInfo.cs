@@ -14,15 +14,9 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Aurum.Applications")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD:Backend/Aurum.Application/obj/Debug/net9.0/Aurum.Application.AssemblyInfo.cs
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+372333490101e60f98406d3a3d86d33c9d8d474a")]
-[assembly: System.Reflection.AssemblyProductAttribute("Aurum.Application")]
-[assembly: System.Reflection.AssemblyTitleAttribute("Aurum.Application")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2ee8e5aa16222021f16c687410dde5e573374272")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5c29c79014c00ddeb31fd7b82a13f12c9ae6721d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Aurum.Applications")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aurum.Applications")]
->>>>>>> matheus:Backend/Aurum.Applications/obj/Debug/net9.0/Aurum.Applications.AssemblyInfo.cs
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.
