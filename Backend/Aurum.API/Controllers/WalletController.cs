@@ -46,11 +46,11 @@ namespace Aurum.API.Controllers
         {
             // 1. Obtém o UserGuid do usuário logado (Claim Types e formatos podem variar)
             var userGuidClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (string.IsNullOrWhiteSpace(userGuidClaim) || !Guid.TryParse(userGuidClaim, out var userGuid))
-            {
                 // Se o token de autenticação não fornecer um UserGuid válido
                 return Unauthorized("Não foi possível identificar o usuário logado.");
-            }
+            
             var wallet = await walletService.GetWalletById(id, userGuid);
             return Ok(wallet);
         }

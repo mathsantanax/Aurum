@@ -12,13 +12,13 @@ namespace Aurum.Infrastructure.Repositories
         private readonly AppDbContext _context = context;
 
         // Cria uma nova carteira no banco de dados.
-        public Task<Wallet> CreateWallet(Wallet wallet)
+        public async Task<Wallet> CreateWallet(Wallet wallet)
         {
             try
             {
                 _context.Wallets.Add(wallet);
-                _context.SaveChanges();
-                return Task.FromResult(wallet);
+                await _context.SaveChangesAsync();
+                return wallet;
 
             }
             catch (DbUpdateException ex)
@@ -31,11 +31,6 @@ namespace Aurum.Infrastructure.Repositories
                 // Se for outro erro de banco, relança como um erro 500 de aplicação.
                 throw new AppException($"Erro ao salvar o item no banco de dados. {ex.Message}", ex.HResult);
             }
-        }
-
-        public Task<bool> DeleteWallet(Guid WalletId, Guid UserId)
-        {
-            throw new NotImplementedException();
         }
 
         // Obtém todas as carteiras associadas a um usuário específico.
@@ -82,7 +77,16 @@ namespace Aurum.Infrastructure.Repositories
             }
         }
 
-        public async Task<Wallet> UpdateNameWallet(Wallet wallet, Guid UserId)
+        public async Task<Wallet> GetWalletByIdAsync(Guid guid)
+        {
+            return await _context.Wallets
+                                 .Where(w => w.Id.Equals(guid))
+                                 .AsNoTracking()
+                                 .FirstAsync()
+                ?? throw new AppException($"Não Existe nenhuma cateira com id {guid}");
+        }
+
+        public async Task<Wallet> UpdateWallet(Wallet wallet)
         {
             try
             {

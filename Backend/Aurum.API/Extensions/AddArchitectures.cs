@@ -30,7 +30,7 @@ namespace Aurum.API.Extensions
             // Configurando o DbContext com PostgreSQL do Supabase
             builder.Services.AddDbContext<AppDbContext>(opt =>
             {
-                opt.UseNpgsql(Globals.DATABASE_URL);
+                opt.UseNpgsql(Globals.DATABASE_URL, o => { o.CommandTimeout(65); });
 
             });
 

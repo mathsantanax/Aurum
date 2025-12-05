@@ -1,4 +1,5 @@
 ﻿using Aurum.Domain.Entities.Enums;
+using System.Transactions;
 
 namespace Aurum.Domain.Entities
 {
@@ -43,6 +44,13 @@ namespace Aurum.Domain.Entities
         public void AddCreditCard(CreditCard creditCard)
         {
             ArgumentNullException.ThrowIfNull(creditCard); // Verifica se o cartão de crédito é nulo
+
+            // Verifica se o usuário que está adicionando o cartão de crédito é um membro da carteira
+            var member = SharedWalletMemberships.FirstOrDefault(m => m.UserGuid == creditCard.UserId) ?? throw new InvalidOperationException("Usuário não é membro desta carteira.");
+
+            // Verifica se o membro que está tentando alterar o papel tem permissão
+            if (member.Role != MemberRole.Owner && member.Role != MemberRole.Admin && member.Role != MemberRole.Member)
+                throw new InvalidOperationException("Permissão negada.");
 
             // Verifica se o cartão de crédito pertence a esta carteira
             if (creditCard.WalletId != Id)

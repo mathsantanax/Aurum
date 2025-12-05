@@ -36,7 +36,7 @@ namespace Aurum.Applications.Services
 
             walletResult.UpdateName(request.Name, userId);
 
-            return await _walletRepository.UpdateNameWallet(walletResult, userId);
+            return await _walletRepository.UpdateWallet(walletResult);
         }
 
     }
