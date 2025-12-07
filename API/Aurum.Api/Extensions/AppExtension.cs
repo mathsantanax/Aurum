@@ -7,12 +7,14 @@ namespace Aurum.Api.Extensions
     {
         public static WebApplication UseArchitecture(this WebApplication app)
         {
+            // Configure the HTTP request pipeline
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
             app.UseHttpsRedirection();
-
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
-            app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();

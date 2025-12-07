@@ -26,11 +26,19 @@ namespace Aurum.Infrastructure.Persistence
             {
                 entity.HasKey(u => u.Id);
                 entity.Property(u => u.fullName).IsRequired().HasMaxLength(150);
+                entity.Property(u => u.RefreshToken).HasMaxLength(500);
                 entity.Property(u => u.Email).IsRequired().HasMaxLength(100);
                 entity.HasMany<PrivateWallet>()
                     .WithOne(w => w.User)
                     .HasForeignKey(w => w.OwnerGuid)
                     .OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany<Transactions>()
+                    .WithOne(t => t.CreatedBy)
+                    .HasForeignKey(t => t.CreatedByGuid)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany<Category>();
+                entity.HasMany<SharedWallet>()
+                    .WithMany(sw => sw.Members);
             });
 
             // Wallet

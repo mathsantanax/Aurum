@@ -10,6 +10,9 @@ namespace Aurum.Domain.Entities
     {
         public string fullName { get; private set; } = string.Empty!;
         public DateTime CreatedAt { get; private set; }
+        public string? RefreshToken { get; private set; }
+        public DateTime RefreshTokenExpiryTime { get; private set; }
+        public bool IsActive { get; private set; } = true;
         public virtual ICollection<Wallet> Wallets { get; set; } = [];
         public User() { }
 

@@ -20,11 +20,11 @@ namespace Aurum.Api.Extensions
             // Carrega Variaveis do .env
             DotEnv.Load();
 
+            builder.Services.AddControllers();
+            
             // string de conexão com o banco de dados supabase
             string stringConnection = Environment.GetEnvironmentVariable("DIRECT_URL")!;
 
-            IdentityModelEventSource.ShowPII = true;
-            IdentityModelEventSource.LogCompleteSecurityArtifact = true;
             // Verifica se a string está nula
             if (string.IsNullOrEmpty(stringConnection))
                 throw new Exception("Sem conexão com o banco de dados!");
@@ -32,8 +32,19 @@ namespace Aurum.Api.Extensions
             // Configura o Dbcontext no DI
             builder.Services.AddDbContext<AurumDbContext>(options => 
                         options.UseNpgsql(stringConnection));
+
             // Configura o Identity
-            builder.Services.AddIdentity<User, IdentityRole<Guid>>()
+            builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+                options.User.RequireUniqueEmail = true;
+
+            })
                 .AddEntityFrameworkStores<AurumDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -41,7 +52,6 @@ namespace Aurum.Api.Extensions
             if (string.IsNullOrEmpty(Globals.JWT_TOKEN))
                 throw new Exception("A variável de ambiente KEY não está definida. Verifique o arquivo .env.");
 
-            var key = Encoding.UTF8.GetBytes(Globals.JWT_TOKEN.Trim());
 
             builder.Services.AddAuthentication(options =>
             {
@@ -50,31 +60,16 @@ namespace Aurum.Api.Extensions
             })
                 .AddJwtBearer(options =>
                 {
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Globals.JWT_TOKEN)),
                         ValidIssuer = Globals.JWT_ISSUER,
                         ValidAudience = Globals.JWT_AUDIENCE,
                         ClockSkew = TimeSpan.Zero
-                    };
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnAuthenticationFailed = context =>
-                        {
-                            Console.WriteLine($"❌ Token inválido: {context.Exception.Message}");
-                            return Task.CompletedTask;
-                        },
-                        OnTokenValidated = context =>
-                        {
-                            Console.WriteLine($"✅ Token validado para {context.Principal?.Identity?.Name}");
-                            return Task.CompletedTask;
-                        }
                     };
                 });
 
@@ -87,12 +82,11 @@ namespace Aurum.Api.Extensions
                 //configuração de autenticação no swagger
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
+                    Description = "JWT Authorization header using the Bearer scheme",
                     Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Description = "Digite 'Bearer {seu_token}' para autenticar."
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -112,7 +106,7 @@ namespace Aurum.Api.Extensions
             });
 
             builder.Services.AddAuthorization();
-            builder.Services.AddControllers();
+
             return builder;
         }
     }

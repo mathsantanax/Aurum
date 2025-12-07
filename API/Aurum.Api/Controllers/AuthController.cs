@@ -1,7 +1,11 @@
 ﻿using Aurum.Api.Service;
 using Aurum.Application.DTOs;
+using Aurum.Application.Interfaces;
 using Aurum.Application.Services;
+using Aurum.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aurum.Api.Controllers
@@ -11,31 +15,47 @@ namespace Aurum.Api.Controllers
     [AllowAnonymous]
     public class AuthController : ControllerBase
     {
-        private readonly UserService _userService;
-        private readonly AuthService authService;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
+        private readonly IAuthService authService;
 
-        public AuthController(UserService userService, AuthService service)
+        public AuthController(
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            IAuthService authService)
         {
-            authService = service;
-            _userService = userService;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.authService = authService;
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody]RegisterDTO request)
+        public async Task<IActionResult<UserResponse>> Register([FromBody]RegisterRequest request)
         {
             try
             {
-                await _userService.RegisterUser(
-                    new UserDTO
-                    {
-                        Name = request.FullName!,
-                        Email = request.Email!,
-                        PhoneNumber = request.PhoneNumber!,
-                        PassWord = request.Password!,
-                        ConfirmedPassword = request.ConfirmedPassword!
-                    });
+                if (request.Password != request.ConfirmPassword)
+                    return BadRequest("Passwords do not match");
 
-                return Ok("Usuário registrado com sucesso!");
+                var user = new User
+                {
+                    UserName = request.UserName ?? request.Email,
+                    Email = request.Email,
+                    FullName = request.FullName
+                };
+
+                var result = await _userManager.CreateAsync(user, request.Password);
+
+                if (!result.Succeeded)
+                    return BadRequest(result.Errors);
+
+                return Ok(new UserResponse
+                {
+                    Id = user.Id,
+                    Email = user.Email!,
+                    FullName = user.FullName,
+                    UserName = user.UserName
+                });
             }
             catch (Exception ex)
             {

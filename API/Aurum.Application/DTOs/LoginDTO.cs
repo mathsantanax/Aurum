@@ -12,6 +12,22 @@ namespace Aurum.Application.DTOs
         public string Password { get; set; } = string.Empty!;
     }
 
+    public record class LoginResponse
+    {
+        public string Token { get; set; } = string.Empty;
+        public string RefreshToken { get; set; } = string.Empty;
+        public UserResponse User { get; set; } = new();
+        public DateTime ExpiresAt { get; set; }
+    }
+
+    public class UserResponse
+    {
+        public Guid Id { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string? FullName { get; set; }
+        public string? UserName { get; set; }
+    }
+
     // DTO Para fazer cadastro de novos usuários
     public record class RegisterDTO
     {

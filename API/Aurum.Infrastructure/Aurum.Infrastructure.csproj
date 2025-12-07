@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Aurum.Domain\Aurum.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Auth\" />
+  </ItemGroup>
+
 </Project>
