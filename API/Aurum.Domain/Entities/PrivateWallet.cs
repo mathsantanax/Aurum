@@ -23,12 +23,15 @@ namespace Aurum.Domain.Entities
             this.CreatedAt = DateTime.UtcNow;
         }
 
-        public void ObterCarteiraPrivada(Guid guid, string name, User ownerUser)
+        public void SetNullOwner()
         {
-            this.Guid = guid;
-            this.OwnerGuid = ownerUser.Id;
-            this.User = ownerUser;
+            this.User = null!;
+        }
+
+        public void AtualizarCarteira(string name)
+        {
             this.Name = name;
+            this.UpdatedAt = DateTime.UtcNow;
         }
     }
 }

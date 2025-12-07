@@ -28,14 +28,15 @@ namespace Aurum.Domain.Entities
 
 
 
-        public virtual void AddIncome(Wallet wallet, decimal value, string description, Category category)
+        public virtual void AddIncome(User user, Wallet wallet, decimal value, string description, Category category)
         {
             this.Guid = Guid.NewGuid();
             this.Value = value;
             this.Description = description;
             this.CreatedAt = DateTime.Now;
             this.TransactionType = TransactionType.Income;
-
+            this.CreatedBy = user;
+            this.CreatedByGuid = user.Id;
             this.Category = category;
             this.CategoryGuid = category.Guid;
             this.WalletGuid = wallet.Guid;
@@ -44,14 +45,15 @@ namespace Aurum.Domain.Entities
             wallet.Amount += value;
         }
 
-        public virtual void AddCost(Wallet wallet, decimal value, string description, Category category)
+        public virtual void AddCost(User user, Wallet wallet, decimal value, string description, Category category)
         {
             this.Guid = Guid.NewGuid();
             this.Value = value;
             this.Description = description;
             this.CreatedAt = DateTime.Now;
             this.TransactionType = TransactionType.Cost;
-
+            this.CreatedBy = user;
+            this.CreatedByGuid = user.Id;
             this.Category = category;
             this.CategoryGuid = category.Guid;
             this.WalletGuid = wallet.Guid;

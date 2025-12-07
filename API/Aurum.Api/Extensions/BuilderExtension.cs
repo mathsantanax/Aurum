@@ -20,19 +20,26 @@ namespace Aurum.Api.Extensions
             // Carrega Variaveis do .env
             DotEnv.Load();
 
+<<<<<<< HEAD
             builder.Services.AddControllers();
             
             // string de conexão com o banco de dados supabase
             string stringConnection = Environment.GetEnvironmentVariable("DIRECT_URL")!;
 
+=======
+>>>>>>> 361a6b5a70ac4ce95e8202e8bab960055fb7d478
             // Verifica se a string está nula
-            if (string.IsNullOrEmpty(stringConnection))
+            if (string.IsNullOrEmpty(Globals.CONNECTION_STRING))
                 throw new Exception("Sem conexão com o banco de dados!");
 
             // Configura o Dbcontext no DI
             builder.Services.AddDbContext<AurumDbContext>(options => 
+<<<<<<< HEAD
                         options.UseNpgsql(stringConnection));
 
+=======
+                        options.UseNpgsql(Globals.CONNECTION_STRING));
+>>>>>>> 361a6b5a70ac4ce95e8202e8bab960055fb7d478
             // Configura o Identity
             builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
             {
@@ -48,18 +55,28 @@ namespace Aurum.Api.Extensions
                 .AddEntityFrameworkStores<AurumDbContext>()
                 .AddDefaultTokenProviders();
 
+<<<<<<< HEAD
             // Verificar se a string de key está nula
             if (string.IsNullOrEmpty(Globals.JWT_TOKEN))
                 throw new Exception("A variável de ambiente KEY não está definida. Verifique o arquivo .env.");
 
 
+=======
+>>>>>>> 361a6b5a70ac4ce95e8202e8bab960055fb7d478
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
                 .AddJwtBearer(options =>
                 {
+<<<<<<< HEAD
+=======
+                    if (string.IsNullOrEmpty(Globals.JWT_TOKEN))
+                        throw new Exception("Chave JWT não definida!");
+
+>>>>>>> 361a6b5a70ac4ce95e8202e8bab960055fb7d478
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -69,6 +86,7 @@ namespace Aurum.Api.Extensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Globals.JWT_TOKEN)),
                         ValidIssuer = Globals.JWT_ISSUER,
                         ValidAudience = Globals.JWT_AUDIENCE,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Globals.JWT_TOKEN)),
                         ClockSkew = TimeSpan.Zero
                     };
                 });
@@ -77,18 +95,23 @@ namespace Aurum.Api.Extensions
 
             builder.Services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Aurum Seu Gerenciador Financeiro", Version = "v1" });
-
-                //configuração de autenticação no swagger
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Aurum API", Version = "v1" });
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme",
                     Name = "Authorization",
+<<<<<<< HEAD
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer"
+=======
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Insira o token JWT (Emitido pelo Supabase) no formato: Bearer SEU_TOKEN_AQUI",
+>>>>>>> 361a6b5a70ac4ce95e8202e8bab960055fb7d478
                 });
-
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
@@ -100,7 +123,7 @@ namespace Aurum.Api.Extensions
                                 Id = "Bearer"
                             }
                         },
-                        new string[] {}
+                        Array.Empty<string>()
                     }
                 });
             });

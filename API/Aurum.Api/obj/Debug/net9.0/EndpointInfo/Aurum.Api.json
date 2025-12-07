@@ -1,10 +1,72 @@
 {
   "openapi": "3.0.4",
   "info": {
-    "title": "Aurum Seu Gerenciador Financeiro",
+    "title": "Aurum API",
     "version": "v1"
   },
   "paths": {
+    "/api/v1/Auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenRefreshDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenRefreshDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenRefreshDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/v1/Auth/Register": {
       "post": {
         "tags": [
@@ -36,130 +98,10 @@
         }
       }
     },
-    "/api/v1/Auth/Login": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/PrivateWallet": {
-      "post": {
-        "tags": [
-          "PrivateWallet"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrivateWalletDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrivateWalletDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrivateWalletDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
+    "/api/v1/Category/GetAll": {
       "get": {
         "tags": [
-          "PrivateWallet"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrivateWalletDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrivateWalletDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrivateWalletDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "PrivateWallet"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrivateWalletDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrivateWalletDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrivateWalletDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/v1/User/me": {
-      "get": {
-        "tags": [
-          "User"
+          "Category"
         ],
         "responses": {
           "200": {
@@ -168,38 +110,26 @@
         }
       }
     },
-    "/api/v1/User/check-token": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/v1/User": {
+    "/api/v1/Category/Create": {
       "post": {
         "tags": [
-          "User"
+          "Category"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDTO"
+                "$ref": "#/components/schemas/CategoryDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDTO"
+                "$ref": "#/components/schemas/CategoryDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDTO"
+                "$ref": "#/components/schemas/CategoryDTO"
               }
             }
           }
@@ -209,26 +139,51 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/v1/Category/GetById/{guid}": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "parameters": [
+          {
+            "name": "guid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Category/Update": {
       "put": {
         "tags": [
-          "User"
+          "Category"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDTO"
+                "$ref": "#/components/schemas/CategoryDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDTO"
+                "$ref": "#/components/schemas/CategoryDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDTO"
+                "$ref": "#/components/schemas/CategoryDTO"
               }
             }
           }
@@ -238,30 +193,246 @@
             "description": "OK"
           }
         }
-      },
-      "delete": {
+      }
+    },
+    "/api/v1/PrivateWallet/Create": {
+      "post": {
         "tags": [
-          "User"
+          "PrivateWallet"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDTO"
+                "$ref": "#/components/schemas/WalletDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDTO"
+                "$ref": "#/components/schemas/WalletDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UserDTO"
+                "$ref": "#/components/schemas/WalletDto"
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/PrivateWallet/GetAll": {
+      "get": {
+        "tags": [
+          "PrivateWallet"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/PrivateWallet/GetById": {
+      "get": {
+        "tags": [
+          "PrivateWallet"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/PrivateWallet/Update": {
+      "put": {
+        "tags": [
+          "PrivateWallet"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/PrivateWallet/Delete": {
+      "delete": {
+        "tags": [
+          "PrivateWallet"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/SharedWallet/GetAll": {
+      "get": {
+        "tags": [
+          "SharedWallet"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/SharedWallet/Create": {
+      "post": {
+        "tags": [
+          "SharedWallet"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/SharedWallet/Update": {
+      "put": {
+        "tags": [
+          "SharedWallet"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/SharedWallet/GetById/{guid}": {
+      "get": {
+        "tags": [
+          "SharedWallet"
+        ],
+        "parameters": [
+          {
+            "name": "guid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Teste/protected": {
+      "get": {
+        "tags": [
+          "Teste"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -272,6 +443,20 @@
   },
   "components": {
     "schemas": {
+      "CategoryDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginDTO": {
         "required": [
           "email",
@@ -287,27 +472,6 @@
           "password": {
             "maxLength": 25,
             "minLength": 0,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PrivateWalletDTO": {
-        "required": [
-          "nameWallet",
-          "user"
-        ],
-        "type": "object",
-        "properties": {
-          "guid": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "user": {
-            "$ref": "#/components/schemas/UserDTO"
-          },
-          "nameWallet": {
-            "minLength": 1,
             "type": "string"
           }
         },
@@ -351,36 +515,32 @@
         },
         "additionalProperties": false
       },
-      "UserDTO": {
+      "TokenRefreshDTO": {
+        "required": [
+          "refreshToken",
+          "token"
+        ],
         "type": "object",
         "properties": {
-          "guid": {
+          "token": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WalletDto": {
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string",
             "format": "uuid"
           },
           "name": {
-            "maxLength": 250,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "phoneNumber": {
-            "maxLength": 20,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "passWord": {
-            "type": "string",
-            "nullable": true
-          },
-          "confirmedPassword": {
             "type": "string",
             "nullable": true
           }
@@ -390,10 +550,10 @@
     },
     "securitySchemes": {
       "Bearer": {
-        "type": "http",
-        "description": "Digite 'Bearer {seu_token}' para autenticar.",
-        "scheme": "Bearer",
-        "bearerFormat": "JWT"
+        "type": "apiKey",
+        "description": "Insira o token JWT (Emitido pelo Supabase) no formato: Bearer SEU_TOKEN_AQUI",
+        "name": "Authorization",
+        "in": "header"
       }
     }
   },

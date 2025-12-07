@@ -9,10 +9,6 @@ namespace Aurum.Domain.Interfaces
 {
     public interface IUserRepository
     {
-        public Task<User> GetUser (User user);
-        public Task AddUser (User user);
-        public Task DeleteUser (User user);
-        public Task UpdateUser (User user);
-
+        Task<User> GetUser(Guid guid);
     }
 }

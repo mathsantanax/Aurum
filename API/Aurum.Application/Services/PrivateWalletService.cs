@@ -1,89 +1,62 @@
 ﻿using Aurum.Application.DTOs;
 using Aurum.Domain.Entities;
 using Aurum.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Aurum.Application.Services
 {
     public class PrivateWalletService
     {
-        private readonly IPrivateWalletRepository privateWalletRepository;
-        public PrivateWalletService(IPrivateWalletRepository _privateWallet)
+        private readonly IPrivateWalletRepositories privateWalletRepositories;
+        private readonly IUserRepository _userRepository;
+        public PrivateWalletService(IPrivateWalletRepositories privateWalletRepositories, IUserRepository userRepository)
         {
-            this.privateWalletRepository = _privateWallet;
+            this.privateWalletRepositories = privateWalletRepositories;
+            this._userRepository = userRepository;
         }
 
-        public async Task AddWallet(PrivateWalletDTO walletDTO)
+        public async Task<PrivateWallet> CreatePrivateWallet(WalletDto request, Guid guid)
         {
-            try
-            {
-                if (walletDTO == null)
-                    throw new ArgumentNullException("Inválido");
-                if (walletDTO.user == null)
-                    throw new ArgumentNullException("Inválido");
+            var user = await _userRepository.GetUser(guid);
 
-                var privateWallet = new PrivateWallet();
-                var userWallet = new User();
+            PrivateWallet privateWallet = new PrivateWallet();
+            privateWallet.CriarCarteira(request.Name, user);
 
-                userWallet.UpdateUser(walletDTO.user.Guid, walletDTO.user.Name, walletDTO.user.Email, walletDTO.user.PhoneNumber);
-
-                privateWallet.CriarCarteira(walletDTO.NameWallet, userWallet);
-
-                await privateWalletRepository.CriarCarteiraPrivada(privateWallet);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException(ex.Message);
-            }
+            var wallet = await privateWalletRepositories.Add(privateWallet);
+            wallet.SetNullOwner();
+            return wallet;
         }
 
-        public async Task<PrivateWallet> GetWalletByGuid(PrivateWalletDTO walletDTO)
+        public async Task<IEnumerable<PrivateWallet>> GetAllPrivateWalletAsync(Guid ownerGuid)
         {
-            try
+            var wallets = await privateWalletRepositories.GetAll(ownerGuid);
+            foreach (var wallet in wallets)
             {
-                if (walletDTO == null)
-                    throw new ArgumentNullException("Inválido");
-
-                var wallet = new PrivateWallet();
-                var user = new User();
-
-                user.UpdateUser(walletDTO.user.Guid, walletDTO.user.Name, walletDTO.user.Email, walletDTO.user.PhoneNumber);
-
-                wallet.ObterCarteiraPrivada(walletDTO.guid, walletDTO.NameWallet, user);
-                var walletData = await privateWalletRepository.ObterCarteiraPrivadaPorGuid(wallet);
-                if (walletData == null)
-                    throw new ArgumentNullException("Carteira não encontrada");
-                return wallet;
+                wallet.SetNullOwner();
             }
-            catch (Exception ex)
-            {
-                throw new ArgumentException(ex.Message);
-            }
+            return wallets;
         }
 
-        public async Task DeleteWallet(PrivateWalletDTO walletDTO)
+        public async Task<PrivateWallet> GetPrivateWalletByIdAsync(WalletDto wallet, Guid ownerGuid)
         {
-            try
-            {
-                if (walletDTO == null)
-                    throw new ArgumentNullException("Inválido");
+            var foundWallet = await privateWalletRepositories.GetById(wallet.Id, ownerGuid);
+            foundWallet.SetNullOwner();
+            return foundWallet;
+        }
 
-                var wallet = new PrivateWallet();
-                var user = new User();
-                user.UpdateUser(walletDTO.user.Guid, walletDTO.user.Name, walletDTO.user.Email, walletDTO.user.PhoneNumber);
-                wallet.ObterCarteiraPrivada(walletDTO.guid, walletDTO.NameWallet, user);
-                await privateWalletRepository.DeletarCarteira(wallet);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException(ex.Message);
-            }
+        public async Task<PrivateWallet> UpdatePrivateWalletAsync(WalletDto wallet, Guid ownerGuid)
+        {
+            var existingWallet = await privateWalletRepositories.GetById(wallet.Id, ownerGuid);
+            existingWallet.AtualizarCarteira(wallet.Name);
+            var resultWallet = await privateWalletRepositories.Update(existingWallet);
+            resultWallet.SetNullOwner();
+            return resultWallet;
+        }
 
+        public async Task<bool> DeletePrivateWalletAsync(WalletDto wallet, Guid ownerGuid)
+        {
+            var existingWallet = await privateWalletRepositories.GetById(wallet.Id, ownerGuid);
+            return await privateWalletRepositories.Delete(existingWallet);
         }
     }
-
 }

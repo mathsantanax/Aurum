@@ -1,0 +1,16 @@
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\bin\Debug\net9.0\Aurum.Applications.deps.json
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\bin\Debug\net9.0\Aurum.Applications.dll
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\bin\Debug\net9.0\Aurum.Applications.pdb
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\bin\Debug\net9.0\Aurum.Domain.dll
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\bin\Debug\net9.0\Aurum.Domain.pdb
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\obj\Debug\net9.0\Aurum.Applications.csproj.AssemblyReference.cache
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\obj\Debug\net9.0\Aurum.Applications.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\obj\Debug\net9.0\Aurum.Applications.AssemblyInfoInputs.cache
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\obj\Debug\net9.0\Aurum.Applications.AssemblyInfo.cs
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\obj\Debug\net9.0\Aurum.Applications.csproj.CoreCompileInputs.cache
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\obj\Debug\net9.0\Aurum.Applications.sourcelink.json
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\obj\Debug\net9.0\Aurum.Ap.6EC41A31.Up2Date
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\obj\Debug\net9.0\Aurum.Applications.dll
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\obj\Debug\net9.0\refint\Aurum.Applications.dll
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\obj\Debug\net9.0\Aurum.Applications.pdb
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.Applications\obj\Debug\net9.0\ref\Aurum.Applications.dll

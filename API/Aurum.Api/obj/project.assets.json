@@ -1769,6 +1769,10 @@
         "dependencies": {
           "Aurum.Domain": "1.0.0",
           "Microsoft.AspNetCore.Identity": "2.3.1",
+<<<<<<< HEAD
+=======
+          "Microsoft.IdentityModel.Tokens": "8.14.0",
+>>>>>>> 361a6b5a70ac4ce95e8202e8bab960055fb7d478
           "System.IdentityModel.Tokens.Jwt": "8.14.0"
         },
         "compile": {

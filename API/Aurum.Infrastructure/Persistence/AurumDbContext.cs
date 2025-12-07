@@ -14,8 +14,6 @@ namespace Aurum.Infrastructure.Persistence
 
         public override  DbSet<User> Users { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
-        public DbSet<PrivateWallet> PrivateWallets { get; set; }
-        public DbSet<SharedWallet> SharedWallets { get; set; }
         public DbSet<Transactions> Transactions { get; set; }
         public DbSet<Category> Category { get; set; }
 
@@ -28,6 +26,7 @@ namespace Aurum.Infrastructure.Persistence
                 entity.Property(u => u.fullName).IsRequired().HasMaxLength(150);
                 entity.Property(u => u.RefreshToken).HasMaxLength(500);
                 entity.Property(u => u.Email).IsRequired().HasMaxLength(100);
+                entity.Property(u => u.RefreshToken).HasMaxLength(500);
                 entity.HasMany<PrivateWallet>()
                     .WithOne(w => w.User)
                     .HasForeignKey(w => w.OwnerGuid)
@@ -36,9 +35,17 @@ namespace Aurum.Infrastructure.Persistence
                     .WithOne(t => t.CreatedBy)
                     .HasForeignKey(t => t.CreatedByGuid)
                     .OnDelete(DeleteBehavior.Cascade);
+<<<<<<< HEAD
                 entity.HasMany<Category>();
                 entity.HasMany<SharedWallet>()
                     .WithMany(sw => sw.Members);
+=======
+                entity.HasMany<Category>().WithMany();
+                entity.HasMany<Members>()
+                    .WithOne(m => m.User)
+                    .HasForeignKey(m => m.UserGuid)
+                    .OnDelete(DeleteBehavior.Cascade);
+>>>>>>> 361a6b5a70ac4ce95e8202e8bab960055fb7d478
             });
 
             // Wallet
@@ -74,9 +81,13 @@ namespace Aurum.Infrastructure.Persistence
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Members (herda de user)
-            modelBuilder.Entity<Members>()
-                .HasBaseType<User>();
+            modelBuilder.Entity<Members>(entity =>
+            {
+                entity.HasKey(m => new { m.UserGuid, m.WalletGuid });
+                entity.Property(m => m.WalletRole)
+                       .IsRequired()
+                       .HasConversion<string>();
+            });
 
             // Category
             modelBuilder.Entity<Category>(entity =>

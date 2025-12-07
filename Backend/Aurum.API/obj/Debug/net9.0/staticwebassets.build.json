@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "KMkR8UcJxcI1v4oKEhBgxFkEKOY1C1f3QNn1WoARGaI=",
+  "Source": "Aurum.API",
+  "BasePath": "_content/Aurum.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

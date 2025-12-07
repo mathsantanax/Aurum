@@ -167,6 +167,13 @@
               "target": "Package",
               "version": "[2.3.1, )"
             },
+<<<<<<< HEAD
+=======
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.14.0, )"
+            },
+>>>>>>> 361a6b5a70ac4ce95e8202e8bab960055fb7d478
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[8.14.0, )"
