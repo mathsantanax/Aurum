@@ -10,7 +10,6 @@
         "dependencies": {
           "Aurum.Applications": "1.0.0",
           "Microsoft.EntityFrameworkCore": "9.0.11",
-          "Microsoft.EntityFrameworkCore.Tools": "10.0.0",
           "Microsoft.Extensions.Configuration": "10.0.0",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "9.0.11",
           "Microsoft.Extensions.Configuration.FileExtensions": "9.0.11",
@@ -32,7 +31,6 @@
       "Microsoft.EntityFrameworkCore/9.0.11": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Abstractions": "9.0.11",
-          "Microsoft.EntityFrameworkCore.Analyzers": "9.0.11",
           "Microsoft.Extensions.Caching.Memory": "9.0.11",
           "Microsoft.Extensions.Logging": "9.0.11"
         },
@@ -51,7 +49,6 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Analyzers/9.0.11": {},
       "Microsoft.EntityFrameworkCore.Relational/9.0.1": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "9.0.11",
@@ -66,7 +63,6 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Tools/10.0.0": {},
       "Microsoft.Extensions.Caching.Abstractions/9.0.11": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "10.0.0"
@@ -310,26 +306,12 @@
       "path": "microsoft.entityframeworkcore.abstractions/9.0.11",
       "hashPath": "microsoft.entityframeworkcore.abstractions.9.0.11.nupkg.sha512"
     },
-    "Microsoft.EntityFrameworkCore.Analyzers/9.0.11": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-ccEk88YkXXWV+s5ZS+27UoY5YUVzgx8mq7kl+e05+AgJPGLhtmpQL26LxqBV1StJZEl2KaL8BxzABvXTXBAkoQ==",
-      "path": "microsoft.entityframeworkcore.analyzers/9.0.11",
-      "hashPath": "microsoft.entityframeworkcore.analyzers.9.0.11.nupkg.sha512"
-    },
     "Microsoft.EntityFrameworkCore.Relational/9.0.1": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-7Iu0h4oevRvH4IwPzmxuIJGYRt55TapoREGlluk75KCO7lenN0+QnzCl6cQDY48uDoxAUpJbpK2xW7o8Ix69dw==",
       "path": "microsoft.entityframeworkcore.relational/9.0.1",
       "hashPath": "microsoft.entityframeworkcore.relational.9.0.1.nupkg.sha512"
-    },
-    "Microsoft.EntityFrameworkCore.Tools/10.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Gx6AWCf1CsBHTbvVVWBYBKp6hrwZt0IgBigoBPaybwOBG2EFIfZc7NP2BoR6r56YuuikbPIzCuvQuFYNnX43+A==",
-      "path": "microsoft.entityframeworkcore.tools/10.0.0",
-      "hashPath": "microsoft.entityframeworkcore.tools.10.0.0.nupkg.sha512"
     },
     "Microsoft.Extensions.Caching.Abstractions/9.0.11": {
       "type": "package",

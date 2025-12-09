@@ -18,6 +18,7 @@ namespace Aurum.Infrastructure.Repositories
             {
                 _context.Wallets.Add(wallet);
                 await _context.SaveChangesAsync();
+                _context.ChangeTracker.Clear(); // Limpa o rastreamento para liberar memória
                 return wallet;
 
             }
@@ -45,8 +46,8 @@ namespace Aurum.Infrastructure.Repositories
                                  .Include(w => w.CreditCards) // Inclui os cartões de crédito associados
                                  .Include(w => w.SharedWalletMemberships) // Inclui os membros da carteira compartilhada
                                  .AsNoTracking() // Evita o rastreamento para melhorar o desempenho em consultas somente leitura
+                                 .AsSplitQuery() // habilitando consultas divididas
                                  .ToListAsync();
-
                 return result;
 
             }
@@ -68,22 +69,12 @@ namespace Aurum.Infrastructure.Repositories
                             .AsSplitQuery()
                             .AsNoTracking()
                             .FirstOrDefaultAsync();
-
                 return result ?? throw new AppException($"Não Existe nenhuma cateira com id {WalletId}");
             }
             catch (DbException ex)
             {
                 throw new AppException($"Erro ao acessar o banco de dados. {ex.Message}", ex.HResult);
             }
-        }
-
-        public async Task<Wallet> GetWalletByIdAsync(Guid guid)
-        {
-            return await _context.Wallets
-                                 .Where(w => w.Id.Equals(guid))
-                                 .AsNoTracking()
-                                 .FirstAsync()
-                ?? throw new AppException($"Não Existe nenhuma cateira com id {guid}");
         }
 
         public async Task<Wallet> UpdateWallet(Wallet wallet)
@@ -95,6 +86,7 @@ namespace Aurum.Infrastructure.Repositories
                 //_context.Entry(wallet).Property(w => w.Name).IsModified = true;
                 //_context.Entry(wallet).Property(w => w.UpdatedAt).IsModified = true;
                 await _context.SaveChangesAsync();
+                _context.ChangeTracker.Clear(); // Limpa o rastreamento para liberar memória
                 return wallet;
             }
             catch (DbUpdateException ex)

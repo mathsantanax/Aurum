@@ -26,7 +26,7 @@ namespace Aurum.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Post([FromBody] CreditCartDTO request,[FromRoute] Guid walletGuid)
+        public async Task<IActionResult> Post([FromBody] CreditCartDTO request, [FromRoute] Guid walletGuid)
         {
             var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -34,11 +34,30 @@ namespace Aurum.API.Controllers
                 // Se o token de autenticação não fornecer um UserGuid válido
                 return Unauthorized("Não foi possível identificar o usuário logado.");
 
-            if(walletGuid == Guid.Empty)
+            if (walletGuid == Guid.Empty)
                 return BadRequest($"Guid da carteira inválido. \n{walletGuid}");
 
-            var creditCard =await _creditCardService.CreateCreditCard(userGuid, walletGuid, request);
+            var creditCard = await _creditCardService.CreateCreditCard(userGuid, walletGuid, request);
 
+            return Ok(creditCard);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("{creditCardGuid:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Get([FromRoute] Guid creditCardGuid)
+        {
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(user) || !Guid.TryParse(user, out var userGuid))
+                // Se o token de autenticação não fornecer um UserGuid válido
+                return Unauthorized("Não foi possível identificar o usuário logado.");
+            if (creditCardGuid == Guid.Empty)
+                return BadRequest($"Guid do cartão de crédito inválido. \n{creditCardGuid}");
+            var creditCard = await _creditCardService.GetCreditCard(creditCardGuid);
             return Ok(creditCard);
         }
     }

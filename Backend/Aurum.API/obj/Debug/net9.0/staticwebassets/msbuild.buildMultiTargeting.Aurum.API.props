@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\Aurum.API.props" />
-</Project>

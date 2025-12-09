@@ -11,17 +11,7 @@
 using System;
 using System.Reflection;
 
-<<<<<<< HEAD:Backend/Aurum.Tests/obj/Debug/net9.0/Aurum.Tests.AssemblyInfo.cs
-[assembly: System.Reflection.AssemblyCompanyAttribute("Aurum.Tests")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+372333490101e60f98406d3a3d86d33c9d8d474a")]
-[assembly: System.Reflection.AssemblyProductAttribute("Aurum.Tests")]
-[assembly: System.Reflection.AssemblyTitleAttribute("Aurum.Tests")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
-=======
 [assembly: Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPartAttribute("Microsoft.AspNetCore.OpenApi")]
->>>>>>> matheus:Backend/Aurum.API/obj/Debug/net9.0/Aurum.API.MvcApplicationPartsAssemblyInfo.cs
 
 // Gerado pela classe WriteCodeFragment do MSBuild.
 

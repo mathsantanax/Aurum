@@ -21,6 +21,9 @@ namespace Aurum.API.Extensions
             builder.Services.AddScoped<CreditCardService>();
             builder.Services.AddScoped<ICreditCardRepository, CreditCardRepository>();
 
+            builder.Services.AddScoped<CategoryService>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
             return builder;
         }
     }

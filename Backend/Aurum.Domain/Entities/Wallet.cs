@@ -27,6 +27,8 @@ namespace Aurum.Domain.Entities
         // Construtor para EF Core (protegido ou privado)
         public Wallet() { }
 
+        public Wallet(Guid OwnerUserGuid) : this(OwnerUserGuid, null) { }
+
         // Construtor público para criar uma nova carteira
         public Wallet(Guid OwnerUserGuid, string? name)
         {

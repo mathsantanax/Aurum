@@ -14,8 +14,9 @@ namespace Aurum.Infrastructure.Repositories
         {
             try
             {
-                _context.CreditCards.Add(creditCard);
-                return await _context.SaveChangesAsync();
+                await _context.CreditCards.AddAsync(creditCard);
+                int retorno = await _context.SaveChangesAsync();
+                return retorno;
             }
             catch (DbUpdateException ex)
             {
@@ -34,7 +35,9 @@ namespace Aurum.Infrastructure.Repositories
             try
             {
                 var creditCard = await _context.CreditCards
+                    .Include(c => c.Transactions)
                     .AsNoTracking()
+                    .AsSplitQuery()
                     .FirstOrDefaultAsync(cc => cc.Id == id);
                 return creditCard ?? throw new AppException($"Não Existe nenhum cartão de crédito com id {id}");
             }

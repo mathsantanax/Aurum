@@ -21,25 +21,25 @@ namespace Aurum.Applications.Services
             _walletRepository = walletRepository;
         }
 
+        // Cria um novo cartão de crédito para um usuário em uma carteira específica
         public async Task<CreditCartDTO> CreateCreditCard(Guid UserGuid, Guid WalletGuid, CreditCartDTO request)
         {
-            var wallet = await _walletRepository.GetWalletByIdAsync(WalletGuid);
-
-            if (wallet == null)
-                throw new Exception("Carteira não cadastrada!");
-
+            // Cria um novo cartão de crédito
             var creditCard = new CreditCard(
                 UserGuid,
-                wallet.Id,
+                walletId: WalletGuid,
                 request.Name,
                 request.CreditLimit,
                 request.ClosingDay,
                 request.DueDay
             );
 
+            // Salva o cartão de crédito no repositório
             var credit = await _creditCardRepository.CreateCreditCard(creditCard);
-            Console.WriteLine(credit);
 
+            Console.WriteLine("\n\n\n\nCredit Card created with ID: " + creditCard.Id + "\n\n\n\n");
+
+            // Retorna os dados do cartão de crédito criado
             return new CreditCartDTO 
             {
                 Name = creditCard.Name!,
