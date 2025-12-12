@@ -8,7 +8,7 @@ namespace Aurum.Domain.Entities
         public Guid Id { get; private set; } // Identificador único da categoria
         public string? Name { get; private set; } // Nome da categoria
         public string? Description { get; private set; } // Descrição da categoria
-        public TransactionFlow IsIncome { get; private set; } // Indica se a categoria é de receita ou despesa
+        public TransactionFlow Flow { get; private set; } // Indica se a categoria é de receita ou despesa
         public DateTime CreatedAt { get; private set; } // Data de criação
         public Guid UserGuid { get; private set; } // Chave estrangeira para o usuário
 
@@ -22,7 +22,7 @@ namespace Aurum.Domain.Entities
             Description = description;
             UserGuid = userGuid;
             CreatedAt = DateTime.UtcNow;
-            IsIncome = isIncome;
+            Flow = isIncome;
         }
 
         // Método para renomear a categoria

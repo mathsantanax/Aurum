@@ -11,6 +11,6 @@ namespace Aurum.Applications.DTOs
     {
         public string NameCagegory { get; set; } = string.Empty!;
         public string DescriptionCagegory { get; set; } = string.Empty!;
-        public TransactionFlow IsIncome { get; set; }
+        public TransactionFlowDTO IsIncome { get; set; }
     }
 }

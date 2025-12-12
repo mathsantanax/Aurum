@@ -87,7 +87,8 @@ namespace Aurum.Infrastructure.Data
                       .IsRequired(); // Define o tamanho máximo e obrigatoriedade para o nome da categoria
                 entity.Property(e => e.Description)
                       .HasMaxLength(250); // Define o tamanho máximo para a descrição da categoria
-                entity.Property(e => e.IsIncome)
+                entity.Property(e => e.Flow)
+                      .HasConversion<string>() // Mapeamento do enum para string
                       .IsRequired(); // Define a obrigatoriedade para o campo IsIncome
                 entity.Property(e => e.CreatedAt)
                       .IsRequired(); // Define a obrigatoriedade para a data de criação

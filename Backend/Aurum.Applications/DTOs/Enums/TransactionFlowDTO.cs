@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurum.Applications.DTOs.Enums
 {
-    public enum TransactionFlow
+    public enum TransactionFlowDTO
     {
         Expense, // Despeza (Deduz do saldo)    
         Income, // Receita (Adiciona ao saldo)

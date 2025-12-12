@@ -9,7 +9,6 @@ C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Aurum
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\dotenv.net.dll
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Humanizer.dll
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Microsoft.AspNetCore.OpenApi.dll
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Microsoft.Build.Locator.dll
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.dll
@@ -48,6 +47,9 @@ C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Micro
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Mono.TextTemplating.dll
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Npgsql.dll
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\System.CodeDom.dll
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\System.Composition.AttributedModel.dll
 C:\Users\mathe\Documents\Projects\Aurum\Backend\Aurum.API\bin\Debug\net9.0\System.Composition.Convention.dll

@@ -14,10 +14,17 @@ namespace Aurum.API.Extensions
             app.UseMiddleware<ExceptionMiddleware>();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.MapOpenApi();
+            //}
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.MapOpenApi();
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Aurum API V1");
+                c.RoutePrefix = "swagger"; // Define a raiz para acessar o Swagger UI
+            });
 
             app.UseHttpsRedirection();
 

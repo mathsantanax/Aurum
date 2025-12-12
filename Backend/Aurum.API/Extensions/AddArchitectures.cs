@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Data.Common;
 using System.Text.Json.Serialization;
+using Microsoft.OpenApi;
 
 namespace Aurum.API.Extensions
 {
@@ -69,14 +71,51 @@ namespace Aurum.API.Extensions
             // Adiciona o serviço de exploração de endpoints para APIs
             builder.Services.AddEndpointsApiExplorer();
 
+            builder.Services.AddSwaggerGen(c =>
+            {
+                // Configuração básica do Swagger
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Aurum API",
+                    Version = "v1",
+                    Description = "API para gestão financeira pessoal e compartilhada."
+                });
+
+                // Configuração do Swagger para suportar autenticação JWT Bearer
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme 
+                { 
+                    Description = "Insira o Bearer token na seguinte formato: Bearer {seu token}",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header
+                });
+
+                //c.AddSecurityRequirement(new OpenApiSecurityRequirement 
+                //{ 
+                //    { 
+                //        new OpenApiSecurityScheme 
+                //        { 
+                //            Reference = new OpenApiReference 
+                //            { 
+                //                Type = ReferenceType.SecurityScheme,
+                //                Id = "Bearer"
+                //            }
+                //        },
+                //        Array.Empty<string>() 
+                //    } 
+                //});
+            });
+
             // Adiciona o serviço de autorização
             builder.Services.AddAuthorization();
 
             // Add services to the container.
             builder.Services.AddControllers();
 
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            //// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            //builder.Services.AddOpenApi();
 
             return builder;
         }
