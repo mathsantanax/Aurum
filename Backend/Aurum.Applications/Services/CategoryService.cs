@@ -36,5 +36,24 @@ namespace Aurum.Applications.Services
 
             return category;
         }
+
+        public async Task<IEnumerable<CategoryDTO>> GetCategoriesByUserGuidAsync(Guid userGuid)
+        {
+            var categories = await _categoryRepository.GetByUserGuidAsync(userGuid);
+            // Mapear Category para CategoryDTO
+            var categoryDTOs = categories.Select(c => new CategoryDTO
+            {
+                NameCagegory = c.Name,
+                DescriptionCagegory = c.Description,
+                IsIncome = c.Flow switch
+                {
+                    TransactionFlow.Expense => TransactionFlowDTO.Expense,
+                    TransactionFlow.Income => TransactionFlowDTO.Income,
+                    TransactionFlow.Transfer => TransactionFlowDTO.Transfer,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
+            });
+            return categoryDTOs;
+        }
     }
 }

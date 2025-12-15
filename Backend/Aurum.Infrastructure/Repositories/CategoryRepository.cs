@@ -34,6 +34,28 @@ namespace Aurum.Infrastructure.Repositories
                 throw new AppException($"Erro ao salvar o item no banco de dados. {ex.Message}", ex.HResult);
             }
         }
+
+        public async Task<IEnumerable<Category>> GetByUserGuidAsync(Guid userGuid)
+        {
+            try
+            {
+                return await _context.Categories
+                    .Where(c => c.UserGuid == userGuid)
+                    .AsSplitQuery()
+                    .ToListAsync()
+                    .ContinueWith(t => (IEnumerable<Category>)t.Result);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("violates unique constraint") == true)
+                {
+                    throw new ValidationException("O nome do item já existe. Escolha outro nome.");
+                }
+
+                // Se for outro erro de banco, relança como um erro 500 de aplicação.
+                throw new AppException($"Erro ao salvar o item no banco de dados. {ex.Message}", ex.HResult);
+            }
+        }
     }
 
 }
