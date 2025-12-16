@@ -24,6 +24,9 @@ namespace Aurum.API.Extensions
             builder.Services.AddScoped<CategoryService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
+            builder.Services.AddScoped<TransactionService>();
+            builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+
             return builder;
         }
     }

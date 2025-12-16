@@ -34,6 +34,17 @@ namespace Aurum.Infrastructure.Repositories
             }
         }
 
+        public async Task<Wallet> GetWalletByGuid(Guid walletGuid)
+        {
+            var result = await _context.Wallets
+                            .Where(w => w.Id.Equals(walletGuid))
+                            .Include(w => w.SharedWalletMemberships)
+                            .AsNoTracking()
+                            .AsSplitQuery()
+                            .FirstOrDefaultAsync();
+            return result ?? throw new AppException($"Não Existe nenhuma cateira com id {walletGuid}");
+        }
+
         // Obtém todas as carteiras associadas a um usuário específico.
         public async Task<IReadOnlyList<Wallet>> GetAllWallets(Guid userId)
         {

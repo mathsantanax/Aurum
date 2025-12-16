@@ -9,6 +9,6 @@ namespace Aurum.Domain.Interfaces
 {
     public interface ITransactionRepository
     {
-        Task<int> AddAsync(Transaction transaction);
+        Task AddAsync(Transaction transaction);
     }
 }

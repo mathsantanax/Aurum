@@ -13,5 +13,6 @@ namespace Aurum.Domain.Interfaces
         Task<Wallet> GetWalletById(Guid WalletId, Guid UserId);
         Task<Wallet> CreateWallet(Wallet wallet);
         Task<Wallet> UpdateWallet(Wallet wallet);
+        Task<Wallet> GetWalletByGuid(Guid walletGuid);
     }
 }

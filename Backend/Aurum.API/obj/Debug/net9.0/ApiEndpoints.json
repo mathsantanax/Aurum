@@ -179,6 +179,37 @@
     ]
   },
   {
+    "ContainingType": "Aurum.API.Controllers.TransactionController",
+    "Method": "Post",
+    "RelativePath": "api/v1/Transaction",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Aurum.Applications.DTOs.TransactionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      }
+    ]
+  },
+  {
     "ContainingType": "Aurum.API.Controllers.ValidationTokenController",
     "Method": "GetDados",
     "RelativePath": "api/v1/ValidationToken/dados-protegidos",

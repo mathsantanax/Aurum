@@ -284,6 +284,57 @@
         }
       }
     },
+    "/api/v1/Transaction": {
+      "post": {
+        "tags": [
+          "Transaction"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/ValidationToken/dados-protegidos": {
       "get": {
         "tags": [
@@ -614,6 +665,31 @@
         },
         "additionalProperties": { }
       },
+      "TransactionDTO": {
+        "type": "object",
+        "properties": {
+          "walletGuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryGuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "$ref": "#/components/schemas/TransactionFlowDTO"
+          }
+        },
+        "additionalProperties": false
+      },
       "TransactionFlowDTO": {
         "enum": [
           0,
@@ -649,6 +725,9 @@
     },
     {
       "name": "CreditCard"
+    },
+    {
+      "name": "Transaction"
     },
     {
       "name": "ValidationToken"
