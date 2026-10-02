@@ -9,6 +9,7 @@ import { RegisterPage } from "../../features/auth/pages/RegisterPage";
 import { ForgotPasswordPage } from "../../features/auth/pages/ForgotPasswordPage";
 import { ResetPasswordPage } from "../../features/auth/pages/ResetPasswordPage";
 import { ConfirmEmailPage } from "../../features/auth/pages/ConfirmEmailPage";
+import { UserProfilePage } from "../../features/auth/pages/UserProfilePage";
 
 import { DashboardPage } from "../../features/dashboard/pages/DashboardPage";
 import { WalletspacesPage } from "../../features/walletspaces/pages/WalletspacesPage";
@@ -46,10 +47,18 @@ export function AppRouter() {
       </Route>
 
       <Route element={<ProtectedRoute />}>
+        <Route
+          path="/complete-profile"
+          element={<UserProfilePage isCompletingProfile />}
+        />
         <Route element={<AppLayout />}>
           <Route
             path="/dashboard"
             element={<DashboardPage />}
+          />
+          <Route
+            path="/my-data"
+            element={<UserProfilePage />}
           />
 
           <Route

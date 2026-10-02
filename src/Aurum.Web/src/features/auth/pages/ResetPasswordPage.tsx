@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { resetPassword } from "../api/authApi";
 import { getAuthErrorMessage } from "../utils/getAuthErrorMessage";
 
 export function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [email, setEmail] = useState(searchParams.get("email") ?? "");
-  const [resetCode, setResetCode] = useState(
+  const [resetCode] = useState(
     searchParams.get("resetCode") ?? searchParams.get("code") ?? "",
   );
   const [password, setPassword] = useState("");
@@ -15,6 +17,18 @@ export function ResetPasswordPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (searchParams.has("resetCode") || searchParams.has("code")) {
+      navigate(
+        {
+          pathname: location.pathname,
+          search: email ? `?email=${encodeURIComponent(email)}` : "",
+        },
+        { replace: true, state: location.state },
+      );
+    }
+  }, [email, location.pathname, location.state, navigate, searchParams]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -52,6 +66,12 @@ export function ResetPasswordPage() {
           Sua senha foi alterada. Agora você já pode entrar na sua conta.
         </div>
       ) : (
+        <>
+        {!resetCode && !isComplete && (
+          <div role="alert" className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm leading-5 text-amber-900">
+            Este link de recuperação está incompleto. Solicite um novo e-mail para redefinir sua senha.
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4" aria-busy={isSubmitting}>
           <div>
             <label htmlFor="reset-email" className="mb-2 block text-sm font-semibold text-slate-800">E-mail da conta</label>
@@ -64,19 +84,6 @@ export function ResetPasswordPage() {
               onChange={(event) => setEmail(event.target.value)}
               required
               className="min-h-12 w-full rounded-xl border border-slate-300 px-4 outline-none transition focus:border-violet-700 focus:ring-4 focus:ring-violet-100"
-            />
-          </div>
-          <div>
-            <label htmlFor="reset-code" className="mb-2 block text-sm font-semibold text-slate-800">Código de recuperação</label>
-            <textarea
-              id="reset-code"
-              name="resetCode"
-              value={resetCode}
-              onChange={(event) => setResetCode(event.target.value)}
-              required
-              rows={3}
-              className="w-full resize-y rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-violet-700 focus:ring-4 focus:ring-violet-100"
-              placeholder="Cole aqui o código recebido por e-mail"
             />
           </div>
           <div>
@@ -114,12 +121,13 @@ export function ResetPasswordPage() {
           )}
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !resetCode}
             className="flex min-h-12 w-full items-center justify-center rounded-xl bg-violet-900 px-4 text-sm font-semibold text-white transition hover:bg-violet-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isSubmitting ? "Atualizando..." : "Alterar senha"}
           </button>
         </form>
+        </>
       )}
       <Link to="/login" className="mt-6 block text-center text-sm font-semibold text-violet-800 underline-offset-4 hover:underline">
         Voltar para o login

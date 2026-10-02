@@ -16,6 +16,11 @@ const navigation = [
     to: "/walletspaces",
     marker: "02",
   },
+  {
+    label: "Meus dados",
+    to: "/my-data",
+    marker: "03",
+  },
 ];
 
 export function AppLayout() {
@@ -115,7 +120,7 @@ export function AppLayout() {
         </main>
       </div>
       <nav aria-label="Navegação principal" className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl lg:hidden">
-        <div className="mx-auto grid max-w-lg grid-cols-2 gap-2">
+        <div className="mx-auto grid max-w-lg grid-cols-3 gap-2">
           {navigation.map((item) => (
             <NavLink
               key={item.to}

@@ -4,6 +4,7 @@ import type {
   CurrentUser,
   LoginRequest,
   RegisterRequest,
+  UpdateProfileRequest,
 } from "../types/auth.types";
 
 const pendingConfirmations = new Map<string, Promise<void>>();
@@ -11,6 +12,14 @@ const pendingConfirmations = new Map<string, Promise<void>>();
 
 export async function getCurrentUser(): Promise<CurrentUser> {
   const response = await api.get<CurrentUser>("/auth/me");
+
+  return response.data;
+}
+
+export async function updateCurrentUser(
+  data: UpdateProfileRequest,
+): Promise<CurrentUser> {
+  const response = await api.put<CurrentUser>("/auth/profile", data);
 
   return response.data;
 }

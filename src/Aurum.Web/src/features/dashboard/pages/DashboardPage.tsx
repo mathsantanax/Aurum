@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../auth/hooks/useAuth";
 import { getAuthErrorMessage } from "../../auth/utils/getAuthErrorMessage";
 import { getDashboardSummary } from "../../walletspaces/api/walletspacesApi";
 
@@ -9,6 +10,7 @@ const currency = new Intl.NumberFormat("pt-BR", {
 });
 
 export function DashboardPage() {
+  const { user } = useAuth();
   const summaryQuery = useQuery({
     queryKey: ["dashboard-summary"],
     queryFn: getDashboardSummary,
@@ -20,7 +22,9 @@ export function DashboardPage() {
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-violet-800">Seu panorama</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">Visão geral</h1>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+            Olá, {user?.fullName?.trim().split(/\s+/)[0] || "bem-vindo"}!
+          </h1>
           <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600">
             Acompanhe seus espaços e tenha mais clareza sobre suas finanças.
           </p>

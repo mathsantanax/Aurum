@@ -2,7 +2,7 @@ import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 
 export function ProtectedRoute() {
-  const { isAuthenticated, isLoading, authError, refreshUser } = useAuth();
+  const { user, isAuthenticated, isLoading, authError, refreshUser } = useAuth();
   const location = useLocation();
 
   if (isLoading) {
@@ -53,6 +53,14 @@ export function ProtectedRoute() {
         state={{ from: location }}
       />
     );
+  }
+
+  if (!user?.profileComplete && location.pathname !== "/complete-profile") {
+    return <Navigate to="/complete-profile" replace />;
+  }
+
+  if (user?.profileComplete && location.pathname === "/complete-profile") {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <Outlet />;
