@@ -161,6 +161,13 @@ export function LoginPage() {
       >
         Criar uma conta
       </Link>
+      <Link
+        to="/confirm-email"
+        state={{ email }}
+        className="mt-4 block text-center text-sm font-semibold text-violet-800 underline-offset-4 hover:underline"
+      >
+        Precisa confirmar seu e-mail?
+      </Link>
       <p className="mt-6 text-center text-xs leading-5 text-slate-500">
         Sua sessão é protegida e mantida em um cookie seguro.
       </p>

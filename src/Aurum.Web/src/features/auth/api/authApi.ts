@@ -6,6 +6,8 @@ import type {
   RegisterRequest,
 } from "../types/auth.types";
 
+const pendingConfirmations = new Map<string, Promise<void>>();
+
 
 export async function getCurrentUser(): Promise<CurrentUser> {
   const response = await api.get<CurrentUser>("/auth/me");
@@ -43,6 +45,10 @@ export async function requestPasswordReset(email: string) {
   await api.post("/auth/forgotPassword", { email });
 }
 
+export async function resendConfirmationEmail(email: string) {
+  await api.post("/auth/resendConfirmationEmail", { email });
+}
+
 export async function resetPassword(
   email: string,
   resetCode: string,
@@ -55,8 +61,22 @@ export async function resetPassword(
   });
 }
 
-export async function confirmEmail(userId: string, code: string) {
-  await api.get("/auth/confirmEmail", {
-    params: { userId, code },
+export function confirmEmail(
+  userId: string,
+  code: string,
+  changedEmail?: string,
+): Promise<void> {
+  const key = `${userId}:${code}:${changedEmail ?? ""}`;
+  const pending = pendingConfirmations.get(key);
+  if (pending) {
+    return pending;
+  }
+
+  const request = api.get("/auth/confirmEmail", {
+    params: { userId, code, changedEmail },
+  }).then(() => undefined).finally(() => {
+    pendingConfirmations.delete(key);
   });
+  pendingConfirmations.set(key, request);
+  return request;
 }

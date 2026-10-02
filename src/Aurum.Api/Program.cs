@@ -101,7 +101,10 @@ namespace Aurum.Api
                 });
             }
 
-            app.UseHttpsRedirection(); // Use HTTPS redirection middleware
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
 
             app.UseCors("AurumFrontend"); // Use CORS policy
 

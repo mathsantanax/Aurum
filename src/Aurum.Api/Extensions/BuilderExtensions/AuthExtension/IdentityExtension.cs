@@ -9,6 +9,7 @@ namespace Aurum.Api.Extensions.BuilderExtensions.AuthExtension
     {
         public static WebApplicationBuilder AddIdentityConfig(this WebApplicationBuilder builder)
         {
+            var secureCookies = !builder.Environment.IsDevelopment();
 
             builder.Services.AddIdentityApiEndpoints<AurumUser>(options =>
             {
@@ -43,11 +44,13 @@ namespace Aurum.Api.Extensions.BuilderExtensions.AuthExtension
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                options.Cookie.Name = "__Host-Aurum.Auth";
+                options.Cookie.Name = secureCookies ? "__Host-Aurum.Auth" : "Aurum.Auth";
 
                 options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = secureCookies
+                    ? CookieSecurePolicy.Always
+                    : CookieSecurePolicy.SameAsRequest;
+                options.Cookie.SameSite = SameSiteMode.Lax;
 
                 options.Cookie.Path = "/";
                 options.Cookie.Domain = null;

@@ -6,6 +6,8 @@ namespace Aurum.Api.Extensions.BuilderExtensions.SecurityExtensions
     {
         public static WebApplicationBuilder AddSecurity(this WebApplicationBuilder builder)
         {
+            var secureCookies = !builder.Environment.IsDevelopment();
+
             // Add security-related services and configurations here
             // For example, you can add cors, rate limiting, etc.
 
@@ -29,10 +31,14 @@ namespace Aurum.Api.Extensions.BuilderExtensions.SecurityExtensions
             builder.Services.AddAntiforgery(options =>
             {
                 options.HeaderName = "X-CSRF-TOKEN";
-                options.Cookie.Name = "__Host-Aurum.Antiforgery";
+                options.Cookie.Name = secureCookies
+                    ? "__Host-Aurum.Antiforgery"
+                    : "Aurum.Antiforgery";
                 options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = secureCookies
+                    ? CookieSecurePolicy.Always
+                    : CookieSecurePolicy.SameAsRequest;
+                options.Cookie.SameSite = SameSiteMode.Lax;
                 options.Cookie.Path = "/";
             });
 

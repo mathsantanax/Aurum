@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/hooks/useAuth";
 import { useLogout } from "../features/auth/hooks/useMutations";
 import { getAuthErrorMessage } from "../features/auth/utils/getAuthErrorMessage";
+import { ThemeSelect } from "../components/ThemeSelect";
 
 const navigation = [
   {
@@ -54,6 +55,7 @@ export function AppLayout() {
             <span className="text-lg font-semibold tracking-tight text-slate-950">Aurum</span>
           </NavLink>
           <div className="flex items-center gap-3">
+            <ThemeSelect />
             <div className="hidden min-w-0 items-center gap-3 sm:flex">
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs font-bold text-violet-900">
                 {initials}

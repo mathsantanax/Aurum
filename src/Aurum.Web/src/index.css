@@ -41,3 +41,119 @@ textarea {
   color: #fff;
   background: #5b21b6;
 }
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  background: #0f1018;
+}
+
+html[data-theme="dark"] body,
+html[data-theme="dark"] #root {
+  background-color: #0f1018;
+  color: #e2e8f0;
+}
+
+html[data-theme="dark"] [class~="bg-white"],
+html[data-theme="dark"] [class~="bg-white/70"],
+html[data-theme="dark"] [class~="bg-white/90"],
+html[data-theme="dark"] [class~="bg-white/95"],
+html[data-theme="dark"] [class~="bg-[#f7f7fb]"] {
+  background-color: #181923;
+}
+
+html[data-theme="dark"] [class~="bg-slate-50"],
+html[data-theme="dark"] [class~="bg-slate-100"],
+html[data-theme="dark"] [class~="bg-violet-50"] {
+  background-color: #242033;
+}
+
+html[data-theme="dark"] [class~="bg-violet-100"] {
+  background-color: #302643;
+}
+
+html[data-theme="dark"] [class~="bg-slate-200"] {
+  background-color: #343542;
+}
+
+html[data-theme="dark"] [class~="bg-emerald-50"] {
+  background-color: #122c25;
+}
+
+html[data-theme="dark"] [class~="bg-rose-50"] {
+  background-color: #351c25;
+}
+
+html[data-theme="dark"] [class~="bg-amber-50"],
+html[data-theme="dark"] [class~="bg-amber-50/70"] {
+  background-color: #332b1b;
+}
+
+html[data-theme="dark"] [class~="text-slate-950"],
+html[data-theme="dark"] [class~="text-slate-900"],
+html[data-theme="dark"] [class~="text-slate-800"],
+html[data-theme="dark"] [class~="text-slate-700"],
+html[data-theme="dark"] [class~="text-slate-600"] {
+  color: #e2e8f0;
+}
+
+html[data-theme="dark"] [class~="text-slate-500"],
+html[data-theme="dark"] [class~="text-slate-400"] {
+  color: #a1a1b2;
+}
+
+html[data-theme="dark"] [class~="text-violet-900"],
+html[data-theme="dark"] [class~="text-violet-800"],
+html[data-theme="dark"] [class~="text-violet-700"] {
+  color: #c4b5fd;
+}
+
+html[data-theme="dark"] [class~="text-emerald-900"],
+html[data-theme="dark"] [class~="text-emerald-800"],
+html[data-theme="dark"] [class~="text-emerald-700"] {
+  color: #86efac;
+}
+
+html[data-theme="dark"] [class~="text-rose-900"],
+html[data-theme="dark"] [class~="text-rose-800"],
+html[data-theme="dark"] [class~="text-rose-700"] {
+  color: #fda4af;
+}
+
+html[data-theme="dark"] [class~="text-amber-900"],
+html[data-theme="dark"] [class~="text-amber-800"],
+html[data-theme="dark"] [class~="text-amber-700"] {
+  color: #fcd34d;
+}
+
+html[data-theme="dark"] [class~="border-slate-200"],
+html[data-theme="dark"] [class~="border-slate-200/80"],
+html[data-theme="dark"] [class~="border-slate-100"],
+html[data-theme="dark"] [class~="border-slate-300"],
+html[data-theme="dark"] [class~="border-slate-400"],
+html[data-theme="dark"] [class~="border-white/70"],
+html[data-theme="dark"] [class~="border-emerald-200"],
+html[data-theme="dark"] [class~="border-rose-200"],
+html[data-theme="dark"] [class~="border-amber-200"],
+html[data-theme="dark"] [class~="border-violet-200"],
+html[data-theme="dark"] [class~="border-violet-300"],
+html[data-theme="dark"] [class~="border-violet-400"],
+html[data-theme="dark"] [class~="border-violet-700"],
+html[data-theme="dark"] [class~="border-violet-800"] {
+  border-color: #343542;
+}
+
+html[data-theme="dark"] [class~="hover:bg-slate-50"]:hover,
+html[data-theme="dark"] [class~="hover:bg-violet-50"]:hover {
+  background-color: #28283a;
+}
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: #8b8b9b;
+}

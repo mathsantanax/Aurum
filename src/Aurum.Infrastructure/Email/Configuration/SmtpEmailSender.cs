@@ -4,10 +4,7 @@ using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using Org.BouncyCastle.Security;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace Aurum.Infrastructure.Email.Configuration
 {
@@ -47,10 +44,20 @@ namespace Aurum.Infrastructure.Email.Configuration
                     secureSocketOptions,
                     cancellationToken);
 
-                await client.AuthenticateAsync(
-                    _options.User,
-                    _options.Password,
-                    cancellationToken);
+                if (!string.IsNullOrWhiteSpace(_options.User) &&
+                    !string.IsNullOrWhiteSpace(_options.Password))
+                {
+                    await client.AuthenticateAsync(
+                        _options.User,
+                        _options.Password,
+                        cancellationToken);
+                }
+                else if (!string.IsNullOrWhiteSpace(_options.User) ||
+                         !string.IsNullOrWhiteSpace(_options.Password))
+                {
+                    throw new InvalidOperationException(
+                        "EMAIL_USER e EMAIL_PASSWORD precisam ser configurados juntos.");
+                }
 
                 await client.SendAsync(
                     message,
