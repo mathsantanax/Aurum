@@ -1,0 +1,67 @@
+services:
+  frontend:
+    build:
+      context: ./src/Aurum.Web
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: .
+      dockerfile: src/Aurum.Api/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8080}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "${ASPNETCORE_ENVIRONMENT:-Development}"
+      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+      Cors__AllowedOrigins__0: "${FRONTEND_ORIGIN:-http://localhost:3000}"
+      DB_HOST: sqlserver
+      DB_PORT: "1433"
+      DB_DATABASE: Aurum
+      DB_USER: sa
+      DB_PASSWORD: "${DB_PASSWORD:?Set DB_PASSWORD in .env; see .env.example}"
+      DB_ENCRYPT: "false"
+      DB_TRUST_SERVER_CERTIFICATE: "true"
+      DB_CONNECTION_TIMEOUT: "30"
+      EMAIL_HOST: "${EMAIL_HOST:-smtp.gmail.com}"
+      EMAIL_PORT: "${EMAIL_PORT:-587}"
+      EMAIL_USER: "${EMAIL_USER:-}"
+      EMAIL_PASSWORD: "${EMAIL_PASSWORD:-}"
+      EMAIL_ENABLE_SSL: "${EMAIL_ENABLE_SSL:-true}"
+      EMAIL_FROM_EMAIL: "${EMAIL_FROM_EMAIL:-}"
+      EMAIL_FROM_NAME: "${EMAIL_FROM_NAME:-Aurum}"
+    volumes:
+      - aurum_dataprotection_keys:/app/keys
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  sqlserver:
+    image: ${SQLSERVER_IMAGE:-mcr.microsoft.com/mssql/server:2022-latest}
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${DB_PASSWORD:?Set DB_PASSWORD in .env; see .env.example}"
+    ports:
+      - "${SQL_PORT:-1433}:1433"
+    volumes:
+      - aurum_sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$${MSSQL_SA_PASSWORD}" -C -Q "SELECT 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  aurum_sqlserver_data:
+  aurum_dataprotection_keys:

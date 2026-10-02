@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../Aurum.Application/Aurum.Application.csproj" />
+  <Project Path="../Aurum.Domain/Aurum.Domain.csproj" />
+  <Project Path="../Aurum.Infrastructure/Aurum.Infrastructure.csproj" />
+  <Project Path="Aurum.Api.csproj" />
+</Solution>

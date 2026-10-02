@@ -1,6 +1,0 @@
-@Aurum.API_HostAddress = http://localhost:5244
-
-GET {{Aurum.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

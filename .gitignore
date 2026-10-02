@@ -1,0 +1,38 @@
+.env
+.env.*
+!.env.example
+**.txt
+
+# .NET
+**/bin/
+**/obj/
+**/out/
+**/publish/
+**/TestResults/
+*.user
+*.suo
+*.cache
+
+# Node.js
+**/node_modules/
+**/dist/
+**/dist-ssr/
+**/coverage/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDEs and operating systems
+.vs/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.DS_Store
+Thumbs.db
+
+# Local data and credentials
+**/keys/
+*.pfx
+*.key
+*.pem
