@@ -2,6 +2,8 @@ export type WalletspaceRole = 1 | 2 | 3 | 4 | 5;
 export type FinancialAccountType = 1 | 2 | 3 | 4 | 5;
 export type FinancialTransactionType = 1 | 2;
 export type FinancialTransactionStatus = 1 | 2;
+export type FinancialTransactionRecurrence = 0 | 1 | 2;
+export type TransactionSeriesScope = "single" | "future" | "all";
 
 export interface Walletspace {
   id: string;
@@ -59,6 +61,10 @@ export interface FinancialTransaction {
   status: FinancialTransactionStatus;
   transactionDate: string;
   dueDate: string | null;
+  recurrence: FinancialTransactionRecurrence;
+  seriesId: string | null;
+  installmentNumber: number | null;
+  installmentCount: number | null;
 }
 
 export interface SaveFinancialTransaction {
@@ -71,6 +77,9 @@ export interface SaveFinancialTransaction {
   status: FinancialTransactionStatus;
   transactionDate: string;
   dueDate?: string | null;
+  recurrence?: FinancialTransactionRecurrence;
+  occurrences?: number;
+  amountIsPerInstallment?: boolean;
 }
 
 export interface WalletspaceMember {

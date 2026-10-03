@@ -14,6 +14,10 @@ public class FinancialTransaction : BaseEntity
     public FinancialTransactionStatus Status { get; private set; }
     public DateOnly TransactionDate { get; private set; }
     public DateOnly? DueDate { get; private set; }
+    public FinancialTransactionRecurrence Recurrence { get; private set; }
+    public Guid? SeriesId { get; private set; }
+    public int? InstallmentNumber { get; private set; }
+    public int? InstallmentCount { get; private set; }
 
     private FinancialTransaction()
     {
@@ -45,6 +49,27 @@ public class FinancialTransaction : BaseEntity
             dueDate);
         SetCreatedInfo(createdBy);
     }
+
+    public void MarkAsSeries(
+        FinancialTransactionRecurrence recurrence,
+        Guid seriesId,
+        int number,
+        int count)
+    {
+        if (recurrence == FinancialTransactionRecurrence.None || !Enum.IsDefined(recurrence))
+            throw new ArgumentException("Recorrência inválida.", nameof(recurrence));
+        if (seriesId == Guid.Empty)
+            throw new ArgumentException("A série é obrigatória.", nameof(seriesId));
+        if (count < 2 || count > MaxOccurrences || number < 1 || number > count)
+            throw new ArgumentOutOfRangeException(nameof(count), $"A recorrência deve ter entre 2 e {MaxOccurrences} ocorrências.");
+
+        Recurrence = recurrence;
+        SeriesId = seriesId;
+        InstallmentNumber = number;
+        InstallmentCount = count;
+    }
+
+    public const int MaxOccurrences = 120;
 
     public void SetDetails(
         Guid? financialAccountId,

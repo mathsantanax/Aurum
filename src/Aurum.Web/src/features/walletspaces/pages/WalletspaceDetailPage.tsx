@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import type { FormEvent } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { getAuthErrorMessage } from "../../auth/utils/getAuthErrorMessage";
 import {
   addMember,
@@ -11,6 +11,9 @@ import {
   deleteAccount,
   deleteCard,
   deleteTransaction,
+  deleteWalletspace,
+  leaveWalletspace,
+  transferOwnership,
   getAccounts,
   getCards,
   getFinancialSummary,
@@ -29,7 +32,9 @@ import type {
   FinancialAccount,
   CreditCard,
   FinancialTransaction,
+  FinancialTransactionRecurrence,
   FinancialTransactionStatus,
+  TransactionSeriesScope,
   FinancialTransactionType,
   SaveFinancialTransaction,
   WalletspaceRole,
@@ -43,6 +48,38 @@ const currency = new Intl.NumberFormat("pt-BR", {
 const today = new Date().toISOString().slice(0, 10);
 const monthStart = `${today.slice(0, 7)}-01`;
 
+function monthKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function monthRange(key: string) {
+  const [year, month] = key.split("-").map(Number);
+  const last = new Date(year, month, 0).getDate();
+  return { from: `${key}-01`, to: `${key}-${String(last).padStart(2, "0")}` };
+}
+
+function shiftMonth(key: string, delta: number) {
+  const [year, month] = key.split("-").map(Number);
+  return monthKey(new Date(year, month - 1 + delta, 1));
+}
+
+function monthLabel(key: string) {
+  const [year, month] = key.split("-").map(Number);
+  const label = new Date(year, month - 1, 1).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
+function askSeriesScope(action: string): TransactionSeriesScope | null {
+  const answer = window.prompt(
+    `Este lançamento faz parte de uma série (fixa/parcelada).\n${action}:\n1 = somente este\n2 = este e os seguintes\n3 = toda a série\n(vazio cancela)`,
+    "1",
+  );
+  if (answer === "1") return "single";
+  if (answer === "2") return "future";
+  if (answer === "3") return "all";
+  return null;
+}
+
 const tabs = [
   { id: "overview", label: "Resumo" },
   { id: "accounts", label: "Contas" },
@@ -50,6 +87,7 @@ const tabs = [
   { id: "transactions", label: "Lançamentos" },
   { id: "reports", label: "Relatórios" },
   { id: "members", label: "Membros" },
+  { id: "settings", label: "Configurações" },
 ] as const;
 type TabId = (typeof tabs)[number]["id"];
 
@@ -96,6 +134,13 @@ export function WalletspaceDetailPage() {
   const { walletspaceId = "" } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const [month, setMonth] = useState(monthKey(new Date()));
+  const [recurrence, setRecurrence] = useState<FinancialTransactionRecurrence>(0);
+  const [occurrences, setOccurrences] = useState(12);
+  const [installmentAmount, setInstallmentAmount] = useState(0);
+  const [amountIsPerInstallment, setAmountIsPerInstallment] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<FinancialAccount | null>(null);
   const [editingCard, setEditingCard] = useState<CreditCard | null>(null);
@@ -125,14 +170,14 @@ export function WalletspaceDetailPage() {
     enabled: Boolean(walletspaceId) && (activeTab === "cards" || activeTab === "transactions" || activeTab === "overview"),
   });
   const transactionsQuery = useQuery({
-    queryKey: ["walletspace", walletspaceId, "transactions"],
-    queryFn: () => getTransactions(walletspaceId),
+    queryKey: ["walletspace", walletspaceId, "transactions", month],
+    queryFn: () => getTransactions(walletspaceId, monthRange(month).from, monthRange(month).to),
     enabled: Boolean(walletspaceId) && (activeTab === "transactions" || activeTab === "overview"),
   });
   const membersQuery = useQuery({
     queryKey: ["walletspace", walletspaceId, "members"],
     queryFn: () => getMembers(walletspaceId),
-    enabled: Boolean(walletspaceId) && activeTab === "members",
+    enabled: Boolean(walletspaceId) && (activeTab === "members" || activeTab === "settings"),
   });
   const reportQuery = useQuery({
     queryKey: ["walletspace", walletspaceId, "report", reportFrom, reportTo],
@@ -181,8 +226,8 @@ export function WalletspaceDetailPage() {
     },
   });
   const transactionMutation = useMutation({
-    mutationFn: ({ transaction, data }: { transaction: FinancialTransaction; data: SaveFinancialTransaction }) =>
-      updateTransaction(walletspaceId, transaction.id, data),
+    mutationFn: ({ transaction, data, scope }: { transaction: FinancialTransaction; data: SaveFinancialTransaction; scope?: TransactionSeriesScope }) =>
+      updateTransaction(walletspaceId, transaction.id, data, scope),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["walletspace", walletspaceId, "transactions"] }),
@@ -194,7 +239,7 @@ export function WalletspaceDetailPage() {
     },
   });
   const deleteTransactionMutation = useMutation({
-    mutationFn: (id: string) => deleteTransaction(walletspaceId, id),
+    mutationFn: ({ id, scope }: { id: string; scope?: TransactionSeriesScope }) => deleteTransaction(walletspaceId, id, scope),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["walletspace", walletspaceId, "transactions"] }),
@@ -240,7 +285,39 @@ export function WalletspaceDetailPage() {
     },
   });
 
+  const deleteSpaceMutation = useMutation({
+    mutationFn: () => deleteWalletspace(walletspaceId),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["walletspaces"] }),
+        queryClient.invalidateQueries({ queryKey: ["dashboard-summary"] }),
+      ]);
+      navigate("/walletspaces");
+    },
+  });
+  const leaveSpaceMutation = useMutation({
+    mutationFn: () => leaveWalletspace(walletspaceId),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["walletspaces"] }),
+        queryClient.invalidateQueries({ queryKey: ["dashboard-summary"] }),
+      ]);
+      navigate("/walletspaces");
+    },
+  });
+  const transferMutation = useMutation({
+    mutationFn: (userId: string) => transferOwnership(walletspaceId, userId),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["walletspace", walletspaceId] }),
+        queryClient.invalidateQueries({ queryKey: ["walletspace", walletspaceId, "members"] }),
+        queryClient.invalidateQueries({ queryKey: ["walletspaces"] }),
+      ]);
+    },
+  });
+
   function showTab(tab: TabId) {
+    setRecurrence(0);
     setFormOpen(false);
     setEditingAccount(null);
     setEditingCard(null);
@@ -304,7 +381,20 @@ export function WalletspaceDetailPage() {
       status: Number(form.get("status")) as FinancialTransactionStatus,
       transactionDate: String(form.get("transactionDate")),
       dueDate: String(form.get("dueDate") ?? "") || null,
+      recurrence,
+      occurrences: recurrence === 0 ? undefined : occurrences,
+      amountIsPerInstallment: recurrence === 2 ? amountIsPerInstallment : false,
     }));
+    setRecurrence(0);
+  }
+
+  async function handleTransfer(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const userId = String(form.get("newOwner") ?? "");
+    if (!userId) return;
+    if (!window.confirm("Transferir a propriedade? Você passará a ser Administrador.")) return;
+    await performAction(() => transferMutation.mutateAsync(userId));
   }
 
   async function handleMemberSubmit(event: FormEvent<HTMLFormElement>) {
@@ -335,7 +425,19 @@ export function WalletspaceDetailPage() {
       transactionDate: transaction.transactionDate,
       dueDate: transaction.dueDate,
     };
-    void performAction(() => transactionMutation.mutateAsync({ transaction, data }));
+    void performAction(() => transactionMutation.mutateAsync({ transaction, data, scope: "single" }));
+  }
+
+  function removeTransaction(transaction: FinancialTransaction) {
+    let scope: TransactionSeriesScope | null = "single";
+    if (transaction.seriesId) {
+      scope = askSeriesScope("Remover");
+    } else if (!window.confirm("Remover este lançamento?")) {
+      scope = null;
+    }
+    if (!scope) return;
+    const chosen = scope;
+    void performAction(() => deleteTransactionMutation.mutateAsync({ id: transaction.id, scope: chosen }));
   }
 
   function deleteSpaceResource(kind: "account" | "card", id: string) {
@@ -388,7 +490,10 @@ export function WalletspaceDetailPage() {
     addMemberMutation.isPending ||
     memberRoleMutation.isPending ||
     removeMemberMutation.isPending ||
-    renameMutation.isPending;
+    renameMutation.isPending ||
+    deleteSpaceMutation.isPending ||
+    leaveSpaceMutation.isPending ||
+    transferMutation.isPending;
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -404,13 +509,13 @@ export function WalletspaceDetailPage() {
             {roleNames[space.myRole]} · {space.memberCount} {space.memberCount === 1 ? "membro" : "membros"}
           </p>
         </div>
-        {manageAccess && (
+        {memberAdmin && (
           <button
             type="button"
-            onClick={() => { setActionError(null); setFormOpen((open) => !open); }}
+            onClick={() => showTab("settings")}
             className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:border-violet-300 hover:bg-violet-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-700"
           >
-            {formOpen && activeTab === "overview" ? "Fechar edição" : "Renomear espaço"}
+            Configurações do espaço
           </button>
         )}
       </div>
@@ -437,18 +542,11 @@ export function WalletspaceDetailPage() {
 
       {activeTab === "overview" && (
         <>
-          {formOpen && manageAccess && (
-            <form onSubmit={handleRename} className="mt-6 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:flex-row">
-              <label htmlFor="rename-space" className="sr-only">Nome do Walletspace</label>
-              <input id="rename-space" name="name" defaultValue={space.name} minLength={3} maxLength={100} required className="min-h-11 flex-1 rounded-xl border border-slate-300 px-3 text-sm outline-none focus:border-violet-700 focus:ring-4 focus:ring-violet-100" />
-              <button disabled={isBusy} className="min-h-11 rounded-xl bg-violet-900 px-4 text-sm font-semibold text-white disabled:opacity-50">{isBusy ? "Salvando..." : "Salvar nome"}</button>
-            </form>
-          )}
           <section className="mt-6 grid gap-4 sm:grid-cols-3" aria-label="Resumo do Walletspace">
             {[
               { label: "Saldo em contas", value: currency.format((accountsQuery.data ?? []).reduce((total, account) => total + account.currentBalance, 0)) },
-              { label: "Receitas efetivadas", value: currency.format(income) },
-              { label: "Despesas efetivadas", value: currency.format(expense) },
+              { label: `Receitas efetivadas · ${monthLabel(month)}`, value: currency.format(income) },
+              { label: `Despesas efetivadas · ${monthLabel(month)}`, value: currency.format(expense) },
             ].map((item) => (
               <article key={item.label} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <p className="text-sm font-medium text-slate-600">{item.label}</p>
@@ -546,15 +644,34 @@ export function WalletspaceDetailPage() {
               <div><label htmlFor="transaction-category" className="mb-1.5 block text-sm font-semibold">Categoria</label><input id="transaction-category" name="category" maxLength={100} placeholder="Ex.: Alimentação" className="min-h-11 w-full rounded-xl border border-slate-300 px-3 text-sm" /></div>
               <div><label htmlFor="transaction-type" className="mb-1.5 block text-sm font-semibold">Tipo</label><select id="transaction-type" name="type" className="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm"><option value="2">Despesa</option><option value="1">Receita</option></select></div>
               <div><label htmlFor="transaction-status" className="mb-1.5 block text-sm font-semibold">Situação</label><select id="transaction-status" name="status" className="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm"><option value="1">Pendente</option><option value="2">Efetivada</option></select></div>
-              <div><label htmlFor="transaction-amount" className="mb-1.5 block text-sm font-semibold">Valor</label><input id="transaction-amount" name="amount" type="number" min="0.01" step="0.01" required className="min-h-11 w-full rounded-xl border border-slate-300 px-3 text-sm" /></div>
+              <div><label htmlFor="transaction-amount" className="mb-1.5 block text-sm font-semibold">Valor</label><input id="transaction-amount" name="amount" type="number" min="0.01" step="0.01" required onChange={(event) => setInstallmentAmount(Number(event.target.value) || 0)} className="min-h-11 w-full rounded-xl border border-slate-300 px-3 text-sm" /></div>
               <div><label htmlFor="transaction-date" className="mb-1.5 block text-sm font-semibold">Data</label><input id="transaction-date" name="transactionDate" type="date" defaultValue={today} required className="min-h-11 w-full rounded-xl border border-slate-300 px-3 text-sm" /></div>
               <div><label htmlFor="transaction-resource-kind" className="mb-1.5 block text-sm font-semibold">Lançar em</label><select id="transaction-resource-kind" name="resourceKind" value={transactionResourceKind} onChange={(event) => setTransactionResourceKind(event.target.value as "account" | "card")} className="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm"><option value="account">Conta</option><option value="card" disabled={cardsQuery.data?.length === 0}>Cartão</option></select></div>
               <div><label htmlFor="transaction-resource-id" className="mb-1.5 block text-sm font-semibold">{transactionResourceKind === "account" ? "Conta" : "Cartão"}</label><select id="transaction-resource-id" name="resourceId" required className="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm">{transactionResourceKind === "account" ? (accountsQuery.data ?? []).map((account) => <option key={account.id} value={account.id}>{account.name}</option>) : (cardsQuery.data ?? []).map((card) => <option key={card.id} value={card.id}>{card.name} · •••• {card.lastFourDigits}</option>)}</select></div>
               <div><label htmlFor="transaction-due" className="mb-1.5 block text-sm font-semibold">Vencimento <span className="font-normal text-slate-500">(opcional)</span></label><input id="transaction-due" name="dueDate" type="date" className="min-h-11 w-full rounded-xl border border-slate-300 px-3 text-sm" /></div>
+              <div><label htmlFor="transaction-recurrence" className="mb-1.5 block text-sm font-semibold">Repetição</label><select id="transaction-recurrence" value={recurrence} onChange={(event) => setRecurrence(Number(event.target.value) as FinancialTransactionRecurrence)} className="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm"><option value={0}>Lançamento único</option><option value={1}>Conta fixa mensal (aluguel, assinatura...)</option><option value={2}>{transactionResourceKind === "card" ? "Parcelado no cartão" : "Parcelado (imóvel, veículo, financiamento...)"}</option></select></div>
+              {recurrence !== 0 && (
+                <div><label htmlFor="transaction-occurrences" className="mb-1.5 block text-sm font-semibold">{recurrence === 1 ? "Quantidade de meses" : "Número de parcelas"}</label><input id="transaction-occurrences" type="number" min={2} max={120} value={occurrences} onChange={(event) => setOccurrences(Math.min(120, Math.max(2, Number(event.target.value) || 2)))} className="min-h-11 w-full rounded-xl border border-slate-300 px-3 text-sm" /></div>
+              )}
+              {recurrence === 2 && (
+                <label className="flex items-center gap-2 text-sm text-slate-700 sm:col-span-2"><input type="checkbox" checked={amountIsPerInstallment} onChange={(event) => setAmountIsPerInstallment(event.target.checked)} className="size-4" />O valor informado é o de cada parcela (desmarcado = valor total a dividir)</label>
+              )}
+              {recurrence !== 0 && (
+                <p className="rounded-xl bg-violet-50 px-3 py-2 text-xs leading-5 text-violet-900 sm:col-span-2">
+                  {recurrence === 1
+                    ? `Serão criados ${occurrences} lançamentos mensais com o mesmo valor, a partir da data informada. Os próximos ficam pendentes até serem efetivados.`
+                    : `Serão criadas ${occurrences} parcelas${installmentAmount > 0 ? ` de ${currency.format(amountIsPerInstallment ? installmentAmount : installmentAmount / occurrences)} (total ${currency.format(amountIsPerInstallment ? installmentAmount * occurrences : installmentAmount)})` : ""}.${transactionResourceKind === "card" ? " O vencimento de cada parcela segue o fechamento e vencimento do cartão." : ""}`}
+                </p>
+              )}
               <p className="text-xs leading-5 text-slate-500 sm:col-span-2">Para despesas no cartão, escolha “Cartão” no campo “Lançar em”. O cartão aceita apenas despesas.</p>
               <button disabled={isBusy || (!accountsQuery.data?.length && !cardsQuery.data?.length)} className="min-h-11 rounded-xl bg-violet-900 px-4 text-sm font-semibold text-white disabled:opacity-50 sm:col-span-2 sm:justify-self-end">{isBusy ? "Salvando..." : "Salvar lançamento"}</button>
             </form>
           )}
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3">
+            <button type="button" aria-label="Mês anterior" onClick={() => setMonth((current) => shiftMonth(current, -1))} className="min-h-10 rounded-xl px-3 text-sm font-semibold text-slate-700 hover:bg-violet-50">←</button>
+            <div className="text-center"><p className="text-sm font-semibold text-slate-950">{monthLabel(month)}</p><p className="text-xs text-slate-500">Receitas {currency.format(transactions.filter((t) => t.type === 1).reduce((a, t) => a + t.amount, 0))} · Despesas {currency.format(transactions.filter((t) => t.type === 2).reduce((a, t) => a + t.amount, 0))} (previstas)</p></div>
+            <button type="button" aria-label="Próximo mês" onClick={() => setMonth((current) => shiftMonth(current, 1))} className="min-h-10 rounded-xl px-3 text-sm font-semibold text-slate-700 hover:bg-violet-50">→</button>
+          </div>
           {transactionsQuery.isPending ? <p className="text-sm text-slate-500">Carregando lançamentos...</p> : transactionsQuery.isError ? <ErrorMessage message={getAuthErrorMessage(transactionsQuery.error, "Não foi possível carregar os lançamentos.")} /> : transactions.length ? (
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
               <div className="divide-y divide-slate-100">
@@ -564,15 +681,15 @@ export function WalletspaceDetailPage() {
                   return (
                     <article key={transaction.id} className="flex flex-wrap items-center gap-3 p-4 sm:px-5">
                       <span className={`flex size-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold ${transaction.type === 1 ? "bg-emerald-50 text-emerald-800" : "bg-rose-50 text-rose-800"}`}>{transaction.type === 1 ? "+" : "−"}</span>
-                      <div className="min-w-0 flex-1"><h3 className="truncate text-sm font-semibold text-slate-950">{transaction.description}</h3><p className="mt-1 text-xs text-slate-500">{transaction.category ?? "Sem categoria"} · {linkedAccount?.name ?? linkedCard?.name ?? "Conta removida"} · {new Date(`${transaction.transactionDate}T12:00:00`).toLocaleDateString("pt-BR")}</p></div>
+                      <div className="min-w-0 flex-1"><h3 className="truncate text-sm font-semibold text-slate-950">{transaction.description}{transaction.recurrence === 1 && <span className="ml-2 rounded-full bg-sky-50 px-2 py-0.5 text-[10px] font-semibold text-sky-800">Fixa</span>}{transaction.recurrence === 2 && <span className="ml-2 rounded-full bg-violet-50 px-2 py-0.5 text-[10px] font-semibold text-violet-800">Parcela {transaction.installmentNumber}/{transaction.installmentCount}</span>}</h3><p className="mt-1 text-xs text-slate-500">{transaction.category ?? "Sem categoria"} · {linkedAccount?.name ?? linkedCard?.name ?? "Conta removida"} · {new Date(`${transaction.transactionDate}T12:00:00`).toLocaleDateString("pt-BR")}</p></div>
                       <div className="text-right"><p className={`text-sm font-semibold ${transaction.type === 1 ? "text-emerald-800" : "text-slate-950"}`}>{transaction.type === 1 ? "+" : "−"}{currency.format(transaction.amount)}</p><span className={`mt-1 inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ${transaction.status === 2 ? "bg-emerald-50 text-emerald-800" : "bg-amber-50 text-amber-800"}`}>{transaction.status === 2 ? "Efetivada" : "Pendente"}</span></div>
-                      {writeAccess && <div className="flex items-center gap-1"><button type="button" onClick={() => toggleTransactionStatus(transaction)} className="rounded-lg px-2 py-1 text-xs font-semibold text-violet-800 hover:bg-violet-50">{transaction.status === 2 ? "Reabrir" : "Efetivar"}</button><button type="button" aria-label={`Remover lançamento ${transaction.description}`} onClick={() => { if (window.confirm("Remover este lançamento?")) void performAction(() => deleteTransactionMutation.mutateAsync(transaction.id)); }} className="rounded-lg px-2 py-1 text-xs font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-700">Remover</button></div>}
+                      {writeAccess && <div className="flex items-center gap-1"><button type="button" onClick={() => toggleTransactionStatus(transaction)} className="rounded-lg px-2 py-1 text-xs font-semibold text-violet-800 hover:bg-violet-50">{transaction.status === 2 ? "Reabrir" : "Efetivar"}</button><button type="button" aria-label={`Remover lançamento ${transaction.description}`} onClick={() => removeTransaction(transaction)} className="rounded-lg px-2 py-1 text-xs font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-700">Remover</button></div>}
                     </article>
                   );
                 })}
               </div>
             </div>
-          ) : <EmptyPanel title="Nenhum lançamento neste espaço" description="Adicione uma conta ou cartão e registre sua primeira receita ou despesa." />}
+          ) : <EmptyPanel title="Nenhum lançamento neste mês" description="Adicione uma conta ou cartão e registre receitas, despesas, contas fixas ou parcelas." />}
         </section>
       )}
 
@@ -619,11 +736,60 @@ export function WalletspaceDetailPage() {
                 <article key={member.userId} className="flex flex-wrap items-center gap-3 p-4 sm:px-5">
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs font-bold text-violet-900">{(member.fullName || member.email).slice(0, 2).toUpperCase()}</span>
                   <div className="min-w-0 flex-1"><h3 className="truncate text-sm font-semibold text-slate-950">{member.fullName || member.email}</h3><p className="truncate text-xs text-slate-500">{member.fullName ? member.email : `Entrou em ${new Date(member.joinedAt).toLocaleDateString("pt-BR")}`}</p></div>
-                  {memberAdmin && member.role !== 1 ? <><label className="sr-only" htmlFor={`role-${member.userId}`}>Permissão de {member.email}</label><select id={`role-${member.userId}`} value={member.role} disabled={isBusy} onChange={(event) => { const role = Number(event.target.value) as WalletspaceRole; void performAction(() => memberRoleMutation.mutateAsync({ userId: member.userId, role })); }} className="min-h-9 max-w-44 rounded-lg border border-slate-300 bg-white px-2 text-xs font-semibold text-slate-700">{space.myRole === 1 && <option value="2">Administrador</option>}<option value="3">Gestor</option><option value="4">Membro</option><option value="5">Visualizador</option></select><button type="button" onClick={() => { if (window.confirm(`Remover ${member.email} deste Walletspace?`)) void performAction(() => removeMemberMutation.mutateAsync(member.userId)); }} className="rounded-lg px-2 py-1 text-xs font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-700">Remover</button></> : <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{roleNames[member.role]}</span>}
+                  {memberAdmin && member.role !== 1 && (space.myRole === 1 || member.role !== 2) ? <><label className="sr-only" htmlFor={`role-${member.userId}`}>Permissão de {member.email}</label><select id={`role-${member.userId}`} value={member.role} disabled={isBusy} onChange={(event) => { const role = Number(event.target.value) as WalletspaceRole; void performAction(() => memberRoleMutation.mutateAsync({ userId: member.userId, role })); }} className="min-h-9 max-w-44 rounded-lg border border-slate-300 bg-white px-2 text-xs font-semibold text-slate-700">{space.myRole === 1 && <option value="2">Administrador</option>}<option value="3">Gestor</option><option value="4">Membro</option><option value="5">Visualizador</option></select><button type="button" onClick={() => { if (window.confirm(`Remover ${member.email} deste Walletspace?`)) void performAction(() => removeMemberMutation.mutateAsync(member.userId)); }} className="rounded-lg px-2 py-1 text-xs font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-700">Remover</button></> : <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{roleNames[member.role]}</span>}
                 </article>
               ))}</div>
             </div>
           ) : <EmptyPanel title="Nenhum membro encontrado" description="As pessoas adicionadas a este espaço aparecerão aqui." />}
+        </section>
+      )}
+
+      {activeTab === "settings" && (
+        <section className="mt-6 space-y-5">
+          <div><h2 className="text-lg font-semibold text-slate-950">Configurações do espaço</h2><p className="mt-1 text-sm text-slate-600">Nome, propriedade e acesso a este Walletspace.</p></div>
+          {memberAdmin && (
+            <form onSubmit={handleRename} className="rounded-2xl border border-slate-200 bg-white p-5">
+              <h3 className="font-semibold text-slate-950">Renomear</h3>
+              <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                <label htmlFor="rename-space" className="sr-only">Nome do Walletspace</label>
+                <input id="rename-space" name="name" defaultValue={space.name} minLength={3} maxLength={100} required className="min-h-11 flex-1 rounded-xl border border-slate-300 px-3 text-sm outline-none focus:border-violet-700 focus:ring-4 focus:ring-violet-100" />
+                <button disabled={isBusy} className="min-h-11 rounded-xl bg-violet-900 px-4 text-sm font-semibold text-white disabled:opacity-50">{renameMutation.isPending ? "Salvando..." : "Salvar nome"}</button>
+              </div>
+            </form>
+          )}
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <div className="flex items-center justify-between gap-3"><h3 className="font-semibold text-slate-950">Usuários</h3><button type="button" onClick={() => showTab("members")} className="text-sm font-semibold text-violet-800 hover:underline">Gerenciar membros e permissões →</button></div>
+            <p className="mt-2 text-sm text-slate-600">{space.memberCount} {space.memberCount === 1 ? "pessoa tem" : "pessoas têm"} acesso. Sua permissão: {roleNames[space.myRole]}.</p>
+          </div>
+          {space.myRole === 1 && (
+            <form onSubmit={handleTransfer} className="rounded-2xl border border-slate-200 bg-white p-5">
+              <h3 className="font-semibold text-slate-950">Transferir propriedade</h3>
+              <p className="mt-1 text-sm text-slate-600">O novo proprietário assume o controle total e você vira Administrador.</p>
+              <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                <label htmlFor="new-owner" className="sr-only">Novo proprietário</label>
+                <select id="new-owner" name="newOwner" required defaultValue="" className="min-h-11 flex-1 rounded-xl border border-slate-300 bg-white px-3 text-sm"><option value="" disabled>Selecione um membro</option>{(membersQuery.data ?? []).filter((member) => member.role !== 1).map((member) => <option key={member.userId} value={member.userId}>{member.fullName || member.email}</option>)}</select>
+                <button disabled={isBusy} className="min-h-11 rounded-xl border border-slate-300 px-4 text-sm font-semibold text-slate-800 hover:bg-violet-50 disabled:opacity-50">Transferir</button>
+              </div>
+            </form>
+          )}
+          {space.myRole !== 1 && (
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+              <h3 className="font-semibold text-amber-950">Sair do espaço</h3>
+              <p className="mt-1 text-sm text-amber-900">Você perderá o acesso a este Walletspace.</p>
+              <button type="button" disabled={isBusy} onClick={() => { if (window.confirm("Sair deste Walletspace?")) void performAction(() => leaveSpaceMutation.mutateAsync()); }} className="mt-3 min-h-11 rounded-xl bg-amber-700 px-4 text-sm font-semibold text-white disabled:opacity-50">Sair do espaço</button>
+            </div>
+          )}
+          {space.myRole === 1 && (
+            <div className="rounded-2xl border border-rose-200 bg-rose-50 p-5">
+              <h3 className="font-semibold text-rose-950">Zona de perigo</h3>
+              <p className="mt-1 text-sm text-rose-900">Excluir remove contas, cartões e lançamentos para todos. Esta ação não pode ser desfeita. Digite <strong>{space.name}</strong> para confirmar.</p>
+              <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                <label htmlFor="delete-confirm" className="sr-only">Confirmar nome</label>
+                <input id="delete-confirm" value={deleteConfirm} onChange={(event) => setDeleteConfirm(event.target.value)} className="min-h-11 flex-1 rounded-xl border border-rose-300 bg-white px-3 text-sm" />
+                <button type="button" disabled={isBusy || deleteConfirm !== space.name} onClick={() => void performAction(() => deleteSpaceMutation.mutateAsync())} className="min-h-11 rounded-xl bg-rose-700 px-4 text-sm font-semibold text-white disabled:opacity-50">Excluir espaço</button>
+              </div>
+            </div>
+          )}
         </section>
       )}
     </div>

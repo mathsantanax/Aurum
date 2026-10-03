@@ -1,4 +1,5 @@
 using Aurum.Domain.Entities.Workspace;
+using Aurum.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,6 +19,10 @@ public class FinancialTransactionConfiguration
         builder.Property(x => x.Status).HasConversion<int>().IsRequired();
         builder.Property(x => x.TransactionDate).HasColumnType("date").IsRequired();
         builder.Property(x => x.DueDate).HasColumnType("date");
+        builder.Property(x => x.Recurrence).HasConversion<int>().HasDefaultValue(FinancialTransactionRecurrence.None).IsRequired();
+        builder.Property(x => x.SeriesId);
+        builder.Property(x => x.InstallmentNumber);
+        builder.Property(x => x.InstallmentCount);
         builder.Property(x => x.CreatedAt).IsRequired();
         builder.Property(x => x.CreatedBy).IsRequired();
         builder.Property(x => x.UpdatedAt);
@@ -37,5 +42,6 @@ public class FinancialTransactionConfiguration
         builder.HasIndex(x => new { x.WalletspaceId, x.TransactionDate });
         builder.HasIndex(x => x.FinancialAccountId);
         builder.HasIndex(x => x.CreditCardId);
+        builder.HasIndex(x => x.SeriesId);
     }
 }

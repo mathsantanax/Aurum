@@ -59,7 +59,11 @@ public sealed record FinancialTransactionDto(
     FinancialTransactionType Type,
     FinancialTransactionStatus Status,
     DateOnly TransactionDate,
-    DateOnly? DueDate);
+    DateOnly? DueDate,
+    FinancialTransactionRecurrence Recurrence,
+    Guid? SeriesId,
+    int? InstallmentNumber,
+    int? InstallmentCount);
 
 public sealed record SaveFinancialTransactionRequest(
     Guid? FinancialAccountId,
@@ -70,7 +74,19 @@ public sealed record SaveFinancialTransactionRequest(
     FinancialTransactionType Type,
     FinancialTransactionStatus Status,
     DateOnly TransactionDate,
-    DateOnly? DueDate);
+    DateOnly? DueDate,
+    FinancialTransactionRecurrence Recurrence = FinancialTransactionRecurrence.None,
+    [Range(2, 120)] int? Occurrences = null,
+    bool AmountIsPerInstallment = false);
+
+public enum TransactionSeriesScope
+{
+    Single = 0,
+    Future = 1,
+    All = 2
+}
+
+public sealed record TransferOwnershipRequest([Required] Guid NewOwnerId);
 
 public sealed record AddWalletspaceMemberRequest(
     [Required, EmailAddress, StringLength(256)] string Email,

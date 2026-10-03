@@ -11,6 +11,7 @@ import type {
   Walletspace,
   WalletspaceMember,
   WalletspaceRole,
+  TransactionSeriesScope,
 } from "../types/walletspace.types";
 
 export async function getWalletspaces() {
@@ -30,6 +31,18 @@ export async function createWalletspace(name: string) {
 
 export async function renameWalletspace(walletspaceId: string, name: string) {
   await api.put(`/walletspaces/${walletspaceId}`, { name });
+}
+
+export async function deleteWalletspace(walletspaceId: string) {
+  await api.delete(`/walletspaces/${walletspaceId}`);
+}
+
+export async function leaveWalletspace(walletspaceId: string) {
+  await api.post(`/walletspaces/${walletspaceId}/leave`);
+}
+
+export async function transferOwnership(walletspaceId: string, newOwnerId: string) {
+  await api.post(`/walletspaces/${walletspaceId}/members/transfer-ownership`, { newOwnerId });
 }
 
 export async function getAccounts(walletspaceId: string) {
@@ -119,19 +132,23 @@ export async function updateTransaction(
   walletspaceId: string,
   transactionId: string,
   transaction: SaveFinancialTransaction,
+  scope: TransactionSeriesScope = "single",
 ) {
   await api.put(
     `/walletspaces/${walletspaceId}/transactions/${transactionId}`,
     transaction,
+    { params: { scope } },
   );
 }
 
 export async function deleteTransaction(
   walletspaceId: string,
   transactionId: string,
+  scope: TransactionSeriesScope = "single",
 ) {
   await api.delete(
     `/walletspaces/${walletspaceId}/transactions/${transactionId}`,
+    { params: { scope } },
   );
 }
 

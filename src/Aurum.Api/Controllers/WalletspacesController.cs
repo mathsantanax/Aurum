@@ -2,6 +2,7 @@ using Aurum.Api.Contracts.Walletspaces;
 using Aurum.Application.Interfaces.Auth;
 using Aurum.Domain.Entities.Workspace;
 using Aurum.Domain.Enums;
+using Aurum.Domain.Services;
 using Aurum.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -109,7 +110,7 @@ public sealed class WalletspacesController : ControllerBase
         var (space, role) = await GetSpaceForWriteAsync(walletspaceId, cancellationToken);
         if (space is null)
             return NotFound();
-        if (!CanManageFinancialData(role))
+        if (!CanManageMembers(role))
             return Forbid();
 
         try
@@ -453,7 +454,11 @@ public sealed class WalletspacesController : ControllerBase
                 transaction.Type,
                 transaction.Status,
                 transaction.TransactionDate,
-                transaction.DueDate))
+                transaction.DueDate,
+                transaction.Recurrence,
+                transaction.SeriesId,
+                transaction.InstallmentNumber,
+                transaction.InstallmentCount))
             .ToListAsync(cancellationToken);
 
         return Ok(transactions);
@@ -479,24 +484,58 @@ public sealed class WalletspacesController : ControllerBase
 
         try
         {
-            var transaction = new FinancialTransaction(
-                walletspaceId,
-                request.FinancialAccountId,
-                request.CreditCardId,
-                request.Description,
-                request.Category,
+            CreditCard? card = null;
+            if (request.CreditCardId.HasValue)
+                card = await _db.CreditCards.AsNoTracking().SingleAsync(
+                    item => item.Id == request.CreditCardId.Value,
+                    cancellationToken);
+
+            var recurrence = request.Recurrence;
+            if (!Enum.IsDefined(recurrence))
+                return BadRequest(new ProblemDetails { Title = "Recorrência inválida.", Status = 400 });
+            if (recurrence != FinancialTransactionRecurrence.None && request.Occurrences is null)
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Informe a quantidade de meses/parcelas.",
+                    Status = 400
+                });
+
+            var plan = TransactionScheduler.Plan(
+                recurrence,
+                request.Occurrences ?? 1,
                 request.Amount,
-                request.Type,
-                request.Status,
+                request.AmountIsPerInstallment,
                 request.TransactionDate,
                 request.DueDate,
-                _currentUser.UserId);
-            _db.FinancialTransactions.Add(transaction);
+                card?.ClosingDay,
+                card?.DueDay);
+            var seriesId = Guid.NewGuid();
+            var created = new List<FinancialTransaction>(plan.Count);
+            foreach (var occurrence in plan)
+            {
+                var transaction = new FinancialTransaction(
+                    walletspaceId,
+                    request.FinancialAccountId,
+                    request.CreditCardId,
+                    request.Description,
+                    request.Category,
+                    occurrence.Amount,
+                    request.Type,
+                    occurrence.Number == 1 ? request.Status : FinancialTransactionStatus.Pending,
+                    occurrence.TransactionDate,
+                    occurrence.DueDate,
+                    _currentUser.UserId);
+                if (recurrence != FinancialTransactionRecurrence.None)
+                    transaction.MarkAsSeries(recurrence, seriesId, occurrence.Number, plan.Count);
+                created.Add(transaction);
+            }
+
+            _db.FinancialTransactions.AddRange(created);
             await _db.SaveChangesAsync(cancellationToken);
             return CreatedAtAction(
                 nameof(GetTransactions),
                 new { walletspaceId },
-                ToDto(transaction));
+                ToDto(created[0]));
         }
         catch (ArgumentException exception)
         {
@@ -509,6 +548,7 @@ public sealed class WalletspacesController : ControllerBase
         Guid walletspaceId,
         Guid transactionId,
         SaveFinancialTransactionRequest request,
+        [FromQuery] TransactionSeriesScope scope,
         CancellationToken cancellationToken)
     {
         var role = await GetRoleAsync(walletspaceId, cancellationToken);
@@ -531,6 +571,30 @@ public sealed class WalletspacesController : ControllerBase
 
         try
         {
+            if (scope != TransactionSeriesScope.Single && transaction.SeriesId.HasValue)
+            {
+                var followers = await _db.FinancialTransactions
+                    .Where(item =>
+                        item.WalletspaceId == walletspaceId &&
+                        item.SeriesId == transaction.SeriesId &&
+                        item.Id != transaction.Id &&
+                        item.TransactionDate >= transaction.TransactionDate)
+                    .ToListAsync(cancellationToken);
+                // Cada ocorrência mantém suas próprias datas e situação.
+                foreach (var follower in followers)
+                    follower.SetDetails(
+                        request.FinancialAccountId,
+                        request.CreditCardId,
+                        request.Description,
+                        request.Category,
+                        request.Amount,
+                        request.Type,
+                        follower.Status,
+                        follower.TransactionDate,
+                        follower.DueDate,
+                        _currentUser.UserId);
+            }
+
             transaction.SetDetails(
                 request.FinancialAccountId,
                 request.CreditCardId,
@@ -555,6 +619,7 @@ public sealed class WalletspacesController : ControllerBase
     public async Task<IActionResult> DeleteTransaction(
         Guid walletspaceId,
         Guid transactionId,
+        [FromQuery] TransactionSeriesScope scope,
         CancellationToken cancellationToken)
     {
         var role = await GetRoleAsync(walletspaceId, cancellationToken);
@@ -569,7 +634,22 @@ public sealed class WalletspacesController : ControllerBase
         if (transaction is null)
             return NotFound();
 
-        _db.FinancialTransactions.Remove(transaction);
+        if (scope != TransactionSeriesScope.Single && transaction.SeriesId.HasValue)
+        {
+            var seriesItems = await _db.FinancialTransactions
+                .Where(item =>
+                    item.WalletspaceId == walletspaceId &&
+                    item.SeriesId == transaction.SeriesId &&
+                    (scope == TransactionSeriesScope.All ||
+                        item.TransactionDate >= transaction.TransactionDate))
+                .ToListAsync(cancellationToken);
+            _db.FinancialTransactions.RemoveRange(seriesItems);
+        }
+        else
+        {
+            _db.FinancialTransactions.Remove(transaction);
+        }
+
         await _db.SaveChangesAsync(cancellationToken);
         return NoContent();
     }
@@ -719,8 +799,62 @@ public sealed class WalletspacesController : ControllerBase
             return NotFound();
         if (member.Role == WalletspaceRole.Owner)
             return Conflict(new ProblemDetails { Title = "A permissão do proprietário não pode ser alterada.", Status = 409 });
+        if (member.Role == WalletspaceRole.Admin && actorRole != WalletspaceRole.Owner)
+            return Forbid();
 
         member.ChangeRole(request.Role, _currentUser.UserId);
+        await _db.SaveChangesAsync(cancellationToken);
+        return NoContent();
+    }
+
+    [HttpPost("walletspaces/{walletspaceId:guid}/members/transfer-ownership")]
+    public async Task<IActionResult> TransferOwnership(
+        Guid walletspaceId,
+        TransferOwnershipRequest request,
+        CancellationToken cancellationToken)
+    {
+        var actorRole = await GetRoleAsync(walletspaceId, cancellationToken);
+        if (actorRole is null)
+            return NotFound();
+        if (actorRole != WalletspaceRole.Owner)
+            return Forbid();
+        if (request.NewOwnerId == _currentUser.UserId)
+            return BadRequest(new ProblemDetails { Title = "Você já é o proprietário.", Status = 400 });
+
+        var members = await _db.WalletspaceMembers
+            .Where(item =>
+                item.WalletspaceId == walletspaceId &&
+                (item.UserId == request.NewOwnerId || item.UserId == _currentUser.UserId))
+            .ToListAsync(cancellationToken);
+        var target = members.SingleOrDefault(item => item.UserId == request.NewOwnerId);
+        var current = members.Single(item => item.UserId == _currentUser.UserId);
+        if (target is null)
+            return NotFound(new ProblemDetails { Title = "A pessoa escolhida não faz parte do Walletspace.", Status = 404 });
+
+        target.ChangeRole(WalletspaceRole.Owner, _currentUser.UserId);
+        current.ChangeRole(WalletspaceRole.Admin, _currentUser.UserId);
+        await _db.SaveChangesAsync(cancellationToken);
+        return NoContent();
+    }
+
+    [HttpPost("walletspaces/{walletspaceId:guid}/leave")]
+    public async Task<IActionResult> LeaveWalletspace(
+        Guid walletspaceId,
+        CancellationToken cancellationToken)
+    {
+        var member = await _db.WalletspaceMembers.SingleOrDefaultAsync(
+            item => item.WalletspaceId == walletspaceId && item.UserId == _currentUser.UserId,
+            cancellationToken);
+        if (member is null)
+            return NotFound();
+        if (member.Role == WalletspaceRole.Owner)
+            return Conflict(new ProblemDetails
+            {
+                Title = "O proprietário precisa transferir a propriedade ou excluir o Walletspace antes de sair.",
+                Status = 409
+            });
+
+        _db.WalletspaceMembers.Remove(member);
         await _db.SaveChangesAsync(cancellationToken);
         return NoContent();
     }
@@ -744,6 +878,8 @@ public sealed class WalletspacesController : ControllerBase
             return NotFound();
         if (member.Role == WalletspaceRole.Owner)
             return Conflict(new ProblemDetails { Title = "O proprietário não pode ser removido do próprio Walletspace.", Status = 409 });
+        if (member.Role == WalletspaceRole.Admin && actorRole != WalletspaceRole.Owner)
+            return Forbid();
 
         _db.WalletspaceMembers.Remove(member);
         await _db.SaveChangesAsync(cancellationToken);
@@ -862,7 +998,11 @@ public sealed class WalletspacesController : ControllerBase
             transaction.Type,
             transaction.Status,
             transaction.TransactionDate,
-            transaction.DueDate);
+            transaction.DueDate,
+            transaction.Recurrence,
+            transaction.SeriesId,
+            transaction.InstallmentNumber,
+            transaction.InstallmentCount);
 
     private static bool CanWriteTransactions(WalletspaceRole role) =>
         role is WalletspaceRole.Owner or WalletspaceRole.Admin or
