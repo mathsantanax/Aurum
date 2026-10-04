@@ -199,6 +199,7 @@ public sealed class WalletspacesController(
         {
             return Conflict(new ProblemDetails { Title = exception.Message, Status = 409 });
         }
+        db.WalletspaceMembers.Add(member);
         await db.SaveChangesAsync(cancellationToken);
         return CreatedAtAction(
             nameof(GetMembers),
