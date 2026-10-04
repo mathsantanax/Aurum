@@ -1,8 +1,8 @@
-namespace Aurum.Domain.Entities.Workspace;
+namespace Aurum.Domain.Entities.Accounts;
 
 public class CreditCard : BaseEntity
 {
-    public Guid WalletspaceId { get; private set; }
+    public Guid OwnerUserId { get; private set; }
     public string Name { get; private set; } = string.Empty;
     public string LastFourDigits { get; private set; } = string.Empty;
     public decimal CreditLimit { get; private set; }
@@ -14,7 +14,7 @@ public class CreditCard : BaseEntity
     }
 
     public CreditCard(
-        Guid walletspaceId,
+        Guid ownerUserId,
         string name,
         string lastFourDigits,
         decimal creditLimit,
@@ -22,7 +22,10 @@ public class CreditCard : BaseEntity
         int dueDay,
         Guid createdBy)
     {
-        WalletspaceId = walletspaceId;
+        if (ownerUserId == Guid.Empty)
+            throw new ArgumentException("O proprietário é obrigatório.", nameof(ownerUserId));
+
+        OwnerUserId = ownerUserId;
         SetDetails(name, lastFourDigits, creditLimit, closingDay, dueDay);
         SetCreatedInfo(createdBy);
     }
@@ -37,7 +40,9 @@ public class CreditCard : BaseEntity
     {
         if (string.IsNullOrWhiteSpace(name) || name.Trim().Length > 100)
             throw new ArgumentException("O nome deve ter entre 1 e 100 caracteres.", nameof(name));
-        if (lastFourDigits.Length != 4 || !lastFourDigits.All(char.IsDigit))
+        if (string.IsNullOrWhiteSpace(lastFourDigits) ||
+            lastFourDigits.Length != 4 ||
+            !lastFourDigits.All(char.IsDigit))
             throw new ArgumentException("Informe os quatro últimos dígitos do cartão.", nameof(lastFourDigits));
         if (creditLimit < 0 || creditLimit > 1_000_000_000_000m)
             throw new ArgumentOutOfRangeException(nameof(creditLimit));

@@ -1,5 +1,7 @@
 ﻿using Aurum.Api.Services.Auth;
+using Aurum.Application.Financial;
 using Aurum.Application.Interfaces.Auth;
+using Aurum.Infrastructure.Repositories;
 
 namespace Aurum.Api.Extensions.InjectionExtension
 {
@@ -9,6 +11,8 @@ namespace Aurum.Api.Extensions.InjectionExtension
         {
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+            builder.Services.AddScoped<IFinancialRepository, FinancialRepository>();
+            builder.Services.AddScoped<IFinancialUseCases, FinancialUseCases>();
             return builder;
         }
     }

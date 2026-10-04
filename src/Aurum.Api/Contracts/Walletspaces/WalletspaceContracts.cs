@@ -1,4 +1,5 @@
 using Aurum.Domain.Enums;
+using Aurum.Application.Financial;
 using System.ComponentModel.DataAnnotations;
 
 namespace Aurum.Api.Contracts.Walletspaces;
@@ -18,7 +19,6 @@ public sealed record RenameWalletspaceRequest(
 
 public sealed record FinancialAccountDto(
     Guid Id,
-    Guid WalletspaceId,
     string Name,
     FinancialAccountType Type,
     string? Institution,
@@ -33,7 +33,6 @@ public sealed record SaveFinancialAccountRequest(
 
 public sealed record CreditCardDto(
     Guid Id,
-    Guid WalletspaceId,
     string Name,
     string LastFourDigits,
     decimal CreditLimit,
@@ -50,7 +49,6 @@ public sealed record SaveCreditCardRequest(
 
 public sealed record FinancialTransactionDto(
     Guid Id,
-    Guid WalletspaceId,
     Guid? FinancialAccountId,
     Guid? CreditCardId,
     string Description,
@@ -78,13 +76,6 @@ public sealed record SaveFinancialTransactionRequest(
     FinancialTransactionRecurrence Recurrence = FinancialTransactionRecurrence.None,
     [Range(2, 120)] int? Occurrences = null,
     bool AmountIsPerInstallment = false);
-
-public enum TransactionSeriesScope
-{
-    Single = 0,
-    Future = 1,
-    All = 2
-}
 
 public sealed record TransferOwnershipRequest([Required] Guid NewOwnerId);
 
@@ -115,6 +106,28 @@ public sealed record CategorySummaryDto(
     string Category,
     FinancialTransactionType Type,
     decimal Total);
+
+public sealed record SharedFinancialTransactionDto(
+    Guid Id,
+    string? OwnerDisplayName,
+    string Description,
+    string? Category,
+    decimal Amount,
+    FinancialTransactionType Type,
+    FinancialTransactionStatus Status,
+    DateOnly TransactionDate,
+    DateOnly? DueDate,
+    FinancialTransactionRecurrence Recurrence,
+    Guid? SeriesId,
+    int? InstallmentNumber,
+    int? InstallmentCount);
+
+public sealed record TransactionShareDto(
+    Guid WalletspaceId,
+    string WalletspaceName,
+    DateTime SharedAt);
+
+public sealed record ShareTransactionRequest([Required] Guid WalletspaceId);
 
 public sealed record DashboardSummaryDto(
     int WalletspaceCount,

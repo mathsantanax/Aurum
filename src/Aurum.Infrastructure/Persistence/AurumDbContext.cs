@@ -1,4 +1,5 @@
-﻿using Aurum.Domain.Entities.Workspace;
+﻿using Aurum.Domain.Entities.Accounts;
+using Aurum.Domain.Entities.Workspace;
 using Aurum.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,9 @@ namespace Aurum.Infrastructure.Persistence
 
         public DbSet<FinancialTransaction> FinancialTransactions =>
             Set<FinancialTransaction>();
+
+        public DbSet<TransactionWalletspaceShare> TransactionWalletspaceShares =>
+            Set<TransactionWalletspaceShare>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

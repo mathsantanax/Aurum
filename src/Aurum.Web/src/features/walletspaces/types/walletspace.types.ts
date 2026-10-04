@@ -15,7 +15,6 @@ export interface Walletspace {
 
 export interface FinancialAccount {
   id: string;
-  walletspaceId: string;
   name: string;
   type: FinancialAccountType;
   institution: string | null;
@@ -32,7 +31,6 @@ export interface SaveFinancialAccount {
 
 export interface CreditCard {
   id: string;
-  walletspaceId: string;
   name: string;
   lastFourDigits: string;
   creditLimit: number;
@@ -51,7 +49,6 @@ export interface SaveCreditCard {
 
 export interface FinancialTransaction {
   id: string;
-  walletspaceId: string;
   financialAccountId: string | null;
   creditCardId: string | null;
   description: string;
@@ -65,6 +62,28 @@ export interface FinancialTransaction {
   seriesId: string | null;
   installmentNumber: number | null;
   installmentCount: number | null;
+}
+
+export interface SharedFinancialTransaction {
+  id: string;
+  ownerDisplayName: string | null;
+  description: string;
+  category: string | null;
+  amount: number;
+  type: FinancialTransactionType;
+  status: FinancialTransactionStatus;
+  transactionDate: string;
+  dueDate: string | null;
+  recurrence: FinancialTransactionRecurrence;
+  seriesId: string | null;
+  installmentNumber: number | null;
+  installmentCount: number | null;
+}
+
+export interface TransactionShare {
+  walletspaceId: string;
+  walletspaceName: string;
+  sharedAt: string;
 }
 
 export interface SaveFinancialTransaction {

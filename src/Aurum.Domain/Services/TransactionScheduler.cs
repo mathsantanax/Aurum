@@ -1,4 +1,4 @@
-using Aurum.Domain.Entities.Workspace;
+using Aurum.Domain.Entities.Accounts;
 using Aurum.Domain.Enums;
 
 namespace Aurum.Domain.Services;

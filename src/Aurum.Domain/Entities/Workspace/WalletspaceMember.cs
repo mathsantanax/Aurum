@@ -35,6 +35,8 @@ namespace Aurum.Domain.Entities.Workspace
                 throw new ArgumentException(
                     "O usuário é obrigatório.",
                     nameof(userId));
+            if (!Enum.IsDefined(role))
+                throw new ArgumentOutOfRangeException(nameof(role));
 
             WalletspaceId = walletspaceId;
             UserId = userId;
@@ -44,10 +46,13 @@ namespace Aurum.Domain.Entities.Workspace
             SetCreatedInfo(userId);
         }
 
-        public void ChangeRole(
+        internal void ChangeRole(
             WalletspaceRole role,
             Guid updatedBy)
         {
+            if (!Enum.IsDefined(role))
+                throw new ArgumentOutOfRangeException(nameof(role));
+
             Role = role;
             MarkAsUpdated(updatedBy);
         }

@@ -8,6 +8,8 @@ import type {
   SaveCreditCard,
   SaveFinancialAccount,
   SaveFinancialTransaction,
+  SharedFinancialTransaction,
+  TransactionShare,
   Walletspace,
   WalletspaceMember,
   WalletspaceRole,
@@ -45,111 +47,96 @@ export async function transferOwnership(walletspaceId: string, newOwnerId: strin
   await api.post(`/walletspaces/${walletspaceId}/members/transfer-ownership`, { newOwnerId });
 }
 
-export async function getAccounts(walletspaceId: string) {
-  const response = await api.get<FinancialAccount[]>(
-    `/walletspaces/${walletspaceId}/accounts`,
-  );
+export async function getAccounts() {
+  const response = await api.get<FinancialAccount[]>("/me/accounts");
   return response.data;
 }
 
-export async function createAccount(
-  walletspaceId: string,
-  account: SaveFinancialAccount,
-) {
-  const response = await api.post<FinancialAccount>(
-    `/walletspaces/${walletspaceId}/accounts`,
-    account,
-  );
+export async function createAccount(account: SaveFinancialAccount) {
+  const response = await api.post<FinancialAccount>("/me/accounts", account);
   return response.data;
 }
 
-export async function updateAccount(
-  walletspaceId: string,
-  accountId: string,
-  account: SaveFinancialAccount,
-) {
-  await api.put(
-    `/walletspaces/${walletspaceId}/accounts/${accountId}`,
-    account,
-  );
+export async function updateAccount(accountId: string, account: SaveFinancialAccount) {
+  await api.put(`/me/accounts/${accountId}`, account);
 }
 
-export async function deleteAccount(walletspaceId: string, accountId: string) {
-  await api.delete(`/walletspaces/${walletspaceId}/accounts/${accountId}`);
+export async function deleteAccount(accountId: string) {
+  await api.delete(`/me/accounts/${accountId}`);
 }
 
-export async function getCards(walletspaceId: string) {
-  const response = await api.get<CreditCard[]>(
-    `/walletspaces/${walletspaceId}/cards`,
-  );
+export async function getCards() {
+  const response = await api.get<CreditCard[]>("/me/cards");
   return response.data;
 }
 
-export async function createCard(walletspaceId: string, card: SaveCreditCard) {
-  const response = await api.post<CreditCard>(
-    `/walletspaces/${walletspaceId}/cards`,
-    card,
-  );
+export async function createCard(card: SaveCreditCard) {
+  const response = await api.post<CreditCard>("/me/cards", card);
   return response.data;
 }
 
-export async function updateCard(
-  walletspaceId: string,
-  cardId: string,
-  card: SaveCreditCard,
-) {
-  await api.put(`/walletspaces/${walletspaceId}/cards/${cardId}`, card);
+export async function updateCard(cardId: string, card: SaveCreditCard) {
+  await api.put(`/me/cards/${cardId}`, card);
 }
 
-export async function deleteCard(walletspaceId: string, cardId: string) {
-  await api.delete(`/walletspaces/${walletspaceId}/cards/${cardId}`);
+export async function deleteCard(cardId: string) {
+  await api.delete(`/me/cards/${cardId}`);
 }
 
-export async function getTransactions(
+export async function getTransactions(from?: string, to?: string) {
+  const response = await api.get<FinancialTransaction[]>("/me/transactions", {
+    params: { from, to },
+  });
+  return response.data;
+}
+
+export async function getSharedTransactions(
   walletspaceId: string,
   from?: string,
   to?: string,
 ) {
-  const response = await api.get<FinancialTransaction[]>(
+  const response = await api.get<SharedFinancialTransaction[]>(
     `/walletspaces/${walletspaceId}/transactions`,
     { params: { from, to } },
   );
   return response.data;
 }
 
-export async function createTransaction(
-  walletspaceId: string,
-  transaction: SaveFinancialTransaction,
-) {
-  const response = await api.post<FinancialTransaction>(
-    `/walletspaces/${walletspaceId}/transactions`,
-    transaction,
-  );
+export async function createTransaction(transaction: SaveFinancialTransaction) {
+  const response = await api.post<FinancialTransaction>("/me/transactions", transaction);
   return response.data;
 }
 
 export async function updateTransaction(
-  walletspaceId: string,
   transactionId: string,
   transaction: SaveFinancialTransaction,
   scope: TransactionSeriesScope = "single",
 ) {
-  await api.put(
-    `/walletspaces/${walletspaceId}/transactions/${transactionId}`,
-    transaction,
-    { params: { scope } },
-  );
+  await api.put(`/me/transactions/${transactionId}`, transaction, { params: { scope } });
 }
 
 export async function deleteTransaction(
-  walletspaceId: string,
   transactionId: string,
   scope: TransactionSeriesScope = "single",
 ) {
-  await api.delete(
-    `/walletspaces/${walletspaceId}/transactions/${transactionId}`,
-    { params: { scope } },
+  await api.delete(`/me/transactions/${transactionId}`, { params: { scope } });
+}
+
+export async function getTransactionShares(transactionId: string) {
+  const response = await api.get<TransactionShare[]>(`/me/transactions/${transactionId}/shares`);
+  return response.data;
+}
+
+export async function shareTransaction(transactionId: string, walletspaceId: string) {
+  const response = await api.post<TransactionShare>(
+    `/me/transactions/${transactionId}/shares`,
+    { walletspaceId },
   );
+  return response.data;
+}
+
+export async function removeTransactionShare(transactionId: string, walletspaceId: string) {
+  await api.delete(`/me/transactions/${transactionId}/shares/${walletspaceId}`);
 }
 
 export async function getMembers(walletspaceId: string) {

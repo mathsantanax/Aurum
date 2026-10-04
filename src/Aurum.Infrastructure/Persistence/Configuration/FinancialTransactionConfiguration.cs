@@ -1,4 +1,5 @@
-using Aurum.Domain.Entities.Workspace;
+using Aurum.Domain.Entities.Accounts;
+using Aurum.Infrastructure.Identity;
 using Aurum.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,7 +11,10 @@ public class FinancialTransactionConfiguration
 {
     public void Configure(EntityTypeBuilder<FinancialTransaction> builder)
     {
-        builder.ToTable("FinancialTransactions");
+        builder.ToTable("FinancialTransactions", table =>
+            table.HasCheckConstraint(
+                "CK_FinancialTransactions_ExactlyOneResource",
+                "([FinancialAccountId] IS NOT NULL AND [CreditCardId] IS NULL) OR ([FinancialAccountId] IS NULL AND [CreditCardId] IS NOT NULL)"));
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Description).HasMaxLength(200).IsRequired();
         builder.Property(x => x.Category).HasMaxLength(100);
@@ -27,10 +31,10 @@ public class FinancialTransactionConfiguration
         builder.Property(x => x.CreatedBy).IsRequired();
         builder.Property(x => x.UpdatedAt);
         builder.Property(x => x.UpdatedBy);
-        builder.HasOne<Walletspace>()
+        builder.HasOne<AurumUser>()
             .WithMany()
-            .HasForeignKey(x => x.WalletspaceId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(x => x.OwnerUserId)
+            .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<FinancialAccount>()
             .WithMany()
             .HasForeignKey(x => x.FinancialAccountId)
@@ -39,7 +43,8 @@ public class FinancialTransactionConfiguration
             .WithMany()
             .HasForeignKey(x => x.CreditCardId)
             .OnDelete(DeleteBehavior.Restrict);
-        builder.HasIndex(x => new { x.WalletspaceId, x.TransactionDate });
+        builder.HasIndex(x => new { x.OwnerUserId, x.TransactionDate });
+        builder.HasIndex(x => new { x.OwnerUserId, x.TransactionDate });
         builder.HasIndex(x => x.FinancialAccountId);
         builder.HasIndex(x => x.CreditCardId);
         builder.HasIndex(x => x.SeriesId);

@@ -1,4 +1,5 @@
-using Aurum.Domain.Entities.Workspace;
+using Aurum.Domain.Entities.Accounts;
+using Aurum.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,10 +19,10 @@ public class FinancialAccountConfiguration : IEntityTypeConfiguration<FinancialA
         builder.Property(x => x.CreatedBy).IsRequired();
         builder.Property(x => x.UpdatedAt);
         builder.Property(x => x.UpdatedBy);
-        builder.HasOne<Walletspace>()
+        builder.HasOne<AurumUser>()
             .WithMany()
-            .HasForeignKey(x => x.WalletspaceId)
-            .OnDelete(DeleteBehavior.Cascade);
-        builder.HasIndex(x => x.WalletspaceId);
+            .HasForeignKey(x => x.OwnerUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasIndex(x => x.OwnerUserId);
     }
 }

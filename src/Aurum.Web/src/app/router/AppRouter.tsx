@@ -15,6 +15,7 @@ import { DashboardPage } from "../../features/dashboard/pages/DashboardPage";
 import { WalletspacesPage } from "../../features/walletspaces/pages/WalletspacesPage";
 import { WalletspaceDetailPage } from "../../features/walletspaces/pages/WalletspaceDetailPage";
 import { CreateWalletspacePage } from "../../features/walletspaces/pages/CreateWalletspacePage";
+import { PersonalFinancePage } from "../../features/finance/pages/PersonalFinancePage";
 
 export function AppRouter() {
   return (
@@ -59,6 +60,10 @@ export function AppRouter() {
           <Route
             path="/my-data"
             element={<UserProfilePage />}
+          />
+          <Route
+            path="/finances"
+            element={<PersonalFinancePage />}
           />
 
           <Route

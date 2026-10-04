@@ -1,10 +1,10 @@
 using Aurum.Domain.Enums;
 
-namespace Aurum.Domain.Entities.Workspace;
+namespace Aurum.Domain.Entities.Accounts;
 
 public class FinancialAccount : BaseEntity
 {
-    public Guid WalletspaceId { get; private set; }
+    public Guid OwnerUserId { get; private set; }
     public string Name { get; private set; } = string.Empty;
     public FinancialAccountType Type { get; private set; }
     public string? Institution { get; private set; }
@@ -15,14 +15,17 @@ public class FinancialAccount : BaseEntity
     }
 
     public FinancialAccount(
-        Guid walletspaceId,
+        Guid ownerUserId,
         string name,
         FinancialAccountType type,
         decimal openingBalance,
         string? institution,
         Guid createdBy)
     {
-        WalletspaceId = walletspaceId;
+        if (ownerUserId == Guid.Empty)
+            throw new ArgumentException("O proprietário é obrigatório.", nameof(ownerUserId));
+
+        OwnerUserId = ownerUserId;
         SetDetails(name, type, openingBalance, institution);
         SetCreatedInfo(createdBy);
     }
